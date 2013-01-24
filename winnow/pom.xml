@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.sift</groupId>
 	<artifactId>winnow</artifactId>
-	<name>Sift winnow</name>
+	<name>Sift Winnow</name>
 	<version>1.0.0</version>
 	<description>Winnow libraries project</description>
 

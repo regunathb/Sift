@@ -28,7 +28,7 @@ import java.util.List;
 public class StopWords {
 	
 	/** List of stop words */	
-	private static final List<String> STOP_WORDS = new LinkedList<String>();
+	private static List<String> STOP_WORDS = new LinkedList<String>();
 	
 	static {
 		STOP_WORDS.add("is");
@@ -63,8 +63,16 @@ public class StopWords {
 	 * @param word the word to be checked for stop words
 	 * @return true if it is a stop word, false otherwise
 	 */
-	public static boolean isStopWord(String word) {
+	public boolean isStopWord(String word) {
 		return StopWords.STOP_WORDS.contains(word);
+	}
+	
+	/**
+	 * Convenience method to set an alternate list of stop words
+	 * @param words List containing stop words
+	 */
+	public void setStopWords(List<String> words) {
+		StopWords.STOP_WORDS = words;
 	}
 	
 }
