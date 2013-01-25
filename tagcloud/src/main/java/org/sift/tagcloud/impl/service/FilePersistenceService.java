@@ -16,6 +16,7 @@
 package org.sift.tagcloud.impl.service;
 
 import org.sift.tagcloud.TagCloud;
+import org.sift.tagcloud.spi.image.ImageFileWriter;
 import org.sift.tagcloud.spi.service.PersistenceService;
 import org.trpr.platform.core.spi.persistence.PersistenceException;
 
@@ -28,12 +29,8 @@ import org.trpr.platform.core.spi.persistence.PersistenceException;
  */
 public class FilePersistenceService implements PersistenceService {
 	
-	/** Constants for file types that this persistence service supports*/
-	public static final String PNG = "png";
-	public static final String SVG = "svg";
-	
 	/** The file type to store the TagCloud as. Initialized to type FilePersistenceService.PNG */
-	private String fileType = PNG;
+	private String fileType = ImageFileWriter.PNG;
 	
 	/** The absolute directory path where tag clouds will be stored*/
 	private String tagCloudsDirectory;
@@ -61,14 +58,16 @@ public class FilePersistenceService implements PersistenceService {
 		return this.fileType;
 	}
 	/**
-	 * Sets the file type for persistence to one of the supported types by this class. For example {@link FilePersistenceService#PNG}, {@link FilePersistenceService#SVG}
+	 * Sets the file type for persistence to one of the supported types by this class. For example {@link ImageFileWriter#PNG}, 
+	 * {@link ImageFileWriter#SVG}, {@link ImageFileWriter#POST_SCRIPT}
 	 * @param fileType the valid file type supported by this class
 	 * @throws PersistenceException in case of unsupported file types
 	 */
 	public void setFileType(String fileType) throws PersistenceException {
-		if (!fileType.equalsIgnoreCase(PNG) &&
-				!fileType.equalsIgnoreCase(SVG)) {
-			throw new PersistenceException("Unrecognized file type : " + fileType + ". Check JavaDoc of this class for supported types. Default is : " + PNG);
+		if (!fileType.equalsIgnoreCase(ImageFileWriter.PNG) &&
+				!fileType.equalsIgnoreCase(ImageFileWriter.SVG) &&
+				!fileType.equalsIgnoreCase(ImageFileWriter.POST_SCRIPT)) {
+			throw new PersistenceException("Unrecognized file type : " + fileType + ". Check JavaDoc of this class for supported types. Default is : " + ImageFileWriter.PNG);
 		}
 		this.fileType = fileType;
 	}

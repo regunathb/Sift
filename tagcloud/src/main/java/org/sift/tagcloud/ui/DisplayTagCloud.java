@@ -34,12 +34,16 @@ public class DisplayTagCloud extends TagCloud {
 	private static final Color STROKE_COLOR = Color.RED;	
 	private static final int BIGGEST_FONT_SIZE = 72;
 	private static final int SMALLEST_FONT_SIZE = 10;
-	private static final String FONT_FAMILY = "Dialog";
+	private static final String FONT_FAMILY = "Courier";
+	private static final boolean NO_ROTATE = false;
 
 	/** Display elements initialized to defaults */
+	private int biggestFontSize = BIGGEST_FONT_SIZE;
+	private int smallestFontSize = SMALLEST_FONT_SIZE;
 	private Color fillColor = FILL_COLOR;
 	private Color strokeColor = STROKE_COLOR;
 	private String fontFamily = FONT_FAMILY;
+	private boolean rotateTags = NO_ROTATE;
 	
 	/**
 	 * Constructor for this class.
@@ -68,6 +72,24 @@ public class DisplayTagCloud extends TagCloud {
 	public void setFontFamily(String fontFamily) {
 		this.fontFamily = fontFamily;
 	}	
+	public boolean isRotateTags() {
+		return this.rotateTags;
+	}
+	public void setRotateTags(boolean rotateTags) {
+		this.rotateTags = rotateTags;
+	}
+	public int getBiggestFontSize() {
+		return this.biggestFontSize;
+	}
+	public void setBiggestFontSize(int biggestFontSize) {
+		this.biggestFontSize = biggestFontSize;
+	}
+	public int getSmallestFontSize() {
+		return this.smallestFontSize;
+	}
+	public void setSmallestFontSize(int smallestFontSize) {
+		this.smallestFontSize = smallestFontSize;
+	}		
 	/** End Getter/Setter methods*/
-	
+
 }
