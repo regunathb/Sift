@@ -32,9 +32,8 @@ import org.sift.tagcloud.TagCloud;
 import org.trpr.platform.core.PlatformException;
 
 /**
- * The <code>DisplayTagCloud</code> is a sub-type of {@link TagCloud} suited for generating a 
- * visual display. This implementation generates an image file (of specified type) depicting the 
- * tag cloud.
+ * The <code>DisplayTagCloud</code> is a sub-type of {@link TagCloud} suited for generating a visual display. 
+ * Portions of this code is based on Pierre Lindenbaum's sample at : http://plindenbaum.blogspot.in/2010/10/playing-with-worldle-algorithm-tag.html
  * 
  * @author Regunath B
  * @version 1.0, 25 Jan 2013
