@@ -15,10 +15,15 @@
  */
 package org.sift.tagcloud.impl.service;
 
+import java.io.File;
+
 import org.sift.tagcloud.Tag;
 import org.sift.tagcloud.TagCloud;
+import org.sift.tagcloud.impl.image.ImageWriterFactory;
 import org.sift.tagcloud.spi.image.ImageFileWriter;
 import org.sift.tagcloud.spi.service.PersistenceService;
+import org.sift.tagcloud.ui.DisplayTag;
+import org.sift.tagcloud.ui.DisplayTagCloud;
 import org.trpr.platform.core.spi.persistence.PersistenceException;
 
 /**
@@ -30,8 +35,8 @@ import org.trpr.platform.core.spi.persistence.PersistenceException;
  */
 public class FilePersistenceService<T extends Tag> implements PersistenceService<T> {
 	
-	/** The file type to store the TagCloud as. Initialized to type FilePersistenceService.PNG */
-	private String fileType = ImageFileWriter.PNG;
+	/** The image writer implementation, initialized to the default implementation */
+	private ImageFileWriter<DisplayTag> imageWriter = ImageWriterFactory.getDefaultImageFileWriter();
 	
 	/** The absolute directory path where tag clouds will be stored*/
 	private String tagCloudsDirectory;
@@ -40,10 +45,20 @@ public class FilePersistenceService<T extends Tag> implements PersistenceService
 	 * Persists the specified TagCloud as an image file on the file system. Uses the {@link TagCloud#getSubject()} as the file name
 	 * @see org.sift.tagcloud.spi.service.PersistenceService#persistTagCloud(org.sift.tagcloud.TagCloud)
 	 */
+	@SuppressWarnings("unchecked")
 	public void persistTagCloud(TagCloud<T> tagCloud) throws PersistenceException {
 		if (tagCloud.getSubject() == null || tagCloud.getSubject().trim().length() == 0) {
 			throw new PersistenceException("Tag cloud's subject cannot be empty! File cannot be created with empty name.");
 		}
+		if (!DisplayTagCloud.class.isAssignableFrom(tagCloud.getClass())) {
+			throw new PersistenceException("This service supports persisting only DisplayTagCloud instances. Specified TagCloud (Subject : " + tagCloud.getSubject() + ") is of type : " + tagCloud.getClass().getName());
+		}
+		
+		// lay out the tag cloud
+		tagCloud.layoutTagCloud();
+		
+		// write the tag cloud image 
+		this.imageWriter.writeImageFile(this.getTagCloudsDirectory() + File.pathSeparator + tagCloud.getSubject(), (DisplayTagCloud<DisplayTag>)tagCloud);
 	}
 
 	/**
@@ -56,7 +71,7 @@ public class FilePersistenceService<T extends Tag> implements PersistenceService
 	
 	/** Start Getter/Setter methods */
 	public String getFileType() {
-		return this.fileType;
+		return imageWriter.getImageFileType();
 	}
 	/**
 	 * Sets the file type for persistence to one of the supported types by this class. For example {@link ImageFileWriter#PNG}, 
@@ -65,12 +80,7 @@ public class FilePersistenceService<T extends Tag> implements PersistenceService
 	 * @throws PersistenceException in case of unsupported file types
 	 */
 	public void setFileType(String fileType) throws PersistenceException {
-		if (!fileType.equalsIgnoreCase(ImageFileWriter.PNG) &&
-				!fileType.equalsIgnoreCase(ImageFileWriter.SVG) &&
-				!fileType.equalsIgnoreCase(ImageFileWriter.POST_SCRIPT)) {
-			throw new PersistenceException("Unrecognized file type : " + fileType + ". Check JavaDoc of this class for supported types. Default is : " + ImageFileWriter.PNG);
-		}
-		this.fileType = fileType;
+		this.imageWriter = ImageWriterFactory.getImageFileWriter(fileType);
 	}
 	public String getTagCloudsDirectory() {
 		return this.tagCloudsDirectory;
