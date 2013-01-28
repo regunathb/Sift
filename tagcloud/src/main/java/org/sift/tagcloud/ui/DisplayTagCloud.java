@@ -16,6 +16,7 @@
 package org.sift.tagcloud.ui;
 
 import java.awt.Color;
+import java.awt.geom.Rectangle2D;
 
 import org.sift.tagcloud.TagCloud;
 
@@ -27,7 +28,7 @@ import org.sift.tagcloud.TagCloud;
  * @author Regunath B
  * @version 1.0, 25 Jan 2013
  */
-public class DisplayTagCloud extends TagCloud {
+public class DisplayTagCloud <S extends DisplayTag> extends TagCloud<S> {
 	
 	/** Defaults for the display elements */
 	private static final Color FILL_COLOR = Color.YELLOW;
@@ -44,6 +45,8 @@ public class DisplayTagCloud extends TagCloud {
 	private Color strokeColor = STROKE_COLOR;
 	private String fontFamily = FONT_FAMILY;
 	private boolean rotateTags = NO_ROTATE;
+	private Rectangle2D imageBounds = new Rectangle2D.Double(0, 0, 0, 0);
+	private Integer preferredImageWidth;
 	
 	/**
 	 * Constructor for this class.
@@ -89,7 +92,16 @@ public class DisplayTagCloud extends TagCloud {
 	}
 	public void setSmallestFontSize(int smallestFontSize) {
 		this.smallestFontSize = smallestFontSize;
-	}		
+	}	
+	public Rectangle2D getImageBounds() {
+		return this.imageBounds;
+	}	
+	public Integer getPreferredImageWidth() {
+		return this.preferredImageWidth;
+	}
+	public void setPreferredImageWidth(Integer preferredImageWidth) {
+		this.preferredImageWidth = preferredImageWidth;
+	}	
 	/** End Getter/Setter methods*/
 
 }

@@ -15,6 +15,7 @@
  */
 package org.sift.tagcloud.impl.service;
 
+import org.sift.tagcloud.Tag;
 import org.sift.tagcloud.TagCloud;
 import org.sift.tagcloud.spi.image.ImageFileWriter;
 import org.sift.tagcloud.spi.service.PersistenceService;
@@ -27,7 +28,7 @@ import org.trpr.platform.core.spi.persistence.PersistenceException;
  * @author Regunath B
  * @version 1.0, 25 Jan 2013
  */
-public class FilePersistenceService implements PersistenceService {
+public class FilePersistenceService<T extends Tag> implements PersistenceService<T> {
 	
 	/** The file type to store the TagCloud as. Initialized to type FilePersistenceService.PNG */
 	private String fileType = ImageFileWriter.PNG;
@@ -39,7 +40,7 @@ public class FilePersistenceService implements PersistenceService {
 	 * Persists the specified TagCloud as an image file on the file system. Uses the {@link TagCloud#getSubject()} as the file name
 	 * @see org.sift.tagcloud.spi.service.PersistenceService#persistTagCloud(org.sift.tagcloud.TagCloud)
 	 */
-	public void persistTagCloud(TagCloud tagCloud) throws PersistenceException {
+	public void persistTagCloud(TagCloud<T> tagCloud) throws PersistenceException {
 		if (tagCloud.getSubject() == null || tagCloud.getSubject().trim().length() == 0) {
 			throw new PersistenceException("Tag cloud's subject cannot be empty! File cannot be created with empty name.");
 		}
@@ -49,7 +50,7 @@ public class FilePersistenceService implements PersistenceService {
 	 * Interface method implementation. WARNING : Not implemented and throws an {@link UnsupportedOperationException} to the effect
 	 * @see org.sift.tagcloud.spi.service.PersistenceService#loadTagCloud(org.sift.tagcloud.TagCloud)
 	 */
-	public TagCloud loadTagCloud(TagCloud tagCloud) throws PersistenceException {
+	public TagCloud<T> loadTagCloud(TagCloud<T> tagCloud) throws PersistenceException {
 		throw new UnsupportedOperationException("Loading of tag clouds from image files is not supported!");
 	}
 	

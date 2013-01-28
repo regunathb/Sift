@@ -18,6 +18,7 @@ package org.sift.tagcloud.spi.image;
 import java.io.File;
 import java.io.IOException;
 
+import org.sift.tagcloud.ui.DisplayTag;
 import org.sift.tagcloud.ui.DisplayTagCloud;
 import org.trpr.platform.core.PlatformException;
 import org.trpr.platform.core.impl.logging.LogFactory;
@@ -30,7 +31,7 @@ import org.trpr.platform.core.spi.logging.Logger;
  * @author Regunath B
  * @version 1.0, 25 Jan 2013
  */
-public abstract class ImageFileWriter {
+public abstract class ImageFileWriter<S extends DisplayTag> {
 
 	/** Constants for common image file types */
 	public static final String PNG = "png";
@@ -62,7 +63,7 @@ public abstract class ImageFileWriter {
 	 * @param displayTagCloud the DisplayTagCloud whose image is to be written to the specified file
 	 * @throws PlatformException in case of errors in writing the image file
 	 */
-	public void writeImageFile(String filePath, DisplayTagCloud displayTagCloud) throws PlatformException {
+	public void writeImageFile(String filePath, DisplayTagCloud<S> displayTagCloud) throws PlatformException {
 		if (!filePath.endsWith(this.getImageFileType())) {
 			throw new PlatformException("Incompatible file path : " + filePath + ". Supported type is : " + this.getImageFileType());
 		}
@@ -85,6 +86,6 @@ public abstract class ImageFileWriter {
 	 * @param displayTagCloud the DisplayTagCloud whose image is to be written to the specified file
 	 * @throws PlatformException in case of errors in writing the image file
 	 */
-	protected abstract void writeImageContents(File file, DisplayTagCloud displayTagCloud) throws PlatformException;
+	protected abstract void writeImageContents(File file, DisplayTagCloud<S> displayTagCloud) throws PlatformException;
 	
 }

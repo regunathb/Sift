@@ -24,13 +24,13 @@ import java.util.List;
  * @author Regunath B
  * @version 1.0, 24 Jan 2013
  */
-public class TagCloud {
+public class TagCloud <T extends Tag>{
 
 	/** The subject for this tag cloud */
 	private String subject;
 	
 	/** The list of tags in this tag cloud for the given subject*/
-	private List<Tag> tagsList  = new LinkedList<Tag>();
+	private List<T> tagsList  = new LinkedList<T>();
 	
 	/**
 	 * Constructor for this class.
@@ -44,7 +44,7 @@ public class TagCloud {
 	 * Adds the specified Tag to the list of tags for the subject
 	 * @param tag the Tag to be added
 	 */
-	public void addTag(Tag tag) {
+	public void addTag(T tag) {
 		if (!this.tagsList.contains(tag)) {
 			this.tagsList.add(tag);
 		}
@@ -55,15 +55,15 @@ public class TagCloud {
 	 * @param tag the Tag to be removed
 	 * @return true if remove was successful, false otherwise - even if the tag does not exist
 	 */
-	public boolean remove(Tag tag) {
+	public boolean remove(T tag) {
 		return this.tagsList.remove(tag);
 	}
 	
 	/** Getter/Setter methods*/
-	public List<Tag> getTagsList() {
+	public List<T> getTagsList() {
 		return this.tagsList;
 	}
-	public void setTagsList(List<Tag> tagsList) {
+	public void setTagsList(List<T> tagsList) {
 		this.tagsList = tagsList;
 	}
 	public String getSubject() {
