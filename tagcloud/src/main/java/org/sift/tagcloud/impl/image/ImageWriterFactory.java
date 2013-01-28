@@ -21,8 +21,6 @@ import org.sift.tagcloud.impl.image.svg.SVGImageWriter;
 import org.sift.tagcloud.spi.image.ImageFileWriter;
 import org.sift.tagcloud.ui.DisplayTag;
 import org.trpr.platform.core.PlatformException;
-import org.trpr.platform.core.spi.persistence.PersistenceException;
-
 
 /**
  * The <code>ImageWriterFactory</code> is a simple factory implementation for {@link ImageFileWriter} implementations
@@ -48,7 +46,7 @@ public class ImageWriterFactory {
 		if (fileType.equalsIgnoreCase(ImageFileWriter.POST_SCRIPT)) {
 			return new PostscriptImageWriter<DisplayTag>();
 		}
-		throw new PersistenceException("Unrecognized file type : " + fileType + ". Check JavaDoc of ImageFileWriter for supported types.");
+		throw new PlatformException("Unrecognized file type : " + fileType + ". Check JavaDoc of ImageFileWriter for supported types.");
 	}
 	
 	/**
