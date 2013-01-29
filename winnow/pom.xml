@@ -48,6 +48,12 @@
 	</properties>
   
 	<dependencies>	
+		<!-- Sift dependencies -->
+		<dependency>
+			<groupId>org.sift</groupId>
+			<artifactId>runtime</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 		<!-- Third party dependencies -->
 		<dependency>
 			<groupId>org.trpr</groupId>
