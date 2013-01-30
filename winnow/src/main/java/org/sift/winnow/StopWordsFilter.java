@@ -37,8 +37,8 @@ public class StopWordsFilter implements Processor {
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
 		Tuple output = new Tuple(tuple.getKey());
-		for (String word : tuple.getValues()) {
-			if (!this.stopWords.isStopWord(word)) {
+		for (Object word : tuple.getValues()) {
+			if (!this.stopWords.isStopWord((String)word)) {
 				output.addValue(word);
 			}
 		}
@@ -51,6 +51,6 @@ public class StopWordsFilter implements Processor {
 	}
 	public void setStopWords(StopWords stopWords) {
 		this.stopWords = stopWords;
-	}	
+	}
 
 }

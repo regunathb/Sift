@@ -32,6 +32,8 @@ public class StopWords {
 	
 	static {
 		STOP_WORDS.add("is");
+		STOP_WORDS.add("was");
+		STOP_WORDS.add("or");
 		STOP_WORDS.add("in");
 		STOP_WORDS.add("on");
 		STOP_WORDS.add("at");
@@ -64,6 +66,9 @@ public class StopWords {
 	 * @return true if it is a stop word, false otherwise
 	 */
 	public boolean isStopWord(String word) {
+		if (word.trim().length() <= 1) {
+			return true;
+		}
 		return StopWords.STOP_WORDS.contains(word);
 	}
 	
