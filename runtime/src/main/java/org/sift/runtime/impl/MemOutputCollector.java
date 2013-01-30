@@ -15,6 +15,7 @@
  */
 package org.sift.runtime.impl;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,13 +40,22 @@ public class MemOutputCollector implements OutputCollector {
 	public void emit(Tuple tuple) {
 		this.emittedTuples.add(tuple);
 	}
-	
+
 	/**
-	 * Returns the list of Tuple instances collected by this OutputCollector
-	 * @return list of Tuple instances
+	 * Interface method implementation. Returns the List of {@link Tuple} instances collected in memory
+	 * @see org.sift.runtime.spi.OutputCollector#getEmittedTuples()
 	 */
 	public List<Tuple> getEmittedTuples() {
 		return this.emittedTuples;
+	}
+
+	/**
+	 * Interface method implementation. Sets the specified Tuple instances as the values collected bu this collector
+	 * @see org.sift.runtime.spi.OutputCollector#setTuples(org.sift.runtime.Tuple[])
+	 */
+	public void setTuples(Tuple... tuples) {
+		this.emittedTuples.clear();
+		Collections.addAll(this.emittedTuples, tuples);
 	}
 
 }

@@ -15,19 +15,23 @@
  */
 package org.sift.runtime.spi;
 
+import java.util.List;
+
 import org.sift.runtime.Tuple;
 
+
 /**
- * The <code>OutputCollector</code> provides methods for {@link Processor} instances to emit processed data
+ * The <code>Shuffler</code> interface provides methods to sort Tuple instances
  * 
  * @author Regunath B
  * @version 1.0, 28 Jan 2013
  */
-public interface OutputCollector {
+public interface Shuffler {	
 
-	/** 
-	 * Emits the specified Tuple post processing
-	 * @param tuple the Tuple containing data elements
+	/**
+	 * Sorts the specified list of Tuple instances
+	 * @param tuples the Tuple instances to sort
+	 * @return List containing sorted Tuple data
 	 */
-	public void emit(Tuple tuple);
+	public List<Tuple> sort(List<Tuple> tuples);
 }

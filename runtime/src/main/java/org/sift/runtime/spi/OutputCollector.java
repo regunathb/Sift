@@ -19,18 +19,30 @@ import java.util.List;
 
 import org.sift.runtime.Tuple;
 
-
 /**
- * The <code>Shuffler</code> interface provides methods to sort Tuple instances
+ * The <code>OutputCollector</code> provides methods for {@link Processor} instances to emit processed data
  * 
  * @author Regunath B
  * @version 1.0, 28 Jan 2013
  */
-public interface Shuffler {	
+public interface OutputCollector{
 
-	/**
-	 * Sorts the specified list of Tuple instances
-	 * @param tuples the Tuple instances to sort
+	/** 
+	 * Emits the specified Tuple post processing
+	 * @param tuple the Tuple containing data elements
 	 */
-	public void sort(List<Tuple> tuples);
+	public void emit(Tuple tuple);
+	
+	/**
+	 * Returns the {@link Tuple} instances emitted to this collector
+	 * @return List of Tuple instances collected by this collector
+	 */
+	public List<Tuple> getEmittedTuples();
+	
+	/**
+	 * Sets the specified Tuple instances as the values collected by this OutputCollector.
+	 * WARNING : replaces all values that may have been collected by this OutputCollector
+	 * @param tuples the Tuple instances to be set on this OutputCollector
+	 */
+	public void setTuples(Tuple... tuples);
 }

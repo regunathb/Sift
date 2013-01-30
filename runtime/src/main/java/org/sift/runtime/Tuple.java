@@ -25,27 +25,52 @@ import java.util.List;
  * @version 1.0, 28 Jan 2013
  */
 public class Tuple {
+	
+	/** The key part separator char */
+	public static final String KEY_SEP_CHAR = ":";
+	
+	/** Constant to denote un-defined key name prefix */
+	public static final String UNDEFINED_KEY = "UNDEFINED";
+	
+	/** String literal constants */
+	private static final String KEY = " Key = ";
+	private static final String VALUES = " Values = ";
+	public static final String VALUE_SEP_CHAR = ",";
 
 	/** The key identifying this Tuple*/
 	private String key;
 	
 	/** List of values held by this Tuple */
-	private List<String> values = new LinkedList<String>();
+	private List<Object> values = new LinkedList<Object>();
 	
 	/** Constructors*/
 	public Tuple(String key) {
 		this.key = key;
 	}	
-	public Tuple(String key, List<String> values) {
+	public Tuple(String key, List<Object> values) {
 		this(key);
 		this.values = values;
 	}	
 	
+	/**
+	 * Overriden super class method. Creates a string representation of this Tuple using its key and values
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		StringBuffer buffer = new StringBuffer(KEY);
+		buffer.append(this.getKey());
+		buffer.append(VALUES);
+		for (Object o : this.getValues()) {
+			buffer.append(o + VALUE_SEP_CHAR);
+		}
+		return buffer.toString();
+	}
+	
 	/** Mutator methods for the Tuple values*/
-	public void addValue(String value) {
+	public void addValue(Object value) {
 		this.values.add(value);
 	}	
-	public boolean removeValue(String value) {
+	public boolean removeValue(Object value) {
 		return this.values.remove(value);
 	}
 	
@@ -53,10 +78,10 @@ public class Tuple {
 	public String getKey() {
 		return this.key;
 	}
-	public List<String> getValues() {
+	public List<Object> getValues() {
 		return this.values;
 	}
-	public void setValues(List<String> values) {
+	public void setValues(List<Object> values) {
 		this.values = values;
 	}	
 	
