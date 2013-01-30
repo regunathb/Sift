@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans classpath:org/springframework/beans/factory/xml/spring-beans-2.5.xsd	
+    http://www.springframework.org/schema/batch classpath:packaged/xsd/spring-batch-2.1.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+    http://www.springframework.org/schema/context classpath:org/springframework/context/config/spring-context-2.5.xsd">
+
+	<!-- Bean for registering the jobs with the JobRegistry. Mandatory bean -->
+	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+		<property name="jobRegistry" ref="jobRegistry"/>
+	</bean>		
+
+	<bean name="tagJobDetailBean" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="org.trpr.platform.batch.impl.spring.job.BatchJob" />
+		<property name="group" value="sample-batch" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="jobName" value-ref="tagCloudJob" />
+				<entry key="jobLocator" value-ref="jobRepository" />
+				<entry key="jobLauncher" value-ref="jobLauncher" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="tagJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="tagJobDetailBean" />
+		<property name="cronExpression" value="0 0/120 * * * ?" />
+	</bean>
+
+	<bean
+		class="org.trpr.platform.batch.impl.spring.web.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="tagJobCronTrigger" />
+			</list>
+		</property>
+	</bean>
+	
+	<!--
+		The simple async task executor for the partition execution
+	-->
+	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
+	
+	<!--
+		Greeting Job Task Executor Multi-Threaded-Pool Configuration.
+	-->
+	<bean id="tagJobTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="10" />
+		<property name="maxPoolSize" value="100" />
+		<property name="queueCapacity" value="500" />
+	</bean>	
+	
+	<!--
+		Multi-Threaded Greeting Batch Job configuration
+	-->
+	<batch:job id="tagCloudJob" incrementer="incrementer">
+		<batch:step id="tagJobStep">
+			<batch:tasklet task-executor="tagJobTaskExecutor">
+				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="1000"/>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+
+	<bean id="fileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" ref="inputFileResource"/>
+ 		<property name="lineMapper">
+            <bean class="org.sift.batch.TupleLineMapper" />
+        </property>		
+	</bean>	
+	<bean id="inputFileResource" class="org.springframework.core.io.FileSystemResource">
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt"/>
+	</bean>	
+	
+	<bean id="chainProcessor" class="org.sift.batch.ProcessorChainItemProcessor">
+		<property name="processors">
+			<list>	
+				<bean class="org.sift.runtime.impl.WordSplitterProcessor" />
+				<bean class="org.sift.winnow.StopWordsFilter">
+			 		<property name="stopWords">
+			            <bean class="org.sift.winnow.StopWords" />
+			        </property>							
+				</bean>
+				<bean class="org.sift.batch.test.TagIdentifierProcessor">
+					<property name="wordWeights">
+						<map>
+							<entry key="1" value="1" />
+							<entry key="2" value="2" />
+							<entry key="3" value="4" />
+						</map>
+					</property>	
+				</bean>
+			</list>
+		</property>
+	</bean>	
+	
+	<bean id="tupleWriter" class="org.sift.batch.TupleWriter">
+		<property name="collector" ref="collector"/>
+	</bean>	
+	<bean id="collector" class="org.sift.runtime.impl.ValueAggregatingOutputCollector">
+		<property name="shuffler" ref="shuffler"/>
+		<property name="delegate" ref="collectorDelegate"/>	
+	</bean>	
+	<bean id="shuffler" class="org.sift.runtime.impl.MemSortMergeShuffler"/>
+	<bean id="collectorDelegate" class="org.sift.runtime.impl.MemOutputCollector"/>
+
+</beans>
+				
