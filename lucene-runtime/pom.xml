@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.sift</groupId>
+	<artifactId>lucene-runtime</artifactId>
+	<name>Sift Lucene Runtime</name>
+	<version>1.0.0</version>
+	<description>Lucene based Runtime libraries project</description>
+
+	<licenses>
+    	<license>
+      		<name>The Apache Software License, Version 2.0</name>
+      		<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      		<distribution>repo</distribution>
+    	</license>
+  	</licenses>
+ 
+	<distributionManagement>
+    	<repository>
+      		<id>clojars</id>
+      		<name>Clojars repository</name>
+      		<url>https://clojars.org/repo</url>
+    	</repository>
+  	</distributionManagement> 
+  	
+  	<scm>
+    	<url>https://github.com/regunathb/Trooper</url>
+    	<connection>https://github.com/regunathb/Trooper.git</connection>
+  	</scm>
+  
+    <developers>
+   		<developer>
+      		<id>regunathb</id>
+      		<name>Regunath B</name>
+      		<email>regunathb@gmail.com</email>
+    	</developer>
+   		<developer>
+      		<id>devashishshankar</id>
+      		<name>Devashish Shankar</name>
+      		<email>devashish.shankar@gmail.com</email>
+    	</developer>
+  	</developers>
+
+	<properties>
+		<org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+	</properties>
+  
+	<dependencies>	
+		<!-- Sift dependencies -->
+		<dependency>
+			<groupId>org.sift</groupId>
+			<artifactId>runtime</artifactId>
+			<version>1.0.0</version>
+		</dependency>	
+		<!-- Third party dependencies -->
+		<dependency>
+			<groupId>org.trpr</groupId>
+			<artifactId>platform-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>2.9.1</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.*</include>
+				</includes>
+			</resource>
+		</resources>		
+		<plugins>		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+					<includes>
+						<include>packaged/**/*</include>
+						<include>org/**/*</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>			
+		</plugins>		
+	</build>	
+</project>
