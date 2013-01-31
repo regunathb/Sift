@@ -26,14 +26,14 @@ import org.trpr.platform.core.spi.persistence.PersistenceException;
  * @author Regunath B
  * @version 1.0, 25 Jan 2013
  */
-public interface PersistenceService<T extends Tag> {
+public interface PersistenceService<T extends Tag, S extends TagCloud<T>> {
 
 	/**
 	 * Persists the specified TagCloud into an underlying persistence store
 	 * @param tagCloud the TagCloud to be persisted
 	 * @throws PersistenceException in case of persistence errors 
 	 */
-	public void persistTagCloud(TagCloud<T> tagCloud) throws PersistenceException;
+	public void persistTagCloud(S tagCloud) throws PersistenceException;
 	
 	/**
 	 * Loads the specified TagClous from the underlying persistence store
@@ -41,6 +41,6 @@ public interface PersistenceService<T extends Tag> {
 	 * @return the loaded TagCloud
 	 * @throws PersistenceException in case of persistence errors 
 	 */
-	public TagCloud<T> loadTagCloud(TagCloud<T> tagCloud) throws PersistenceException;
+	public S loadTagCloud(S tagCloud) throws PersistenceException;
 	
 }

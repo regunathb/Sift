@@ -38,6 +38,9 @@ public abstract class ImageFileWriter<S extends DisplayTag> {
 	public static final String SVG = "svg";
 	public static final String POST_SCRIPT = "ps";
 	
+	/** The file extension separator char*/
+	public static final String FILE_EXTENSION_SEP = ".";
+	
 	/** Logger for this class*/
 	protected static final Logger LOGGER = LogFactory.getLogger(ImageFileWriter.class);
 	
@@ -65,7 +68,7 @@ public abstract class ImageFileWriter<S extends DisplayTag> {
 	 */
 	public void writeImageFile(String filePath, DisplayTagCloud<S> displayTagCloud) throws PlatformException {
 		if (!filePath.endsWith(this.getImageFileType())) {
-			throw new PlatformException("Incompatible file path : " + filePath + ". Supported type is : " + this.getImageFileType());
+			throw new PlatformException("Invalid file path : " + filePath + ". Supported type is : " + this.getImageFileType());
 		}
 		File file = new File(filePath);
 		if (file.exists()) {

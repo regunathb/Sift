@@ -51,21 +51,28 @@ public abstract class TagCloud <T extends Tag> {
 			this.tagsList.add(tag);
 		}
 	}	
+		
+	/**
+	 * Removes the specified tag from this tag cloud
+	 * @param tag the Tag to be removed
+	 * @return true if remove was successful, false otherwise - even if the tag does not exist
+	 */
+	public boolean removeTag(T tag) {
+		return this.tagsList.remove(tag);
+	}
+	
+	/**
+	 * Removes all tags in this TagCloud
+	 */
+	public void removeAllTags() {
+		this.tagsList.clear();
+	}
 	
 	/**
 	 * Lays out this tag cloud using the contained tags. 
 	 * @throws PlatformException in case of errors laying out the tag cloud.
 	 */
 	public abstract void layoutTagCloud() throws PlatformException;
-	
-	/**
-	 * Removes the specified tag from this tag cloud
-	 * @param tag the Tag to be removed
-	 * @return true if remove was successful, false otherwise - even if the tag does not exist
-	 */
-	public boolean remove(T tag) {
-		return this.tagsList.remove(tag);
-	}
 	
 	/** Getter/Setter methods*/
 	public List<T> getTagsList() {
