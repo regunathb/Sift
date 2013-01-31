@@ -16,7 +16,6 @@
 package org.sift.runtime.impl;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.sift.runtime.Tuple;
@@ -67,16 +66,15 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 			// now aggregate the values treating them as type double
 			for (int i=0; i < aggregatedTuples.length; i++) {
 				Tuple aggregatedValuesTuple = new Tuple(sortMergedTuples.get(i).getKey());
-				Double aggregateValue = 0d;
+				Integer aggregateValue = 0;
 				for (Object value : sortMergedTuples.get(i).getValues()) {
-					aggregateValue += Double.parseDouble((String)value);
+					aggregateValue += Integer.parseInt((String)value);
 				}
 				aggregatedValuesTuple.addValue(String.valueOf(aggregateValue));
-				System.out.println(aggregatedValuesTuple);
 				aggregatedTuples[i] = aggregatedValuesTuple;
 			}
 			this.delegate.setTuples(aggregatedTuples);
-		}		
+		}	
 	}
 
 	/** Getter/Setter methods */

@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.Shuffler;
+import org.trpr.platform.core.PlatformException;
 
 /**
  * The <code>MemSortMergeShuffler</code> is a memory based {@link Shuffler} implementation that first sorts the Tuple instances by their keys
@@ -39,19 +40,17 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 	public List<Tuple> sort(List<Tuple> tuples) {
 		Collections.sort(tuples, this);
 		List<Tuple> sortMergeTuples = new LinkedList<Tuple>();
+		Tuple mergedTuple = null;
 		for (Tuple tuple : tuples) {
-			Tuple mergedTuple = null;
-			for (Tuple candidateMergedTuple : sortMergeTuples) {
-				if (candidateMergedTuple.getKey().equals(tuple.getKey())) {
-					mergedTuple = candidateMergedTuple;
-					break;
-				}
-			}
-			if (mergedTuple == null) {
-				mergedTuple = new Tuple(tuple.getKey());
+			if (mergedTuple == null || !mergedTuple.getKey().equals(tuple.getKey())) {
+				mergedTuple = new Tuple(tuple.getKey());;
 				sortMergeTuples.add(mergedTuple);
 			}
-			Collections.addAll(mergedTuple.getValues(), tuple.getValues().toArray(new Object[0]));
+			if (mergedTuple.getKey().equals(tuple.getKey())) { // double check
+				Collections.addAll(mergedTuple.getValues(), tuple.getValues().toArray(new Object[0]));
+			} else { // this should never happen
+				throw new PlatformException("Unable to sort and merge tuple data!");
+			}
 		}
 		return sortMergeTuples;
 	}
