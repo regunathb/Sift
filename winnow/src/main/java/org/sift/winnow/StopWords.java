@@ -57,7 +57,9 @@ public class StopWords {
 		STOP_WORDS.add("but");		
 		STOP_WORDS.add("be");		
 		STOP_WORDS.add("as");		
-		STOP_WORDS.add("these");		
+		STOP_WORDS.add("these");	
+		STOP_WORDS.add("&amp;");
+		STOP_WORDS.add("&quot;");
 	}
 	
 	/**
