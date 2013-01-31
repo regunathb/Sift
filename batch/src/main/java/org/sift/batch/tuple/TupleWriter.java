@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sift.batch;
+package org.sift.batch.tuple;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.sift.runtime.Tuple;
@@ -38,13 +40,15 @@ public class TupleWriter implements ItemWriter<Tuple> {
 	 * @see org.springframework.batch.item.ItemWriter#write(java.util.List)
 	 */
 	public void write(List<? extends Tuple> tuples) throws Exception {
+		List<Tuple> containedTuples = new LinkedList<Tuple>();
 		for (Tuple t : tuples) {
 			if (t.getKey().equals(Tuple.UNDEFINED_KEY)) { // it is an collection of Tuple instances
-				this.collector.setTuples(t.getValues().toArray(new Tuple[0]));
+				Collections.addAll(containedTuples, t.getValues().toArray(new Tuple[0]));				
 			} else {
-				this.collector.emit(t);
+				Collections.addAll(containedTuples,t);
 			}
 		}
+		this.collector.setTuples(containedTuples.toArray(new Tuple[0]));
 	}
 	
 	/** Getter/Setter methods */
