@@ -28,7 +28,7 @@
 	
 	<bean id="tagJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="tagJobDetailBean" />
-		<property name="cronExpression" value="0 0/120 * * * ?" />
+		<property name="cronExpression" value="0 0/20 * * * ?" />
 	</bean>
 
 	<bean
@@ -78,13 +78,13 @@
         </property>		
 	</bean>	
 	<bean id="inputFileResource" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt"/>
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt"/>
 	</bean>	
 	
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
 		<property name="processors">
 			<list>	
-				<bean class="org.sift.runtime.impl.WordSplitterProcessor" />
+				<bean class="org.sift.runtime.impl.LuceneWordSplitterProcessor" />
 				<bean class="org.sift.winnow.StopWordsFilter">
 			 		<property name="stopWords">
 			            <bean class="org.sift.winnow.StopWords" />
@@ -119,7 +119,7 @@
 		<property name="collector" ref="collector"/>
 	</bean>	
 	<bean id="tagCloudProcessor" class="org.sift.batch.tag.TagCloudProcessor">
-		<property name="maxTags" value="75"/>
+		<property name="maxTags" value="100"/>
 	</bean>	
 	<bean id="tagCloudWriter" class="org.sift.batch.tag.TagCloudWriter">
 		<property name="persistenceService" ref="fileWriter"/>
