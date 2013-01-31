@@ -152,7 +152,6 @@ public class DisplayTagCloud<S extends DisplayTag> extends TagCloud<S> {
 			double radius = 0.5 * Math.min(first.getBounds().getWidth(),first.getBounds().getHeight());
 
 			while (!done) {
-				System.out.println(""+i+"/"+this.getTagsList().size()+" rad:"+radius);
 				int startDeg = this.random.nextInt(360);
 				// loop over spiral
 				int prev_x = -1;
