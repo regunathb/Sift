@@ -15,7 +15,7 @@
  */
 package org.sift.winnow;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,10 +51,10 @@ public class StopWords {
 	};
 	
 	/** List of stop words */
-	private List<String> stopWords = new LinkedList<String>();
+	private List<String> stopWords = new ArrayList<String>();
 
 	/** List of stop words */
-	private List<String> conjunctionWords = new LinkedList<String>();
+	private List<String> conjunctionWords = new ArrayList<String>();
 
 	/**
 	 * Constructor for this class

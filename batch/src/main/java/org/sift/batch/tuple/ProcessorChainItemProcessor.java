@@ -15,7 +15,7 @@
  */
 package org.sift.batch.tuple;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sift.runtime.Tuple;
@@ -33,7 +33,7 @@ import org.springframework.batch.item.ItemProcessor;
 public class ProcessorChainItemProcessor implements ItemProcessor<Tuple,Tuple> {
 
 	/** The list of Processor instances to pass the Tuple through */
-	private List<Processor> processors = new LinkedList<Processor>();
+	private List<Processor> processors = new ArrayList<Processor>();
 		
 	/**
 	 * Interface method implementation. Subjects the specified Tuple through a set of configured {@link Processor} instances, 

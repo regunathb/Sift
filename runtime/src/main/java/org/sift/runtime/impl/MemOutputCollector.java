@@ -16,7 +16,7 @@
 package org.sift.runtime.impl;
 
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sift.runtime.Tuple;
@@ -31,7 +31,7 @@ import org.sift.runtime.spi.OutputCollector;
 public class MemOutputCollector implements OutputCollector {
 
 	/** List of Tuple instances emitted to this OutputCollector */
-	private List<Tuple> emittedTuples = new LinkedList<Tuple>();
+	private List<Tuple> emittedTuples = new ArrayList<Tuple>();
 	
 	/**
 	 * Interface method implementation. Collects the emitted Tuple in an in-memory collection

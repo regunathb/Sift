@@ -17,7 +17,7 @@ package org.sift.runtime.impl;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -64,7 +64,7 @@ public class LuceneWordSplitterProcessor implements Processor {
 	public void process(Tuple tuple, OutputCollector collector) {
 		Tuple returnTuple = new Tuple(tuple.getKey());
 		for (Object line : tuple.getValues()) {
-			List<String> tokensList = new LinkedList<String>();
+			List<String> tokensList = new ArrayList<String>();
 			try {
 				TokenStream stream = this.analyzer.tokenStream(null, new StringReader(((String)line).toLowerCase()));
 				while (stream.incrementToken()) { 
