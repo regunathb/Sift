@@ -33,8 +33,8 @@ public class WordSplitterProcessor implements Processor {
 	private int nGram = StopWords.DEFAULT_N_GRAM;
 			
 	/** Additional stop words, if any */
-	private StopWords stopWords;	
-
+	private StopWords stopWords;
+	
 	/**
 	 * Interface method implementation. Splits the string values in the specified Tuple into independent words
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)

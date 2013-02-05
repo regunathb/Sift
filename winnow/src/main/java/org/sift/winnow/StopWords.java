@@ -39,15 +39,15 @@ public class StopWords {
 	/** List of stop words */	
 	private static final String[] STOP_WORDS = {
 		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
-		"/","\\",",",".","<",">","!","%","$","#","@","-","+","//","\\\\",
+		"/","\\","\\n",",",".","<",">","!","&","*","%","$","#","@","-","+","//","\\\\","(",")",
 		"&amp;","&quot;",
 	};
 	
 	/** List of conjunctions */
 	private static final String[] CONJUNCTIONS = {
-		"or","in","on","at","by","of","if","it","my","to","be","as","is",		
-		"was","the","his","her","you","for","and","are","but",
-		"this","with","that","they","these",		
+		"or","in","on","at","by","of","if","it","my","to","be","as","is","so","go","an","he",		
+		"was","the","his","her","you","for","and","are","but","its","has","too","all",
+		"this","with","that","they","these","been","will",		
 	};
 	
 	/** List of stop words */
@@ -80,7 +80,7 @@ public class StopWords {
 		} 
 		// check if it is a conjunction word, but is at the start (or at the end)
 		String[] words = word.split(WORD_BOUNDARY);
-		if (this.conjunctionWords.contains(words[0]) || this.conjunctionWords.contains(words[words.length - 1])) {
+		if (this.stopWords.contains(words[0]) || this.stopWords.contains(words[words.length - 1])) {
 			return true;
 		}
 		return false;
