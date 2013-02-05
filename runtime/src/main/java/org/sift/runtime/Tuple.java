@@ -15,6 +15,7 @@
  */
 package org.sift.runtime;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -81,8 +82,9 @@ public class Tuple {
 	public List<Object> getValues() {
 		return this.values;
 	}
-	public void setValues(List<Object> values) {
-		this.values = values;
+	public void setValues(Object... values) {
+		this.values.clear();
+		Collections.addAll(this.values, values);
 	}	
 	
 }

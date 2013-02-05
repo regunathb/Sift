@@ -80,14 +80,8 @@ public class SVGImageWriter<S extends DisplayTag> extends ImageFileWriter<S> {
 			
 				String style="";
 				Color c = tag.getFill();
-				if(c==null) {
-					c = displayTagCloud.getFillColor();
-				}
 				style+="fill:"+(c==null?"none":toRGB(c))+";";
 				c = tag.getStroke();
-				if(c==null) {
-					c = displayTagCloud.getStrokeColor();
-				}
 				style+="stroke:"+ (c==null ? "none" : toRGB(c)) + ";";
 				style+="stroke-width:"+ tag.getLineHeight() + ";";
 				w.writeAttribute("style", style);

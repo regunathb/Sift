@@ -28,7 +28,7 @@ import java.net.URL;
 public class Tag {
 	
 	/** Default weight associated for this Tag, if none is specified*/
-	private static final int DEFAULT_WEIGHT = 1;
+	public static final int DEFAULT_WEIGHT = 1;
 	
 	// Mandatory attributes
 	/** The display text for this tag*/

@@ -47,9 +47,7 @@ public abstract class TagCloud <T extends Tag> {
 	 * @param tag the Tag to be added
 	 */
 	public void addTag(T tag) {
-		if (!this.tagsList.contains(tag)) {
-			this.tagsList.add(tag);
-		}
+		this.tagsList.add(tag);
 	}	
 		
 	/**

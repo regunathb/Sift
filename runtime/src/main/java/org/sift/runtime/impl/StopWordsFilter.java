@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sift.winnow;
+package org.sift.runtime.impl;
 
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
+import org.sift.winnow.StopWords;
 
 
 /**

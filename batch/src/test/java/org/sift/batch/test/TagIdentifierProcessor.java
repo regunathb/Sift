@@ -47,15 +47,17 @@ public class TagIdentifierProcessor  implements Processor {
 		Object[] values = tuple.getValues().toArray();
 		String tag = (String)values[0];
 		for (int i = 1; i < values.length; i++) {
-			Tuple returnTuple = new Tuple(tag + Tuple.KEY_SEP_CHAR + (String)values[i]);
-			int wordsLength = WordSplitterProcessor.getWordsLength((String)values[i]);
-			String weight = this.getWordWeights().get(String.valueOf(wordsLength));
-			if (weight == null) {
-				// assign the default weight
-				weight = DEFAULT_WEIGHT;
+			if (!((String)values[i]).startsWith(tag)) { // ignore Tuple values that start with the Tag
+				Tuple returnTuple = new Tuple(tag + Tuple.KEY_SEP_CHAR + (String)values[i]);
+				int wordsLength = WordSplitterProcessor.getWordsLength((String)values[i]);
+				String weight = this.getWordWeights().get(String.valueOf(wordsLength));
+				if (weight == null) {
+					// assign the default weight
+					weight = DEFAULT_WEIGHT;
+				}
+				returnTuple.addValue(Integer.valueOf(weight));
+				collector.emit(returnTuple);		
 			}
-			returnTuple.addValue(weight);
-			collector.emit(returnTuple);			
 		}
 	}
 	

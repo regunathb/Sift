@@ -46,7 +46,7 @@ public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTa
 				Tuple t = this.collector.getEmittedTuples().get(0);
 				tupleValues = this.getSubjectAndTag(t.getKey());
 				if (tupleValues[0].equals(tagCloud.getSubject())) {
-					tagCloud.addTag(new DisplayTag(this.getSubjectAndTag(t.getKey())[1], Integer.parseInt((String)t.getValues().get(0))));
+					tagCloud.addTag(new DisplayTag(this.getSubjectAndTag(t.getKey())[1], (Integer)t.getValues().get(0)));
 					this.collector.getEmittedTuples().remove(0);
 				} else {
 					break;

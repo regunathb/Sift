@@ -15,14 +15,12 @@
  */
 package org.sift.tagcloud.ui;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -45,22 +43,19 @@ import org.trpr.platform.core.PlatformException;
 public class DisplayTagCloud<S extends DisplayTag> extends TagCloud<S> {
 
 	/** Defaults for the display elements */
-	private static final Color FILL_COLOR = Color.YELLOW;
-	private static final Color STROKE_COLOR = Color.RED;
-	private static final int BIGGEST_FONT_SIZE = 72;
-	private static final int SMALLEST_FONT_SIZE = 10;
-	private static final String FONT_FAMILY = "Courier";
-	private static final boolean NO_ROTATE = false;
+	private static final int BIGGEST_FONT_SIZE = 120;
+	private static final int SMALLEST_FONT_SIZE = 20;
+	private static final String FONT_FAMILY = "Serif";
+	private static final boolean ROTATE_TAGS = true;
 	private static final int DELTA_DEGREE = 10;
 	private static final double DELTA_RADIUS = 10.0;
+	private static final int BORDER = 2;
 
 	/** Display elements initialized to defaults */
 	private int biggestFontSize = BIGGEST_FONT_SIZE;
 	private int smallestFontSize = SMALLEST_FONT_SIZE;
-	private Color fillColor = FILL_COLOR;
-	private Color strokeColor = STROKE_COLOR;
 	private String fontFamily = FONT_FAMILY;
-	private boolean rotateTags = NO_ROTATE;
+	private boolean rotateTags = ROTATE_TAGS;
 	private Rectangle2D imageBounds = new Rectangle2D.Double(0, 0, 0, 0);
 	private Integer preferredImageWidth;
 
@@ -117,8 +112,7 @@ public class DisplayTagCloud<S extends DisplayTag> extends TagCloud<S> {
 			TextLayout textLayout = new TextLayout(tag.getDisplayText(), font, frc);
 			Shape shape = textLayout.getOutline(null);
 			if (this.isRotateTags() && this.random.nextBoolean()) {
-				AffineTransform rotate = AffineTransform
-						.getRotateInstance(Math.PI / 2.0);
+				AffineTransform rotate = AffineTransform.getRotateInstance(-Math.PI / 2.0); // negative value to rotate anti-clockwise
 				shape = rotate.createTransformedShape(shape);
 			}
 			Rectangle2D bounds = shape.getBounds2D();
@@ -197,76 +191,50 @@ public class DisplayTagCloud<S extends DisplayTag> extends TagCloud<S> {
 		double maxx = -Integer.MAX_VALUE;
 		double maxy = -Integer.MAX_VALUE;
 		for (DisplayTag tag : this.getTagsList()) {
-			minx = Math.min(minx, tag.getBounds().getMinX() + 1);
-			miny = Math.min(miny, tag.getBounds().getMinY() + 1);
-			maxx = Math.max(maxx, tag.getBounds().getMaxX() + 1);
-			maxy = Math.max(maxy, tag.getBounds().getMaxY() + 1);
+			minx = Math.min(minx, tag.getBounds().getMinX());
+			miny = Math.min(miny, tag.getBounds().getMinY());
+			maxx = Math.max(maxx, tag.getBounds().getMaxX());
+			maxy = Math.max(maxy, tag.getBounds().getMaxY());
 		}
 		AffineTransform shiftTr = AffineTransform.getTranslateInstance(-minx,-miny);
 		for (DisplayTag tag : this.getTagsList()) {
 			tag.setShape(shiftTr.createTransformedShape(tag.getShape()));
 			tag.setBounds(tag.getShape().getBounds2D());
 		}
-		this.imageBounds = new Rectangle2D.Double(0, 0, maxx - minx, maxy - miny);
+		this.imageBounds = new Rectangle2D.Double(0, 0, maxx - minx + BORDER, maxy - miny + BORDER);
 	}
 
-	/** Start Getter/Setter methods */
-	public Color getFillColor() {
-		return this.fillColor;
-	}
-
-	public void setFillColor(Color fillColor) {
-		this.fillColor = fillColor;
-	}
-
-	public Color getStrokeColor() {
-		return this.strokeColor;
-	}
-
-	public void setStrokeColor(Color strokeColor) {
-		this.strokeColor = strokeColor;
-	}
-
+	/** Start Getter/Setter methods */	
 	public String getFontFamily() {
 		return this.fontFamily;
 	}
-
 	public void setFontFamily(String fontFamily) {
 		this.fontFamily = fontFamily;
 	}
-
 	public boolean isRotateTags() {
 		return this.rotateTags;
 	}
-
 	public void setRotateTags(boolean rotateTags) {
 		this.rotateTags = rotateTags;
 	}
-
 	public int getBiggestFontSize() {
 		return this.biggestFontSize;
 	}
-
 	public void setBiggestFontSize(int biggestFontSize) {
 		this.biggestFontSize = biggestFontSize;
 	}
-
 	public int getSmallestFontSize() {
 		return this.smallestFontSize;
 	}
-
 	public void setSmallestFontSize(int smallestFontSize) {
 		this.smallestFontSize = smallestFontSize;
 	}
-
 	public Rectangle2D getImageBounds() {
 		return this.imageBounds;
 	}
-
 	public Integer getPreferredImageWidth() {
 		return this.preferredImageWidth;
 	}
-
 	public void setPreferredImageWidth(Integer preferredImageWidth) {
 		this.preferredImageWidth = preferredImageWidth;
 	}

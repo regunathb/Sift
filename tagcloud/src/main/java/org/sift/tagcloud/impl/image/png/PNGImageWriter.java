@@ -71,17 +71,11 @@ public class PNGImageWriter<S extends DisplayTag> extends ImageFileWriter<S> {
 		
 		for(DisplayTag tag : displayTagCloud.getTagsList()) {
 			Color c = tag.getFill();
-			if(c==null) { 
-				c = displayTagCloud.getFillColor();
-			}
 			if(c!=null) {
 				g.setColor(c);
 				g.fill(tag.getShape());
 			}			
 			c=tag.getStroke();
-			if(c==null) {
-				c =displayTagCloud.getStrokeColor();
-			}
 			if(c!=null) {
 				Stroke old=g.getStroke();
 				g.setStroke(new BasicStroke(tag.getLineHeight(),BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));

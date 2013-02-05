@@ -18,6 +18,7 @@ package org.sift.runtime.impl;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
+import org.sift.winnow.StopWords;
 
 /**
  * The <code>WordSplitterProcessor</code> is an implementation of the {@link Processor} that splits {@link Tuple} values as words following standard
@@ -28,8 +29,11 @@ import org.sift.runtime.spi.Processor;
  */
 public class WordSplitterProcessor implements Processor {
 	
-	/** The regex used to identify word boundaries */
-	private static final String WORD_BOUNDARY = "\\s+";
+	/** The n-grams to extract */
+	private int nGram = StopWords.DEFAULT_N_GRAM;
+			
+	/** Additional stop words, if any */
+	private StopWords stopWords;	
 
 	/**
 	 * Interface method implementation. Splits the string values in the specified Tuple into independent words
@@ -38,9 +42,19 @@ public class WordSplitterProcessor implements Processor {
 	public void process(Tuple tuple, OutputCollector collector) {
 		Tuple returnTuple = new Tuple(tuple.getKey());
 		for (Object line : tuple.getValues()) {
-			String[] tokens = ((String)line).toLowerCase().split(WORD_BOUNDARY);
-			for (String token : tokens) {
-				returnTuple.addValue(token);
+			String[] tokens = ((String)line).toLowerCase().split(StopWords.WORD_BOUNDARY);
+			for (int i = 0; i < tokens.length; i++) {
+				StringBuffer tokenBuffer = new StringBuffer();
+				for (int j = 0; j < this.getnGram(); j++) {
+					if (i+j <  tokens.length) {
+						tokenBuffer.append(tokens[i+j]);
+						tokenBuffer.append(StopWords.WORD_BOUNDARY_STRING);
+					}
+					String word = tokenBuffer.toString().trim();
+					if (this.getStopWords() != null && !this.getStopWords().isStopWord(word)) {
+						returnTuple.addValue(tokenBuffer.toString().trim());
+					}
+				}
 			}			
 		}
 		collector.emit(returnTuple);
@@ -52,6 +66,21 @@ public class WordSplitterProcessor implements Processor {
 	 * @return numbers of words found in the specified string
 	 */
 	public static int getWordsLength(String words) {
-		return words.split(WORD_BOUNDARY).length;
+		return words.split(StopWords.WORD_BOUNDARY).length;
 	}
+	
+	/** Getter/Setter for values */
+	public int getnGram() {
+		return this.nGram;
+	}
+	public void setnGram(int nGram) {
+		this.nGram = nGram;
+	}
+	public StopWords getStopWords() {
+		return this.stopWords;
+	}
+	public void setStopWords(StopWords stopWords) {
+		this.stopWords = stopWords;
+	}
+	
 }

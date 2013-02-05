@@ -120,9 +120,6 @@ public class PostscriptImageWriter <S extends DisplayTag> extends ImageFileWrite
 					}
 				
 				Color c = tag.getFill();
-				if(c==null) {
-					c = displayTagCloud.getFillColor();
-				}				
 				out.print(c.getRed()/255.0);
 				out.print(' ');
 				out.print(c.getGreen()/255.0);
@@ -132,9 +129,6 @@ public class PostscriptImageWriter <S extends DisplayTag> extends ImageFileWrite
 				out.print(" setrgbcolor fill");
 
 				c = tag.getStroke();
-				if(c==null) {
-					c = displayTagCloud.getStrokeColor();
-				}				
 				out.print(c.getRed()/255.0);
 				out.print(' ');
 				out.print(c.getGreen()/255.0);

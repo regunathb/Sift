@@ -27,39 +27,46 @@ import java.util.List;
  */
 public class StopWords {
 	
-	/** List of stop words */	
-	private static List<String> STOP_WORDS = new LinkedList<String>();
+	/** The regex used to identify word boundaries */
+	public static final String WORD_BOUNDARY = "\\s+";
+
+	/** Word boundary for n-grams*/
+	public static final String WORD_BOUNDARY_STRING = " ";	
 	
-	static {
-		STOP_WORDS.add("is");
-		STOP_WORDS.add("was");
-		STOP_WORDS.add("or");
-		STOP_WORDS.add("in");
-		STOP_WORDS.add("on");
-		STOP_WORDS.add("at");
-		STOP_WORDS.add("the");
-		STOP_WORDS.add("this");
-		STOP_WORDS.add("his");
-		STOP_WORDS.add("her");
-		STOP_WORDS.add("by");
-		STOP_WORDS.add("of");
-		STOP_WORDS.add("if");
-		STOP_WORDS.add("with");
-		STOP_WORDS.add("for");
-		STOP_WORDS.add("it");		
-		STOP_WORDS.add("you");		
-		STOP_WORDS.add("my");		
-		STOP_WORDS.add("that");		
-		STOP_WORDS.add("they");		
-		STOP_WORDS.add("and");		
-		STOP_WORDS.add("to");		
-		STOP_WORDS.add("are");		
-		STOP_WORDS.add("but");		
-		STOP_WORDS.add("be");		
-		STOP_WORDS.add("as");		
-		STOP_WORDS.add("these");	
-		STOP_WORDS.add("&amp;");
-		STOP_WORDS.add("&quot;");
+	/** The default value for n-grams*/
+	public static final int DEFAULT_N_GRAM = 1;
+	
+	/** List of stop words */	
+	private static final String[] STOP_WORDS = {
+		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+		"/","\\",",",".","<",">","!","%","$","#","@","-","+","//","\\\\",
+		"&amp;","&quot;",
+	};
+	
+	/** List of conjunctions */
+	private static final String[] CONJUNCTIONS = {
+		"or","in","on","at","by","of","if","it","my","to","be","as","is",		
+		"was","the","his","her","you","for","and","are","but",
+		"this","with","that","they","these",		
+	};
+	
+	/** List of stop words */
+	private List<String> stopWords = new LinkedList<String>();
+
+	/** List of stop words */
+	private List<String> conjunctionWords = new LinkedList<String>();
+
+	/**
+	 * Constructor for this class
+	 */
+	public StopWords() {
+		for (String word : STOP_WORDS) {
+			this.stopWords.add(word);
+		}
+		for (String word : CONJUNCTIONS) {
+			this.stopWords.add(word);
+			this.conjunctionWords.add(word);
+		}		
 	}
 	
 	/**
@@ -68,10 +75,15 @@ public class StopWords {
 	 * @return true if it is a stop word, false otherwise
 	 */
 	public boolean isStopWord(String word) {
-		if (word.trim().length() <= 1) {
+		if (this.stopWords.contains(word)) {
+			return true;
+		} 
+		// check if it is a conjunction word, but is at the start (or at the end)
+		String[] words = word.split(WORD_BOUNDARY);
+		if (this.conjunctionWords.contains(words[0]) || this.conjunctionWords.contains(words[words.length - 1])) {
 			return true;
 		}
-		return StopWords.STOP_WORDS.contains(word);
+		return false;
 	}
 	
 	/**
@@ -79,7 +91,7 @@ public class StopWords {
 	 * @param words List containing stop words
 	 */
 	public void setStopWords(List<String> words) {
-		StopWords.STOP_WORDS = words;
+		this.stopWords = words;
 	}
 	
 }

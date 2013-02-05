@@ -18,6 +18,8 @@ package org.sift.tagcloud.ui;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.sift.tagcloud.Tag;
 
@@ -29,6 +31,21 @@ import org.sift.tagcloud.Tag;
  * @version 1.0, 25 Jan 2013
  */
 public class DisplayTag extends Tag {
+	
+	/** Default list of display tag colors*/
+	private static final List<Color> DEFAULT_FILL_COLORS = new LinkedList<Color>();
+	
+	/** Initialize with a list of default fill colors*/
+	static {
+		DEFAULT_FILL_COLORS.add(Color.BLUE);
+		DEFAULT_FILL_COLORS.add(Color.CYAN);
+		DEFAULT_FILL_COLORS.add(Color.GRAY);
+		DEFAULT_FILL_COLORS.add(Color.GREEN);
+		DEFAULT_FILL_COLORS.add(Color.MAGENTA);
+		DEFAULT_FILL_COLORS.add(Color.ORANGE);
+		DEFAULT_FILL_COLORS.add(Color.PINK);
+		DEFAULT_FILL_COLORS.add(Color.YELLOW);
+	}
 	
 	/** The default line height*/
 	private static final float DEFAULT_LINE_HEIGHT = 1.0f;
@@ -53,10 +70,12 @@ public class DisplayTag extends Tag {
 	
 	/** Constructors*/
 	public DisplayTag(String displayText) {
-		super(displayText);
+		this(displayText, Tag.DEFAULT_WEIGHT);
 	}	
 	public DisplayTag(String displayText, int weight) {
 		super(displayText, weight);
+		this.setFill(DEFAULT_FILL_COLORS.get((int)(Math.random() * DEFAULT_FILL_COLORS.size())));
+		this.setStroke(this.getFill().darker());
 	}	
 	
 	/** Start Getter/Setter methods*/

@@ -17,6 +17,8 @@ package org.sift.runtime.impl;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -26,6 +28,7 @@ import org.apache.lucene.util.Version;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
+import org.sift.winnow.StopWords;
 import org.trpr.platform.core.impl.logging.LogFactory;
 import org.trpr.platform.core.spi.logging.Logger;
 
@@ -45,8 +48,14 @@ public class LuceneWordSplitterProcessor implements Processor {
 	/** The default Analyzer*/
 	private static final Analyzer DEFAULT_ANALYZER = new StandardAnalyzer(Version.LUCENE_CURRENT);
 	
+	/** The n-grams to extract */
+	private int nGram = StopWords.DEFAULT_N_GRAM;
+	
 	/** The Analyzer to use for identifying words*/
 	private Analyzer analyzer = DEFAULT_ANALYZER;
+	
+	/** Additional stop words, if any */
+	private StopWords stopWords;
 
 	/**
 	 * Interface method implementation. Emits words as {@link Tuple} values by applying the configured Lucene {@link Analyzer} on specified {@link Tuple} values
@@ -55,15 +64,29 @@ public class LuceneWordSplitterProcessor implements Processor {
 	public void process(Tuple tuple, OutputCollector collector) {
 		Tuple returnTuple = new Tuple(tuple.getKey());
 		for (Object line : tuple.getValues()) {
-			TokenStream stream;
+			List<String> tokensList = new LinkedList<String>();
 			try {
-				stream = this.analyzer.tokenStream(null, new StringReader(((String)line).toLowerCase()));
+				TokenStream stream = this.analyzer.tokenStream(null, new StringReader(((String)line).toLowerCase()));
 				while (stream.incrementToken()) { 
-					returnTuple.addValue(((TermAttribute)stream.getAttribute(TermAttribute.class)).term());
+					tokensList.add(((TermAttribute)stream.getAttribute(TermAttribute.class)).term());
 				}			
 			} catch (IOException e) {
 				LOGGER.error("Error parsing input line : " + line,e);
 			}
+			String[] tokens = tokensList.toArray(new String[0]);
+			for (int i = 0; i < tokens.length; i ++) {
+				StringBuffer tokenBuffer = new StringBuffer();
+				for (int j = 0; j < this.getnGram(); j++) {
+					if (i+j <  tokens.length) {
+						tokenBuffer.append(tokens[i+j]);
+						tokenBuffer.append(StopWords.WORD_BOUNDARY_STRING);
+					}
+					String word = tokenBuffer.toString().trim();
+					if (this.getStopWords() != null && !this.getStopWords().isStopWord(word)) {
+						returnTuple.addValue(tokenBuffer.toString().trim());
+					}
+				}
+			}						
 		}
 		collector.emit(returnTuple);
 	}
@@ -74,6 +97,18 @@ public class LuceneWordSplitterProcessor implements Processor {
 	}
 	public void setAnalyzer(Analyzer analyzer) {
 		this.analyzer = analyzer;
+	}
+	public int getnGram() {
+		return this.nGram;
+	}
+	public void setnGram(int nGram) {
+		this.nGram = nGram;
+	}
+	public StopWords getStopWords() {
+		return this.stopWords;
+	}
+	public void setStopWords(StopWords stopWords) {
+		this.stopWords = stopWords;
 	}
 	
 }

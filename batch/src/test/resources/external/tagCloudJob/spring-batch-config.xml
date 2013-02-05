@@ -28,7 +28,7 @@
 	
 	<bean id="tagJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="tagJobDetailBean" />
-		<property name="cronExpression" value="0 0/20 * * * ?" />
+		<property name="cronExpression" value="0 0/60 * * * ?" />
 	</bean>
 
 	<bean
@@ -60,7 +60,7 @@
 	<batch:job id="tagCloudJob" incrementer="incrementer">
 		<batch:step id="tagStep" next="tagCloudStep">
 			<batch:tasklet task-executor="tagJobTaskExecutor">
-				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="1000"/>
+				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="10000"/>
 			</batch:tasklet>
 		</batch:step>
 		<batch:step id="tagCloudStep">
@@ -78,14 +78,14 @@
         </property>		
 	</bean>	
 	<bean id="inputFileResource" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt"/>
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt"/>
 	</bean>	
 	
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
 		<property name="processors">
 			<list>	
-				<bean class="org.sift.runtime.impl.LuceneWordSplitterProcessor" />
-				<bean class="org.sift.winnow.StopWordsFilter">
+				<bean class="org.sift.runtime.impl.WordSplitterProcessor">
+					<property name="nGram" value="4"/>
 			 		<property name="stopWords">
 			            <bean class="org.sift.winnow.StopWords" />
 			        </property>							
@@ -94,8 +94,9 @@
 					<property name="wordWeights">
 						<map>
 							<entry key="1" value="1" />
-							<entry key="2" value="2" />
-							<entry key="3" value="4" />
+							<entry key="2" value="4" />
+							<entry key="3" value="8" />
+							<entry key="4" value="16" />
 						</map>
 					</property>	
 				</bean>
@@ -119,7 +120,7 @@
 		<property name="collector" ref="collector"/>
 	</bean>	
 	<bean id="tagCloudProcessor" class="org.sift.batch.tag.TagCloudProcessor">
-		<property name="maxTags" value="100"/>
+		<property name="maxTags" value="50"/>
 	</bean>	
 	<bean id="tagCloudWriter" class="org.sift.batch.tag.TagCloudWriter">
 		<property name="persistenceService" ref="fileWriter"/>

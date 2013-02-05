@@ -54,6 +54,11 @@
 			<artifactId>runtime</artifactId>
 			<version>1.0.0</version>
 		</dependency>	
+		<dependency>
+			<groupId>org.sift</groupId>
+			<artifactId>winnow</artifactId>
+			<version>1.0.0</version>
+		</dependency>				
 		<!-- Third party dependencies -->
 		<dependency>
 			<groupId>org.trpr</groupId>

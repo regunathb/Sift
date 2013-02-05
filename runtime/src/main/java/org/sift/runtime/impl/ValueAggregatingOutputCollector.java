@@ -63,15 +63,17 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 			Collections.addAll(this.getEmittedTuples(), tuples);
 			List<Tuple> sortMergedTuples = this.shuffler.sort(this.getEmittedTuples());
 			Tuple[] aggregatedTuples = new Tuple[sortMergedTuples.size()];
-			// now aggregate the values treating them as type double
-			for (int i=0; i < aggregatedTuples.length; i++) {
-				Tuple aggregatedValuesTuple = new Tuple(sortMergedTuples.get(i).getKey());
+			// now aggregate the values treating them as type integer
+			int count = 0;
+			for (Tuple sortMergedTuple : sortMergedTuples) {
+				Tuple aggregatedValuesTuple = new Tuple(sortMergedTuple.getKey());
 				Integer aggregateValue = 0;
-				for (Object value : sortMergedTuples.get(i).getValues()) {
-					aggregateValue += Integer.parseInt((String)value);
+				for (Object value : sortMergedTuple.getValues()) {
+					aggregateValue += (Integer)value;
 				}
-				aggregatedValuesTuple.addValue(String.valueOf(aggregateValue));
-				aggregatedTuples[i] = aggregatedValuesTuple;
+				aggregatedValuesTuple.addValue(aggregateValue);
+				aggregatedTuples[count] = aggregatedValuesTuple;	
+				count++;
 			}
 			this.delegate.setTuples(aggregatedTuples);
 		}	
