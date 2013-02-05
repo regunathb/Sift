@@ -17,7 +17,7 @@ package org.sift.batch.tag;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.sift.tagcloud.ui.DisplayTag;
@@ -46,7 +46,7 @@ public class TagCloudProcessor implements ItemProcessor<DisplayTagCloud<DisplayT
 	 */
 	public DisplayTagCloud<DisplayTag> process(DisplayTagCloud<DisplayTag> tagCloud) throws Exception {
 		Collections.sort(tagCloud.getTagsList(), this);
-		List<DisplayTag> finalDisplayTags = new ArrayList<DisplayTag>();
+		List<DisplayTag> finalDisplayTags = new LinkedList<DisplayTag>();
 		int maxSize = Math.min(tagCloud.getTagsList().size(), this.getMaxTags());
 		for (int i=0; i < maxSize; i++) {
 			finalDisplayTags.add(tagCloud.getTagsList().get(i));

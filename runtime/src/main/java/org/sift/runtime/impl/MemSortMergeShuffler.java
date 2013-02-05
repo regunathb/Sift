@@ -17,7 +17,7 @@ package org.sift.runtime.impl;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.sift.runtime.Tuple;
@@ -39,7 +39,7 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 	 */
 	public List<Tuple> sort(List<Tuple> tuples) {
 		Collections.sort(tuples, this);
-		List<Tuple> sortMergeTuples = new ArrayList<Tuple>();
+		List<Tuple> sortMergeTuples = new LinkedList<Tuple>();
 		Tuple mergedTuple = null;
 		for (Tuple tuple : tuples) {
 			if (mergedTuple == null || !mergedTuple.getKey().equals(tuple.getKey())) {

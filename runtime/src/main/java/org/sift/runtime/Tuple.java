@@ -16,7 +16,7 @@
 package org.sift.runtime;
 
 import java.util.Collections;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,7 +42,7 @@ public class Tuple {
 	private String key;
 	
 	/** List of values held by this Tuple */
-	private List<Object> values = new ArrayList<Object>();
+	private List<Object> values = new LinkedList<Object>();
 	
 	/** Constructors*/
 	public Tuple(String key) {

@@ -18,7 +18,7 @@ package org.sift.tagcloud.ui;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.sift.tagcloud.Tag;
@@ -33,7 +33,7 @@ import org.sift.tagcloud.Tag;
 public class DisplayTag extends Tag {
 	
 	/** Default list of display tag colors*/
-	private static final List<Color> DEFAULT_FILL_COLORS = new ArrayList<Color>();
+	private static final List<Color> DEFAULT_FILL_COLORS = new LinkedList<Color>();
 	
 	/** Initialize with a list of default fill colors*/
 	static {

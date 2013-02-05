@@ -16,7 +16,7 @@
 package org.sift.batch.tuple;
 
 import java.util.Collections;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.sift.runtime.Tuple;
@@ -40,7 +40,7 @@ public class TupleWriter implements ItemWriter<Tuple> {
 	 * @see org.springframework.batch.item.ItemWriter#write(java.util.List)
 	 */
 	public void write(List<? extends Tuple> tuples) throws Exception {
-		List<Tuple> containedTuples = new ArrayList<Tuple>();
+		List<Tuple> containedTuples = new LinkedList<Tuple>();
 		for (Tuple t : tuples) {
 			if (t.getKey().equals(Tuple.UNDEFINED_KEY)) { // it is an collection of Tuple instances
 				Collections.addAll(containedTuples, t.getValues().toArray(new Tuple[0]));				

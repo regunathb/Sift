@@ -15,7 +15,7 @@
  */
 package org.sift.tagcloud;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.trpr.platform.core.PlatformException;
@@ -32,7 +32,7 @@ public abstract class TagCloud <T extends Tag> {
 	private String subject;
 	
 	/** The list of tags in this tag cloud for the given subject*/
-	private List<T> tagsList  = new ArrayList<T>();
+	private List<T> tagsList  = new LinkedList<T>();
 	
 	/**
 	 * Constructor for this class.
