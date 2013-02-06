@@ -29,8 +29,6 @@ import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
 import org.sift.winnow.StopWords;
-import org.trpr.platform.core.impl.logging.LogFactory;
-import org.trpr.platform.core.spi.logging.Logger;
 
 /**
  * The <code>LuceneWordSplitterProcessor</code> is an implementation of the {@link Processor} that splits {@link Tuple} values as words using the Apache
@@ -41,9 +39,6 @@ import org.trpr.platform.core.spi.logging.Logger;
  */
 
 public class LuceneWordSplitterProcessor implements Processor {
-	
-	/** Logger instance for this class*/
-	private static final Logger LOGGER = LogFactory.getLogger(LuceneWordSplitterProcessor.class);
 	
 	/** The default Analyzer*/
 	private static final Analyzer DEFAULT_ANALYZER = new StandardAnalyzer(Version.LUCENE_CURRENT);
@@ -71,7 +66,7 @@ public class LuceneWordSplitterProcessor implements Processor {
 					tokensList.add(((TermAttribute)stream.getAttribute(TermAttribute.class)).term());
 				}			
 			} catch (IOException e) {
-				LOGGER.error("Error parsing input line : " + line,e);
+				throw new RuntimeException("Error parsing input line : " + line,e);
 			}
 			String[] tokens = tokensList.toArray(new String[0]);
 			for (int i = 0; i < tokens.length; i ++) {
