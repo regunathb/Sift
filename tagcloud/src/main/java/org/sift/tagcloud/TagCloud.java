@@ -18,8 +18,6 @@ package org.sift.tagcloud;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.trpr.platform.core.PlatformException;
-
 /**
  * The <code>TagCloud</code> is an aggregate of {@link Tag} instances for a given subject.
  * 
@@ -70,7 +68,7 @@ public abstract class TagCloud <T extends Tag> {
 	 * Lays out this tag cloud using the contained tags. 
 	 * @throws PlatformException in case of errors laying out the tag cloud.
 	 */
-	public abstract void layoutTagCloud() throws PlatformException;
+	public abstract void layoutTagCloud() throws RuntimeException;
 	
 	/** Getter/Setter methods*/
 	public List<T> getTagsList() {

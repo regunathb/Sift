@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Random;
 
 import org.sift.tagcloud.TagCloud;
-import org.trpr.platform.core.PlatformException;
 
 /**
  * The <code>DisplayTagCloud</code> is a sub-type of {@link TagCloud} suited for
@@ -78,7 +77,7 @@ public class DisplayTagCloud<S extends DisplayTag> extends TagCloud<S> {
 	 * 
 	 * @see org.sift.tagcloud.TagCloud#layoutTagCloud()
 	 */
-	public void layoutTagCloud() throws PlatformException {
+	public void layoutTagCloud() throws RuntimeException {
 
 		if (this.getTagsList().isEmpty()) {
 			return;

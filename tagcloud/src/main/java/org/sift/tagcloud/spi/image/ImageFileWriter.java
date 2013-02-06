@@ -20,9 +20,6 @@ import java.io.IOException;
 
 import org.sift.tagcloud.ui.DisplayTag;
 import org.sift.tagcloud.ui.DisplayTagCloud;
-import org.trpr.platform.core.PlatformException;
-import org.trpr.platform.core.impl.logging.LogFactory;
-import org.trpr.platform.core.spi.logging.Logger;
 
 /**
  * The <code>ImageFileWriter</code> interface provides methods to write display tag clouds to specific image file types.
@@ -40,9 +37,6 @@ public abstract class ImageFileWriter<S extends DisplayTag> {
 	
 	/** The file extension separator char*/
 	public static final String FILE_EXTENSION_SEP = ".";
-	
-	/** Logger for this class*/
-	protected static final Logger LOGGER = LogFactory.getLogger(ImageFileWriter.class);
 	
 	/** The file type extension supported by this image writer*/
 	private String fileType;
@@ -66,9 +60,9 @@ public abstract class ImageFileWriter<S extends DisplayTag> {
 	 * @param displayTagCloud the DisplayTagCloud whose image is to be written to the specified file
 	 * @throws PlatformException in case of errors in writing the image file
 	 */
-	public void writeImageFile(String filePath, DisplayTagCloud<S> displayTagCloud) throws PlatformException {
+	public void writeImageFile(String filePath, DisplayTagCloud<S> displayTagCloud) throws RuntimeException {
 		if (!filePath.endsWith(this.getImageFileType())) {
-			throw new PlatformException("Invalid file path : " + filePath + ". Supported type is : " + this.getImageFileType());
+			throw new RuntimeException("Invalid file path : " + filePath + ". Supported type is : " + this.getImageFileType());
 		}
 		File file = new File(filePath);
 		if (file.exists()) {
@@ -77,8 +71,7 @@ public abstract class ImageFileWriter<S extends DisplayTag> {
 		try {
 			file.createNewFile();
 		} catch (IOException e) {
-			LOGGER.error("Error writing tag cloud image for : " + displayTagCloud.getSubject() + " to file : " + filePath, e);
-			throw new PlatformException("Error writing tag cloud image for : " + displayTagCloud.getSubject() + " to file : " + filePath);
+			throw new RuntimeException("Error writing tag cloud image for : " + displayTagCloud.getSubject() + " to file : " + filePath, e);
 		}
 		writeImageContents(file, displayTagCloud);
 	}
@@ -89,6 +82,6 @@ public abstract class ImageFileWriter<S extends DisplayTag> {
 	 * @param displayTagCloud the DisplayTagCloud whose image is to be written to the specified file
 	 * @throws PlatformException in case of errors in writing the image file
 	 */
-	protected abstract void writeImageContents(File file, DisplayTagCloud<S> displayTagCloud) throws PlatformException;
+	protected abstract void writeImageContents(File file, DisplayTagCloud<S> displayTagCloud) throws RuntimeException;
 	
 }

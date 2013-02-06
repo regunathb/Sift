@@ -17,7 +17,6 @@ package org.sift.tagcloud.spi.service;
 
 import org.sift.tagcloud.Tag;
 import org.sift.tagcloud.TagCloud;
-import org.trpr.platform.core.spi.persistence.PersistenceException;
 
 
 /**
@@ -33,7 +32,7 @@ public interface PersistenceService<T extends Tag, S extends TagCloud<T>> {
 	 * @param tagCloud the TagCloud to be persisted
 	 * @throws PersistenceException in case of persistence errors 
 	 */
-	public void persistTagCloud(S tagCloud) throws PersistenceException;
+	public void persistTagCloud(S tagCloud) throws RuntimeException;
 	
 	/**
 	 * Loads the specified TagClous from the underlying persistence store
@@ -41,6 +40,6 @@ public interface PersistenceService<T extends Tag, S extends TagCloud<T>> {
 	 * @return the loaded TagCloud
 	 * @throws PersistenceException in case of persistence errors 
 	 */
-	public S loadTagCloud(S tagCloud) throws PersistenceException;
+	public S loadTagCloud(S tagCloud) throws RuntimeException;
 	
 }

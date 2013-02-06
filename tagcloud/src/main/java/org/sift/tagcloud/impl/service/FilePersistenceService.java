@@ -24,8 +24,6 @@ import org.sift.tagcloud.spi.image.ImageFileWriter;
 import org.sift.tagcloud.spi.service.PersistenceService;
 import org.sift.tagcloud.ui.DisplayTag;
 import org.sift.tagcloud.ui.DisplayTagCloud;
-import org.trpr.platform.core.PlatformException;
-import org.trpr.platform.core.spi.persistence.PersistenceException;
 
 /**
  * The <code>FilePersistenceService</code> is an implementation of {@link PersistenceService} that writes the tag cloud as an image of suitable type
@@ -47,12 +45,12 @@ public class FilePersistenceService<T extends Tag, S extends TagCloud<T>> implem
 	 * @see org.sift.tagcloud.spi.service.PersistenceService#persistTagCloud(org.sift.tagcloud.TagCloud)
 	 */
 	@SuppressWarnings("unchecked")
-	public void persistTagCloud(S tagCloud) throws PersistenceException {
+	public void persistTagCloud(S tagCloud) throws RuntimeException {
 		if (tagCloud.getSubject() == null || tagCloud.getSubject().trim().length() == 0) {
-			throw new PersistenceException("Tag cloud's subject cannot be empty! File cannot be created with empty name.");
+			throw new RuntimeException("Tag cloud's subject cannot be empty! File cannot be created with empty name.");
 		}
 		if (!DisplayTagCloud.class.isAssignableFrom(tagCloud.getClass())) {
-			throw new PersistenceException("This service supports persisting only DisplayTagCloud instances. Specified TagCloud (Subject : " + tagCloud.getSubject() + ") is of type : " + tagCloud.getClass().getName());
+			throw new RuntimeException("This service supports persisting only DisplayTagCloud instances. Specified TagCloud (Subject : " + tagCloud.getSubject() + ") is of type : " + tagCloud.getClass().getName());
 		}
 		
 		// lay out the tag cloud
@@ -61,8 +59,8 @@ public class FilePersistenceService<T extends Tag, S extends TagCloud<T>> implem
 		// write the tag cloud image 
 		try {
 			this.imageWriter.writeImageFile(this.getTagCloudsDirectory() + File.separator + tagCloud.getSubject() + ImageFileWriter.FILE_EXTENSION_SEP + this.getFileType(), (DisplayTagCloud<DisplayTag>)tagCloud);
-		} catch (PlatformException pe) {
-			throw new PersistenceException("Error persisting tag cloud with subject : " + tagCloud.getSubject(),pe);
+		} catch (RuntimeException pe) {
+			throw new RuntimeException("Error persisting tag cloud with subject : " + tagCloud.getSubject(),pe);
 		}
 	}
 
@@ -70,7 +68,7 @@ public class FilePersistenceService<T extends Tag, S extends TagCloud<T>> implem
 	 * Interface method implementation. WARNING : Not implemented and throws an {@link UnsupportedOperationException} to the effect
 	 * @see org.sift.tagcloud.spi.service.PersistenceService#loadTagCloud(org.sift.tagcloud.TagCloud)
 	 */
-	public S loadTagCloud(S tagCloud) throws PersistenceException {
+	public S loadTagCloud(S tagCloud) throws RuntimeException {
 		throw new UnsupportedOperationException("Loading of tag clouds from image files is not supported!");
 	}
 	
@@ -82,9 +80,9 @@ public class FilePersistenceService<T extends Tag, S extends TagCloud<T>> implem
 	 * Sets the file type for persistence to one of the supported types by this class. For example {@link ImageFileWriter#PNG}, 
 	 * {@link ImageFileWriter#SVG}, {@link ImageFileWriter#POST_SCRIPT}
 	 * @param fileType the valid file type supported by this class
-	 * @throws PlatformException in case of unsupported file types
+	 * @throws RuntimeException in case of unsupported file types
 	 */
-	public void setFileType(String fileType) throws PlatformException {
+	public void setFileType(String fileType) throws RuntimeException {
 		this.imageWriter = ImageWriterFactory.getImageFileWriter(fileType);
 	}
 	public String getTagCloudsDirectory() {

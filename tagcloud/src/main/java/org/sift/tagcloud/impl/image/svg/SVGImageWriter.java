@@ -28,7 +28,6 @@ import javax.xml.stream.XMLStreamWriter;
 import org.sift.tagcloud.spi.image.ImageFileWriter;
 import org.sift.tagcloud.ui.DisplayTag;
 import org.sift.tagcloud.ui.DisplayTagCloud;
-import org.trpr.platform.core.PlatformException;
 
 /**
  * The <code>SVGImageWriter</code> is a sub-type of {@link ImageFileWriter} that stores tag clouds as SVG image files
@@ -48,7 +47,7 @@ public class SVGImageWriter<S extends DisplayTag> extends ImageFileWriter<S> {
 	 * Writes the specified DisplayCloud as a SVG image to the specified file location
 	 * @see org.sift.tagcloud.spi.image.ImageFileWriter#writeImageContents(java.io.File, org.sift.tagcloud.ui.DisplayTagCloud)
 	 */
-	protected void writeImageContents(File file, DisplayTagCloud<S> displayTagCloud) throws PlatformException {	
+	protected void writeImageContents(File file, DisplayTagCloud<S> displayTagCloud) throws RuntimeException {	
 		
 		final String SVG="http://www.w3.org/2000/svg";
 		final String XLINK="http://www.w3.org/1999/xlink";
@@ -128,8 +127,7 @@ public class SVGImageWriter<S extends DisplayTag> extends ImageFileWriter<S> {
 			fout.flush();
 			fout.close();
 		} catch (Exception e) {
-			LOGGER.error("Error writing output file for display cloud : " + displayTagCloud.getSubject() + " to file : " + file.getAbsolutePath(),e);
-			throw new PlatformException("Error writing output file for display cloud : " + displayTagCloud.getSubject() + " to file : " + file.getAbsolutePath(),e);
+			throw new RuntimeException("Error writing output file for display cloud : " + displayTagCloud.getSubject() + " to file : " + file.getAbsolutePath(),e);
 		}		
 		
 	}

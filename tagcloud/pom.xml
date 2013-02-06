@@ -48,12 +48,6 @@
 	</properties>
 
 	<dependencies>	
-		<!-- Third party dependencies -->
-		<dependency>
-			<groupId>org.trpr</groupId>
-			<artifactId>platform-core</artifactId>
-			<version>1.0.0</version>
-		</dependency>
 	</dependencies>
 	
 	<build>

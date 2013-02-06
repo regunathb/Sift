@@ -20,7 +20,6 @@ import org.sift.tagcloud.impl.image.postscript.PostscriptImageWriter;
 import org.sift.tagcloud.impl.image.svg.SVGImageWriter;
 import org.sift.tagcloud.spi.image.ImageFileWriter;
 import org.sift.tagcloud.ui.DisplayTag;
-import org.trpr.platform.core.PlatformException;
 
 /**
  * The <code>ImageWriterFactory</code> is a simple factory implementation for {@link ImageFileWriter} implementations
@@ -36,7 +35,7 @@ public class ImageWriterFactory {
 	 * @return ImageFileWriter instance for the specified file type
 	 * @throws PlatformException in case of errors while creating an instance of specific ImageFileWriter type
 	 */
-	public static ImageFileWriter<DisplayTag> getImageFileWriter(String fileType) throws PlatformException {
+	public static ImageFileWriter<DisplayTag> getImageFileWriter(String fileType) throws RuntimeException {
 		if (fileType.equalsIgnoreCase(ImageFileWriter.PNG)) {
 			return new PNGImageWriter<DisplayTag>();
 		}
@@ -46,7 +45,7 @@ public class ImageWriterFactory {
 		if (fileType.equalsIgnoreCase(ImageFileWriter.POST_SCRIPT)) {
 			return new PostscriptImageWriter<DisplayTag>();
 		}
-		throw new PlatformException("Unrecognized file type : " + fileType + ". Check JavaDoc of ImageFileWriter for supported types.");
+		throw new RuntimeException("Unrecognized file type : " + fileType + ". Check JavaDoc of ImageFileWriter for supported types.");
 	}
 	
 	/**
@@ -54,7 +53,7 @@ public class ImageWriterFactory {
 	 * @return an instance of PNGImageWriter
 	 * @throws PlatformException in case of errors while creating the default image writer
 	 */
-	public static ImageFileWriter<DisplayTag> getDefaultImageFileWriter() throws PlatformException {
+	public static ImageFileWriter<DisplayTag> getDefaultImageFileWriter() throws RuntimeException {
 		return new PNGImageWriter<DisplayTag>();
 	}
 	

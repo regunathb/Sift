@@ -31,7 +31,6 @@ import javax.imageio.ImageIO;
 import org.sift.tagcloud.spi.image.ImageFileWriter;
 import org.sift.tagcloud.ui.DisplayTag;
 import org.sift.tagcloud.ui.DisplayTagCloud;
-import org.trpr.platform.core.PlatformException;
 
 /**
  * The <code>PNGImageWriter</code> is a sub-type of {@link ImageFileWriter} that stores tag clouds as PNG image files
@@ -51,7 +50,7 @@ public class PNGImageWriter<S extends DisplayTag> extends ImageFileWriter<S> {
 	 * Writes the specified DisplayCloud as a PNG image to the specified file location
 	 * @see org.sift.tagcloud.spi.image.ImageFileWriter#writeImageContents(java.io.File, org.sift.tagcloud.ui.DisplayTagCloud)
 	 */
-	protected void writeImageContents(File file, DisplayTagCloud<S> displayTagCloud) throws PlatformException {
+	protected void writeImageContents(File file, DisplayTagCloud<S> displayTagCloud) throws RuntimeException {
 		
 		AffineTransform scale = new AffineTransform();
 		Dimension imageDimension=new Dimension((int)displayTagCloud.getImageBounds().getWidth(),(int)displayTagCloud.getImageBounds().getHeight());	
@@ -89,8 +88,7 @@ public class PNGImageWriter<S extends DisplayTag> extends ImageFileWriter<S> {
 		try {
 			ImageIO.write(img, ImageFileWriter.PNG, file);
 		} catch (IOException e) {
-			LOGGER.error("Error writing output file for display cloud : " + displayTagCloud.getSubject() + " to file : " + file.getAbsolutePath(),e);
-			throw new PlatformException("Error writing output file for display cloud : " + displayTagCloud.getSubject() + " to file : " + file.getAbsolutePath(),e);
+			throw new RuntimeException("Error writing output file for display cloud : " + displayTagCloud.getSubject() + " to file : " + file.getAbsolutePath(),e);
 		}
 		
 	}
