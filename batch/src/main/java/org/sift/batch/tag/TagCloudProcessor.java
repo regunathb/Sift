@@ -33,8 +33,8 @@ import org.springframework.batch.item.ItemProcessor;
  */
 public class TagCloudProcessor implements ItemProcessor<DisplayTagCloud<DisplayTag>,DisplayTagCloud<DisplayTag>>, Comparator<DisplayTag>{
 
-	/** Default max number of tags to display*/
-	private static final int MAX_TAGS = 75;
+	/** Default max number of tags to display, initialized to Integer.MAX_VALUE*/
+	private static final int MAX_TAGS = Integer.MAX_VALUE;
 	
 	/** The max number of tags to display */
 	private int maxTags = MAX_TAGS;

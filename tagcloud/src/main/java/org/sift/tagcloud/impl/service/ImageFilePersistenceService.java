@@ -32,7 +32,7 @@ import org.sift.tagcloud.ui.DisplayTagCloud;
  * @author Regunath B
  * @version 1.0, 25 Jan 2013
  */
-public class FilePersistenceService<T extends Tag, S extends TagCloud<T>> implements PersistenceService<T,S> {
+public class ImageFilePersistenceService<T extends Tag, S extends TagCloud<T>> implements PersistenceService<T,S> {
 	
 	/** The image writer implementation, initialized to the default implementation */
 	private ImageFileWriter<DisplayTag> imageWriter = ImageWriterFactory.getDefaultImageFileWriter();
@@ -41,7 +41,7 @@ public class FilePersistenceService<T extends Tag, S extends TagCloud<T>> implem
 	private String tagCloudsDirectory;
 
 	/**
-	 * Persists the specified TagCloud as an image file on the file system. Uses the {@link TagCloud#getSubject()} as the file name
+	 * Interface method implementation. Persists the specified TagCloud as an image file on the file system. Uses the {@link TagCloud#getSubject()} as the file name
 	 * @see org.sift.tagcloud.spi.service.PersistenceService#persistTagCloud(org.sift.tagcloud.TagCloud)
 	 */
 	@SuppressWarnings("unchecked")

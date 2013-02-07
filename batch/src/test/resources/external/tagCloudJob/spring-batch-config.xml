@@ -78,14 +78,14 @@
         </property>		
 	</bean>	
 	<bean id="inputFileResource" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt"/>
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt"/>
 	</bean>	
 	
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
 		<property name="processors">
 			<list>	
 				<bean class="org.sift.runtime.impl.WordSplitterProcessor">
-					<property name="nGram" value="4"/>
+					<property name="nGram" value="3"/>
 			 		<property name="stopWords">
 			            <bean class="org.sift.winnow.StopWords" />
 			        </property>							
@@ -94,9 +94,9 @@
 					<property name="wordWeights">
 						<map>
 							<entry key="1" value="1" />
-							<entry key="2" value="4" />
-							<entry key="3" value="8" />
-							<entry key="4" value="16" />
+							<entry key="2" value="2" />
+							<entry key="3" value="3" />
+							<entry key="4" value="4" />
 						</map>
 					</property>	
 				</bean>
@@ -120,13 +120,20 @@
 		<property name="collector" ref="collector"/>
 	</bean>	
 	<bean id="tagCloudProcessor" class="org.sift.batch.tag.TagCloudProcessor">
-		<property name="maxTags" value="25"/>
+		<property name="maxTags" value="50"/>
 	</bean>	
 	<bean id="tagCloudWriter" class="org.sift.batch.tag.TagCloudWriter">
-		<property name="persistenceService" ref="fileWriter"/>
+		<property name="persistenceService" ref="imageFileWriter"/>
 	</bean>	
-	<bean id="fileWriter" class="org.sift.tagcloud.impl.service.FilePersistenceService">
+	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
 		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds"/>		
+	</bean>
+	<bean id="marshallerFileWriter" class="org.sift.batch.tag.service.TagCloudMarshallerService">
+		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds"/>		
+ 		<property name="marshaller">
+            <bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
+        </property>		
+		
 	</bean>
 	<!-- End tagCloudStep beans -->
 

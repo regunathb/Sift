@@ -58,7 +58,7 @@ public abstract class ImageFileWriter<S extends DisplayTag> {
 	 * Writes an image representation of the specified DisplayTagCloud to the specified file path.
 	 * @param filePath the absolute path to the image file
 	 * @param displayTagCloud the DisplayTagCloud whose image is to be written to the specified file
-	 * @throws PlatformException in case of errors in writing the image file
+	 * @throws RuntimeException in case of errors in writing the image file
 	 */
 	public void writeImageFile(String filePath, DisplayTagCloud<S> displayTagCloud) throws RuntimeException {
 		if (!filePath.endsWith(this.getImageFileType())) {
