@@ -1,0 +1,15 @@
+<jaxb:bindings 
+  xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" version="1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	
+	<jaxb:bindings schemaLocation="../../xsd/tagcloud/TagCloud.xsd"  node="/xs:schema">
+ 		<jaxb:globalBindings>
+			<jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
+			  parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
+			  printMethod="javax.xml.bind.DatatypeConverter.printDate"
+			/>
+			<jaxb:serializable uid="1" />
+		</jaxb:globalBindings>
+	</jaxb:bindings>
+	
+</jaxb:bindings>	
