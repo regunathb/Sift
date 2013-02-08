@@ -66,7 +66,7 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 			// now aggregate the values treating them as type integer
 			int count = 0;
 			for (Tuple sortMergedTuple : sortMergedTuples) {
-				Tuple aggregatedValuesTuple = new Tuple(sortMergedTuple.getKey());
+				Tuple aggregatedValuesTuple = new Tuple(sortMergedTuple.getKey(), sortMergedTuple.getSource());
 				Integer aggregateValue = 0;
 				for (Object value : sortMergedTuple.getValues()) {
 					aggregateValue += (Integer)value;

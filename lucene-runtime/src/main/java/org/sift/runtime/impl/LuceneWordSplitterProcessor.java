@@ -57,7 +57,7 @@ public class LuceneWordSplitterProcessor implements Processor {
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
-		Tuple returnTuple = new Tuple(tuple.getKey());
+		Tuple returnTuple = new Tuple(tuple.getKey(), tuple.getSource());
 		for (Object line : tuple.getValues()) {
 			List<String> tokensList = new LinkedList<String>();
 			try {

@@ -49,7 +49,7 @@ public class ProcessorChainItemProcessor implements ItemProcessor<Tuple,Tuple> {
 				returnTuple = collector.getEmittedTuples().get(0);
 			} else {
 				//else force merge all tuple values into one tuple
-				returnTuple = new Tuple(Tuple.UNDEFINED_KEY);
+				returnTuple = new Tuple(Tuple.UNDEFINED_KEY, tuple.getSource());
 				for (Tuple t : collector.getEmittedTuples()) {
 					returnTuple.getValues().add(t);
 				}

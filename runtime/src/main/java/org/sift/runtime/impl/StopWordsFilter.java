@@ -37,7 +37,7 @@ public class StopWordsFilter implements Processor {
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
-		Tuple output = new Tuple(tuple.getKey());
+		Tuple output = new Tuple(tuple.getKey(), tuple.getSource());
 		for (Object word : tuple.getValues()) {
 			if (!this.stopWords.isStopWord((String)word)) {
 				output.addValue(word);

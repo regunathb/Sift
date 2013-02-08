@@ -74,18 +74,20 @@
 	<bean id="fileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
 		<property name="resource" ref="inputFileResource"/>
  		<property name="lineMapper">
-            <bean class="org.sift.batch.tuple.TupleLineMapper" />
+            <bean class="org.sift.batch.tuple.TupleLineMapper">
+            	<property name="resource" ref="inputFileResource"/>
+            </bean>
         </property>		
 	</bean>	
 	<bean id="inputFileResource" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt"/>
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt"/>
 	</bean>	
 	
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
 		<property name="processors">
 			<list>	
 				<bean class="org.sift.runtime.impl.WordSplitterProcessor">
-					<property name="nGram" value="3"/>
+					<property name="nGram" value="4"/>
 			 		<property name="stopWords">
 			            <bean class="org.sift.winnow.StopWords" />
 			        </property>							
@@ -97,6 +99,11 @@
 							<entry key="2" value="2" />
 							<entry key="3" value="3" />
 							<entry key="4" value="4" />
+						</map>
+					</property>	
+					<property name="sourceBoosts">
+						<map>
+							<entry key="nikon.txt" value="2" />
 						</map>
 					</property>	
 				</bean>
@@ -120,10 +127,10 @@
 		<property name="collector" ref="collector"/>
 	</bean>	
 	<bean id="tagCloudProcessor" class="org.sift.batch.tag.TagCloudProcessor">
-		<property name="maxTags" value="50"/>
+		<property name="maxTags" value="25"/>
 	</bean>	
 	<bean id="tagCloudWriter" class="org.sift.batch.tag.TagCloudWriter">
-		<property name="persistenceService" ref="imageFileWriter"/>
+		<property name="persistenceService" ref="marshallerFileWriter"/>
 	</bean>	
 	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
 		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds"/>		

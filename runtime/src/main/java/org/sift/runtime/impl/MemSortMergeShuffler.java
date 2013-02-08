@@ -42,7 +42,7 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 		Tuple mergedTuple = null;
 		for (Tuple tuple : tuples) {
 			if (mergedTuple == null || !mergedTuple.getKey().equals(tuple.getKey())) {
-				mergedTuple = new Tuple(tuple.getKey());;
+				mergedTuple = new Tuple(tuple.getKey(), tuple.getSource());
 				sortMergeTuples.add(mergedTuple);
 			}
 			if (mergedTuple.getKey().equals(tuple.getKey())) { // double check

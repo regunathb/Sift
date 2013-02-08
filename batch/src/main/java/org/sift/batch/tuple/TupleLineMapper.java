@@ -17,6 +17,7 @@ package org.sift.batch.tuple;
 
 import org.sift.runtime.Tuple;
 import org.springframework.batch.item.file.LineMapper;
+import org.springframework.core.io.Resource;
 
 /**
  * The <code>TupleLineMapper</code> is an implementation of the Spring Batch {@link LineMapper} that maps a single line into a {@link Tuple}
@@ -26,14 +27,25 @@ import org.springframework.batch.item.file.LineMapper;
  */
 public class TupleLineMapper implements LineMapper<Tuple> {
 
+	/** The Resource instance that this LineMapper is mapping lines from */
+	private Resource resource;
+	
 	/**
 	 * Interface method implementation. Maps the input line into a {@link Tuple} with line number as key and the line contents as a single String value
 	 * @see org.springframework.batch.item.file.LineMapper#mapLine(java.lang.String, int)
 	 */
 	public Tuple mapLine(String line, int lineNumber) throws Exception {
-		Tuple tuple = new Tuple(String.valueOf(lineNumber));
+		Tuple tuple = new Tuple(String.valueOf(lineNumber), this.resource.getFilename());
 		tuple.addValue(line);
 		return tuple;
 	}
+
+	/** Getter/Setter methods */
+	public Resource getResource() {
+		return this.resource;
+	}
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}	
 
 }

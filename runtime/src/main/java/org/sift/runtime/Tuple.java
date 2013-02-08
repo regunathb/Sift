@@ -20,7 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * The <code>Tuple</code> represents a basic data structure in Sift. It contains a list of values (that may be ordered) and a key identifying the Tuple.
+ * The <code>Tuple</code> represents a basic data structure of a named list of values in Sift. It contains a list of values (that may be ordered) and 
+ * a key each identifying the Tuple and its source.
  * 
  * @author Regunath B
  * @version 1.0, 28 Jan 2013
@@ -41,15 +42,19 @@ public class Tuple {
 	/** The key identifying this Tuple*/
 	private String key;
 	
+	/** The source identifier for this Tuple*/
+	private String source;
+	
 	/** List of values held by this Tuple */
 	private List<Object> values = new LinkedList<Object>();
 	
 	/** Constructors*/
-	public Tuple(String key) {
+	public Tuple(String key, String source) {
 		this.key = key;
+		this.source = source;
 	}	
-	public Tuple(String key, List<Object> values) {
-		this(key);
+	public Tuple(String key, String source, List<Object> values) {
+		this(key, source);
 		this.values = values;
 	}	
 	
@@ -78,6 +83,9 @@ public class Tuple {
 	/** Getter/Setter methods*/
 	public String getKey() {
 		return this.key;
+	}
+	public String getSource() {
+		return this.source;
 	}
 	public List<Object> getValues() {
 		return this.values;

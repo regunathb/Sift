@@ -39,6 +39,9 @@ public class TagIdentifierProcessor  implements Processor {
 	/** Map of word lengths and associated weights */
 	private Map<String,String> wordWeights = new HashMap<String,String>();
 	
+	/** Map of sources and their respective boost factors */
+	private Map<String,String> sourceBoosts = new HashMap<String,String>();	
+	
 	/**
 	 * Interface method implementation. Identifies tags from the {@link Tuple} values
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
@@ -48,12 +51,17 @@ public class TagIdentifierProcessor  implements Processor {
 		String tag = (String)values[0];
 		for (int i = 1; i < values.length; i++) {
 			if (!((String)values[i]).startsWith(tag)) { // ignore Tuple values that start with the Tag
-				Tuple returnTuple = new Tuple(tag + Tuple.KEY_SEP_CHAR + (String)values[i]);
+				Tuple returnTuple = new Tuple(tag + Tuple.KEY_SEP_CHAR + (String)values[i], tuple.getSource());
 				int wordsLength = WordSplitterProcessor.getWordsLength((String)values[i]);
 				String weight = this.getWordWeights().get(String.valueOf(wordsLength));
 				if (weight == null) {
 					// assign the default weight
 					weight = DEFAULT_WEIGHT;
+				}
+				//check if there is a source boost to be applied
+				String boost = this.sourceBoosts.get(tuple.getSource());
+				if (boost != null) {
+					weight = String.valueOf((int)(Double.valueOf(boost) * Integer.valueOf(weight)));
 				}
 				returnTuple.addValue(Integer.valueOf(weight));
 				collector.emit(returnTuple);		
@@ -67,6 +75,12 @@ public class TagIdentifierProcessor  implements Processor {
 	}
 	public void setWordWeights(Map<String, String> wordWeights) {
 		this.wordWeights = wordWeights;
+	}
+	public Map<String, String> getSourceBoosts() {
+		return this.sourceBoosts;
+	}
+	public void setSourceBoosts(Map<String, String> sourceBoosts) {
+		this.sourceBoosts = sourceBoosts;
 	}
 	
 }
