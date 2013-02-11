@@ -80,7 +80,7 @@
         </property>		
 	</bean>	
 	<bean id="inputFileResource" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt"/>
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt"/>
 	</bean>	
 	
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
@@ -96,9 +96,9 @@
 					<property name="wordWeights">
 						<map>
 							<entry key="1" value="1" />
-							<entry key="2" value="2" />
-							<entry key="3" value="3" />
-							<entry key="4" value="4" />
+							<entry key="2" value="4" />
+							<entry key="3" value="6" />
+							<entry key="4" value="8" />
 						</map>
 					</property>	
 					<property name="sourceBoosts">
@@ -127,10 +127,10 @@
 		<property name="collector" ref="collector"/>
 	</bean>	
 	<bean id="tagCloudProcessor" class="org.sift.batch.tag.TagCloudProcessor">
-		<property name="maxTags" value="25"/>
+		<property name="maxTags" value="50"/>
 	</bean>	
 	<bean id="tagCloudWriter" class="org.sift.batch.tag.TagCloudWriter">
-		<property name="persistenceService" ref="marshallerFileWriter"/>
+		<property name="persistenceService" ref="imageFileWriter"/>
 	</bean>	
 	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
 		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds"/>		
