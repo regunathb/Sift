@@ -28,7 +28,7 @@ import java.util.List;
 public class StopWords {
 	
 	/** The regex used to identify word boundaries */
-	public static final String WORD_BOUNDARY = "\\s+";
+	public static final String WORD_BOUNDARY = "\\s+|[^a-zA-Z0-9]+";
 
 	/** Word boundary for n-grams*/
 	public static final String WORD_BOUNDARY_STRING = " ";	
@@ -40,7 +40,7 @@ public class StopWords {
 	private static final String[] STOP_WORDS = {
 		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
 		"/","\\","\\n",",",".","<",">","!","&","*","%","$","#","@","-","+","//","\\\\","(",")",
-		"&amp;","&quot;",
+		"&amp;","&quot;","amp","quot",
 	};
 	
 	/** List of conjunctions */
