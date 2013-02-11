@@ -15,6 +15,9 @@
  */
 package org.sift.runtime.impl;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
@@ -41,32 +44,44 @@ public class WordSplitterProcessor implements Processor {
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
 		Tuple returnTuple = new Tuple(tuple.getKey(), tuple.getSource());
-		for (Object line : tuple.getValues()) {
-			String[] tokens = ((String)line).toLowerCase().split(StopWords.WORD_BOUNDARY);
-			for (int i = 0; i < tokens.length; i++) {
-				StringBuffer tokenBuffer = new StringBuffer();
-				for (int j = 0; j < this.getnGram(); j++) {
-					if (i+j <  tokens.length) {
-						tokenBuffer.append(tokens[i+j]);
-						tokenBuffer.append(StopWords.WORD_BOUNDARY_STRING);
+		for (Object value : tuple.getValues()) {
+			String[] lines = this.getLines(((String)value).toLowerCase());
+			for (String line : lines) {
+				String[] tokens = line.split(StopWords.WORD_BOUNDARY);
+				for (int i = 0; i < tokens.length; i++) {
+					StringBuffer tokenBuffer = new StringBuffer();
+					for (int j = 0; j < this.getnGram(); j++) {
+						if (i+j <  tokens.length) {
+							tokenBuffer.append(tokens[i+j]);
+							tokenBuffer.append(StopWords.WORD_BOUNDARY_STRING);
+						}
+						String word = tokenBuffer.toString().trim();
+						if (this.getStopWords() != null && !this.getStopWords().isStopWord(word)) {
+							returnTuple.addValue(tokenBuffer.toString().trim());
+						}
 					}
-					String word = tokenBuffer.toString().trim();
-					if (this.getStopWords() != null && !this.getStopWords().isStopWord(word)) {
-						returnTuple.addValue(tokenBuffer.toString().trim());
-					}
-				}
-			}			
+				}			
+			}
 		}
 		collector.emit(returnTuple);
 	}
 	
 	/**
-	 * Conveninece method to consistently return word lengths as interpreted by Sift
+	 * Convenience method to consistently return word lengths as interpreted by Sift
 	 * @param words the String containing one or more words
 	 * @return numbers of words found in the specified string
 	 */
 	public static int getWordsLength(String words) {
 		return words.split(StopWords.WORD_BOUNDARY).length;
+	}
+	
+	/**
+	 * Helper method to take a raw line of text and return an array of strings, each representing a separate line
+	 * @param rawLine the raw line to process
+	 * @return array of line strings
+	 */
+	private String[] getLines(String rawLine) {
+		return new String[] {rawLine.replaceAll(StopWords.LINE_BOUNDARY, StopWords.WORD_BOUNDARY_STRING)};
 	}
 	
 	/** Getter/Setter for values */

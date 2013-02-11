@@ -27,15 +27,18 @@ import java.util.List;
  */
 public class StopWords {
 	
+	/** The regex used to identify line boundaries */
+	public static final String LINE_BOUNDARY = "\\\\n";
+	
 	/** The regex used to identify word boundaries */
-	public static final String WORD_BOUNDARY = "\\s+|[^a-zA-Z0-9]+";
+	public static final String WORD_BOUNDARY = "\\s+|[^a-zA-Z0-9]+"; // includes multiple occurrences of spaces, special chars except . (dot)
 
 	/** Word boundary for n-grams*/
 	public static final String WORD_BOUNDARY_STRING = " ";	
 	
 	/** The default value for n-grams*/
 	public static final int DEFAULT_N_GRAM = 1;
-	
+		
 	/** List of stop words */	
 	private static final String[] STOP_WORDS = {
 		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
@@ -78,7 +81,7 @@ public class StopWords {
 		if (this.stopWords.contains(word)) {
 			return true;
 		} 
-		// check if it is a conjunction word, but is at the start (or at the end)
+		// check if it is a stop word, but is at the start (or at the end) of the phrase
 		String[] words = word.split(WORD_BOUNDARY);
 		if (this.stopWords.contains(words[0]) || this.stopWords.contains(words[words.length - 1])) {
 			return true;
