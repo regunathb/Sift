@@ -18,7 +18,7 @@ package org.sift.runtime.spi;
 import org.sift.runtime.Tuple;
 
 /**
- * The <code>Processor</code> provides methods for processing a {@link Tuple} instance and emitting another instance of the same type using the {@link OutputCollector}
+ * The <code>Processor</code> provides methods for processing a {@link Tuple} instance and emitting one or more instances of it using the {@link OutputCollector}
  * 
  * @author Regunath B
  * @version 1.0, 28 Jan 2013
@@ -26,9 +26,9 @@ import org.sift.runtime.Tuple;
 public interface Processor {
 
 	/**
-	 * Processes the specified Tuple and emits another containing processing results to the specified OutputCollector
+	 * Processes the specified Tuple and emits another(or more instances) containing processing results to the specified OutputCollector
 	 * @param tuple the Tuple to process
-	 * @param collector the OutputCollector to emit the processed Tuple to 
+	 * @param collector the OutputCollector to emit the processed Tuple(s) to 
 	 */
 	public void process(Tuple tuple, OutputCollector collector);
 	
