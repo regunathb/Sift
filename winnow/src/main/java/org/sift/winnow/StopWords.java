@@ -41,7 +41,7 @@ public class StopWords {
 		
 	/** List of stop words */	
 	private static final String[] STOP_WORDS = {
-		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9",
 		"/","\\","\\n",",",".","<",">","!","&","*","%","$","#","@","-","+","//","\\\\","(",")",
 		"&amp;","&quot;","amp","quot",
 	};
@@ -49,8 +49,9 @@ public class StopWords {
 	/** List of conjunctions */
 	private static final String[] CONJUNCTIONS = {
 		"or","in","on","at","by","of","if","it","my","to","be","as","is","so","go","an","he",		
-		"was","the","his","her","you","for","and","are","but","its","has","too","all",
-		"this","with","that","they","these","been","will",		
+		"was","the","his","her","you","for","and","are","but","its","has","too","all","not",
+		"this","with","that","they","these","been","will","have","one","two",
+		"three","four","five","six","seven","eight","nine","ten",		
 	};
 	
 	/** List of stop words */
