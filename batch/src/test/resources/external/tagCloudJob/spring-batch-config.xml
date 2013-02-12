@@ -59,7 +59,7 @@
 	-->
 	<batch:job id="tagCloudJob" incrementer="incrementer">
 		<batch:step id="tagStep" next="tagCloudStep">
-			<batch:tasklet task-executor="tagJobTaskExecutor">
+			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the  MultiResourceItemReader. See https://jira.springsource.org/browse/BATCH-1301-->
 				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="10000"/>
 			</batch:tasklet>
 		</batch:step>
@@ -71,15 +71,32 @@
 	</batch:job>
 	
 	<!-- Start tagStep beans -->
-	<bean id="fileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
-		<property name="resource" ref="inputFileResource"/>
- 		<property name="lineMapper">
-            <bean class="org.sift.batch.tuple.TupleLineMapper">
-            	<property name="resource" ref="inputFileResource"/>
-            </bean>
-        </property>		
+	<bean id="fileReader" class="org.springframework.batch.item.file.MultiResourceItemReader">
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+ 				<property name="lineMapper">
+	            	<bean class="org.sift.batch.tuple.TupleLineMapper">
+	            		<property name="itemReader" ref="fileReader"/>
+	            	</bean>
+        		</property>	
+        	</bean>
+        </property>	
+        <property name="resources">
+			<list>	
+				<ref bean="inputFileResource1"/>
+				<ref bean="inputFileResource2"/>
+				<ref bean="inputFileResource3"/>
+			</list>        
+        </property>
 	</bean>	
-	<bean id="inputFileResource" class="org.springframework.core.io.FileSystemResource">
+			
+	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt"/>
+	</bean>	
+	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource">
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt"/>
+	</bean>	
+	<bean id="inputFileResource3" class="org.springframework.core.io.FileSystemResource">
 		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt"/>
 	</bean>	
 	
@@ -127,7 +144,7 @@
 		<property name="collector" ref="collector"/>
 	</bean>	
 	<bean id="tagCloudProcessor" class="org.sift.batch.tag.TagCloudProcessor">
-		<property name="maxTags" value="50"/>
+		<property name="maxTags" value="25"/>
 	</bean>	
 	<bean id="tagCloudWriter" class="org.sift.batch.tag.TagCloudWriter">
 		<property name="persistenceService" ref="imageFileWriter"/>

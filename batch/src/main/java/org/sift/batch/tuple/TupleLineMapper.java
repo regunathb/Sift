@@ -17,6 +17,8 @@ package org.sift.batch.tuple;
 
 import org.sift.runtime.Tuple;
 import org.springframework.batch.item.file.LineMapper;
+import org.springframework.batch.item.file.MultiResourceItemReader;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
 /**
@@ -25,20 +27,34 @@ import org.springframework.core.io.Resource;
  * @author Regunath B
  * @version 1.0, 28 Jan 2013
  */
-public class TupleLineMapper implements LineMapper<Tuple> {
+public class TupleLineMapper implements LineMapper<Tuple>, InitializingBean {
 
 	/** The Resource instance that this LineMapper is mapping lines from */
 	private Resource resource;
+	
+	/** The MultiResourceItemReader instance that uses this LineMapper via the delegate reader*/
+	private MultiResourceItemReader<Tuple> itemReader;
 	
 	/**
 	 * Interface method implementation. Maps the input line into a {@link Tuple} with line number as key and the line contents as a single String value
 	 * @see org.springframework.batch.item.file.LineMapper#mapLine(java.lang.String, int)
 	 */
 	public Tuple mapLine(String line, int lineNumber) throws Exception {
-		Tuple tuple = new Tuple(String.valueOf(lineNumber), this.resource.getFilename());
+		Resource currentResource = this.itemReader == null ? this.resource : this.itemReader.getCurrentResource();
+		Tuple tuple = new Tuple(String.valueOf(lineNumber), currentResource.getFilename());
 		tuple.addValue(line);
 		return tuple;
 	}
+
+	/**
+	 * Interface method implementation. Checks to see if atleast one Resource or MultiResourceItemReader is set
+	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
+	public void afterPropertiesSet() throws Exception {
+		if (this.getResource() == null && this.itemReader == null) {
+			throw new Exception("Atleast one of 'resource' or 'itemReader' must be set!");
+		}
+	}	
 
 	/** Getter/Setter methods */
 	public Resource getResource() {
@@ -46,6 +62,12 @@ public class TupleLineMapper implements LineMapper<Tuple> {
 	}
 	public void setResource(Resource resource) {
 		this.resource = resource;
-	}	
+	}
+	public MultiResourceItemReader<Tuple> getItemReader() {
+		return this.itemReader;
+	}
+	public void setItemReader(MultiResourceItemReader<Tuple> itemReader) {
+		this.itemReader = itemReader;
+	}
 
 }
