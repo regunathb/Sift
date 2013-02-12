@@ -15,9 +15,6 @@
  */
 package org.sift.runtime.impl;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
