@@ -4,10 +4,10 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.sift</groupId>
-	<artifactId>batch-model</artifactId>
-	<name>Sift Batch Model</name>
+	<artifactId>runtime-model</artifactId>
+	<name>Sift Runtime Model</name>
 	<version>1.0.0</version>
-	<description>Sift Batch Model</description>
+	<description>Sift Runtime Model</description>
 
 	<licenses>
     	<license>

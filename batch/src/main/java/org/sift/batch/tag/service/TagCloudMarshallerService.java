@@ -24,8 +24,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.sift.batch.model.tagcloud.TagCloudModel;
-import org.sift.batch.model.tagcloud.TagModel;
+import org.sift.runtime.model.tagcloud.TagCloudModel;
+import org.sift.runtime.model.tagcloud.TagModel;
 import org.sift.tagcloud.Tag;
 import org.sift.tagcloud.TagCloud;
 import org.sift.tagcloud.spi.service.PersistenceService;

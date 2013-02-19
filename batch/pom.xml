@@ -72,7 +72,7 @@
 		<!-- Sift dependencies -->
 		<dependency>
 			<groupId>org.sift</groupId>
-			<artifactId>batch-model</artifactId>
+			<artifactId>runtime-model</artifactId>
 			<version>1.0.0</version>
 		</dependency>	
 		<dependency>
@@ -155,7 +155,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.trpr</groupId>
-			<artifactId>runtime-core</artifactId>
+			<artifactId>batch-core</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>

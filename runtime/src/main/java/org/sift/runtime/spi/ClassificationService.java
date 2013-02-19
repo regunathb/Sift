@@ -1,6 +1,6 @@
 package org.sift.runtime.spi;
 
-import org.sift.batch.model.sentimentdata.ClassificationCollection;
+import org.sift.runtime.model.sentimentdata.ClassificationCollection;
 
 /**
  * <code>ClassificationService</code> is used to access the Sentiment Analysis API to get the sentiment information through 

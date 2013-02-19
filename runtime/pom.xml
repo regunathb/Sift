@@ -53,6 +53,11 @@
 			<groupId>org.sift</groupId>
 			<artifactId>winnow</artifactId>
 			<version>1.0.0</version>
+		</dependency>	
+		<dependency>
+			<groupId>org.sift</groupId>
+			<artifactId>runtime-model</artifactId>
+			<version>1.0.0</version>
 		</dependency>				
 	</dependencies>
 	

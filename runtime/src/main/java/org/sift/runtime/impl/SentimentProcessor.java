@@ -15,8 +15,8 @@
  */
 package org.sift.runtime.impl;
 
-import org.sift.batch.model.sentimentdata.Classification;
-import org.sift.batch.model.sentimentdata.ClassificationCollection;
+import org.sift.runtime.model.sentimentdata.Classification;
+import org.sift.runtime.model.sentimentdata.ClassificationCollection;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.ClassificationService;
 import org.sift.runtime.spi.OutputCollector;

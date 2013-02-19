@@ -7,9 +7,9 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.sift.batch.model.sentimentdata.Classification;
-import org.sift.batch.model.sentimentdata.ClassificationCollection;
-import org.sift.batch.model.sentimentdata.Probability;
+import org.sift.runtime.model.sentimentdata.Classification;
+import org.sift.runtime.model.sentimentdata.ClassificationCollection;
+import org.sift.runtime.model.sentimentdata.Probability;
 import org.sift.runtime.spi.ClassificationService;
 import org.trpr.platform.integration.spi.marshalling.Marshaller;
 
