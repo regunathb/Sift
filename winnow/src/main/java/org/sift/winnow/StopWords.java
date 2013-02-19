@@ -47,7 +47,7 @@ public class StopWords {
 		"has","have","he","her","his","if","in","into","is","it","its","my","nine","no","not","of","on",
 		"one","or","seven","six","so","such","ten","that","the","then","there","these","they","this","three","to","too","two",
 		"will","with",
-		"&amp;","&quot;","amp","quot",
+		"&amp;","&quot;","amp","quot","&gt","&mdash","gt","mdash","samsung","galaxy","phone","htc"
 	};
 	
 	/** List of conjunctions */
