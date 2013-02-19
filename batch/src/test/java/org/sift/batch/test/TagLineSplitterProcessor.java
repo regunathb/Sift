@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sift.runtime.impl;
+package org.sift.batch.test;
 
 import org.sift.runtime.Tuple;
+import org.sift.runtime.impl.LineSplitterProcessor;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
 
