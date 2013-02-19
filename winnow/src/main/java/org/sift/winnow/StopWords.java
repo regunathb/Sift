@@ -43,15 +43,17 @@ public class StopWords {
 	private static final String[] STOP_WORDS = {
 		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9",
 		"/","\\","\\n",",",".","<",">","!","&","*","%","$","#","@","-","+","//","\\\\","(",")",
-		"&amp;","&quot;","amp","quot","&gt","&mdash","gt","mdash","samsung","galaxy","phone","htc"
+		"an","and","are","as","at","be","but","by","eight","five","for","four","go",
+		"has","have","he","her","his","if","in","into","is","it","its","my","nine","no","not","of","on",
+		"one","or","seven","six","so","such","ten","that","the","then","there","these","they","this","three","to","too","two",
+		"will","with",
+		"&amp;","&quot;","amp","quot",
 	};
 	
 	/** List of conjunctions */
 	private static final String[] CONJUNCTIONS = {
-		"or","in","on","at","by","of","if","it","my","to","be","as","is","so","go","an","he",		
-		"was","the","his","her","you","for","and","are","but","its","has","too","all","not",
-		"this","with","that","they","these","been","will","have","one","two",
-		"three","four","five","six","seven","eight","nine","ten",		
+		"and","both","but","either","for","just","neither","nor","only","or",
+		"so","whether","yet",
 	};
 	
 	/** List of stop words */
@@ -68,7 +70,6 @@ public class StopWords {
 			this.stopWords.add(word);
 		}
 		for (String word : CONJUNCTIONS) {
-			this.stopWords.add(word);
 			this.conjunctionWords.add(word);
 		}		
 	}
@@ -79,25 +80,29 @@ public class StopWords {
 	 * @return true if it is a stop word, false otherwise
 	 */
 	public boolean isStopWord(String word) {
-		//System.out.println("Word is : " + word);
 		if (this.stopWords.contains(word)) {
-			//System.out.println("found: "+word);
 			return true;
 		} 
 		// check if it is a stop word, but is at the start (or at the end) of the phrase
 		String[] words = word.split(WORD_BOUNDARY);
-		if (this.stopWords.contains(words[0]) || this.stopWords.contains(words[words.length - 1])) {
+		if (this.conjunctionWords.contains(words[0]) || this.conjunctionWords.contains(words[words.length - 1])) {
 			return true;
 		}
 		return false;
 	}
-	
-	/**
-	 * Convenience method to set an alternate list of stop words
-	 * @param words List containing stop words
-	 */
-	public void setStopWords(List<String> words) {
-		this.stopWords = words;
+
+	/** Getter/Setter methods */	
+	public List<String> getStopWords() {
+		return this.stopWords;
 	}
-	
+	public void setStopWords(List<String> stopWords) {
+		this.stopWords = stopWords;
+	}
+	public List<String> getConjunctionWords() {
+		return this.conjunctionWords;
+	}
+	public void setConjunctionWords(List<String> conjunctionWords) {
+		this.conjunctionWords = conjunctionWords;
+	}
+
 }
