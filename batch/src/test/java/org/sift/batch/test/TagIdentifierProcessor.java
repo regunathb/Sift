@@ -48,7 +48,11 @@ public class TagIdentifierProcessor  implements Processor {
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
 		Object[] values = tuple.getValues().toArray();
+		if(values.length<1) {
+			return;
+		}
 		String tag = (String)values[0];
+		System.out.println("tag: "+tag);
 		for (int i = 1; i < values.length; i++) {
 			if (!((String)values[i]).startsWith(tag)) { // ignore Tuple values that start with the Tag
 				Tuple returnTuple = new Tuple(tag + Tuple.KEY_SEP_CHAR + (String)values[i], tuple.getSource());

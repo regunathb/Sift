@@ -43,7 +43,7 @@ public class StopWords {
 	private static final String[] STOP_WORDS = {
 		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9",
 		"/","\\","\\n",",",".","<",">","!","&","*","%","$","#","@","-","+","//","\\\\","(",")",
-		"&amp;","&quot;","amp","quot",
+		"&amp;","&quot;","amp","quot","&gt","&mdash","gt","mdash","samsung","galaxy","phone","htc"
 	};
 	
 	/** List of conjunctions */
@@ -79,7 +79,9 @@ public class StopWords {
 	 * @return true if it is a stop word, false otherwise
 	 */
 	public boolean isStopWord(String word) {
+		//System.out.println("Word is : " + word);
 		if (this.stopWords.contains(word)) {
+			//System.out.println("found: "+word);
 			return true;
 		} 
 		// check if it is a stop word, but is at the start (or at the end) of the phrase

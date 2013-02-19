@@ -84,14 +84,14 @@
         <property name="resources">
 			<list>	
 				<ref bean="inputFileResource1"/>
-				<ref bean="inputFileResource2"/>
-				<ref bean="inputFileResource3"/>
+		<!-- 	<ref bean="inputFileResource2"/>
+				<ref bean="inputFileResource3"/> -->	
 			</list>        
         </property>
 	</bean>	
 			
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt"/>
+		<constructor-arg value="/home/devashishshankar/mobile_rev"/>
 	</bean>	
 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource">
 		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt"/>
@@ -102,7 +102,16 @@
 	
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
 		<property name="processors">
-			<list>	
+			<list>
+				<bean class="org.sift.runtime.impl.TagLineSplitterProcessor">
+					<constructor-arg ref="lineSplitterProcessor" />
+				</bean>
+			<bean class="org.sift.runtime.impl.SentimentProcessor" >
+					<property name="classificationService" ref="classificationService" />
+					<property name="numberConfidence" value="1" />
+					<property name="probConfidence" value="0.7" />
+					<property name="sentimentFilter" value="neg" />
+				</bean>  	
 				<bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4"/>
 			 		<property name="stopWords">
@@ -114,8 +123,8 @@
 						<map>
 							<entry key="1" value="1" />
 							<entry key="2" value="4" />
-							<entry key="3" value="6" />
-							<entry key="4" value="8" />
+							<entry key="3" value="8" />
+							<entry key="4" value="16" />
 						</map>
 					</property>	
 					<property name="sourceBoosts">
@@ -127,7 +136,14 @@
 			</list>
 		</property>
 	</bean>	
-	
+	<bean id = "lineSplitterProcessor" class="org.sift.runtime.impl.LineSplitterProcessor" />
+	<bean id="classificationService" class="org.sift.batch.tag.service.ClassificationServiceImpl">
+		 <property name="marshaller">
+            <bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
+        </property>		
+		<property name="url" value="http://localhost:4000/" />
+		<property name="urlParameter" value="query" />
+	</bean>
 	<bean id="tupleWriter" class="org.sift.batch.tuple.TupleWriter">
 		<property name="collector" ref="collector"/>
 	</bean>	
@@ -144,20 +160,19 @@
 		<property name="collector" ref="collector"/>
 	</bean>	
 	<bean id="tagCloudProcessor" class="org.sift.batch.tag.TagCloudProcessor">
-		<property name="maxTags" value="25"/>
+		<property name="maxTags" value="100"/>
 	</bean>	
 	<bean id="tagCloudWriter" class="org.sift.batch.tag.TagCloudWriter">
-		<property name="persistenceService" ref="imageFileWriter"/>
+		<property name="persistenceService" ref="marshallerFileWriter"/>
 	</bean>	
 	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
-		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds"/>		
+		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagclouds"/>		
 	</bean>
 	<bean id="marshallerFileWriter" class="org.sift.batch.tag.service.TagCloudMarshallerService">
-		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds"/>		
+		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagclouds"/>		
  		<property name="marshaller">
             <bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
         </property>		
-		
 	</bean>
 	<!-- End tagCloudStep beans -->
 

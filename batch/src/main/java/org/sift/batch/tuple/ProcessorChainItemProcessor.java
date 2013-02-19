@@ -45,6 +45,9 @@ public class ProcessorChainItemProcessor implements ItemProcessor<Tuple,Tuple> {
 			MemOutputCollector collector = new MemOutputCollector();
 			p.process(returnTuple, collector);
 			// check if there is only one emitted Tuple and return it
+			if(collector.getEmittedTuples().size()==0) { //No tuple returned. The processor filtered it
+				return null;
+			}
 			if (collector.getEmittedTuples().size() == 1) {
 				returnTuple = collector.getEmittedTuples().get(0);
 			} else {
