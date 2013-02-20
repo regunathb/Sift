@@ -24,19 +24,19 @@ import org.sift.winnow.StopWords;
  * The <code>LineSplitterProcessor</code> is an implementation of the {@link Processor} that splits {@link Tuple} values as lines following standard
  * interpretation of line boundaries
  * 
- * @author Regunath B
+ * @author devashishshankar
  * @version 1.0, 28 Jan 2013
  */
 public class LineSplitterProcessor implements Processor {
 	
 	/** Minimum length (in no. of characters) of a line for it to contain useful information */
-	protected static int minLineLength = 3;
+	public static int minLineLength = 3;
 	
 	/** The regex for splitting text into lines. It follows the following rules:
 	 * 1. Splits on '\n'
 	 * 2. Splits on '.' except decimal numbers (like '3.5')
 	 */
-	protected static String lineSplitRegex = "\\\\n|\\.(?!\\d)|(?<!\\d)\\.";
+	public static String lineSplitRegex = "\\\\n|\\.(?!\\d)|(?<!\\d)\\.";
 	
 	/**
 	 * Interface method implementation. Splits the string values in the specified Tuple into independent lines
@@ -59,7 +59,7 @@ public class LineSplitterProcessor implements Processor {
 	 * @param rawLine the raw line to process
 	 * @return array of line strings
 	 */
-	protected String[] getLines(String rawLine) {
+	public String[] getLines(String rawLine) {
 		String a[] = rawLine.split(LineSplitterProcessor.lineSplitRegex);
 		for(String i : a){
 			i.replaceAll(StopWords.LINE_BOUNDARY, "");
