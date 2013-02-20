@@ -7,4 +7,6 @@ Sift uses ([Trooper profiles](https://github.com/regunathb/Trooper)) as its runt
 
 ## Samples
 
-* Example Tag Cloud ![Camera tags](https://github.com/regunathb/Sift/raw/master/Docs/images/camd7fnwyqngxf5w.png)
+* Example Tag Cloud 
+
+![Camera tags](https://github.com/regunathb/Sift/raw/master/Docs/images/camd7fnwyqngxf5w.png)
