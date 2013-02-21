@@ -52,8 +52,8 @@ public class StopWords {
 	
 	/** List of conjunctions */
 	private static final String[] CONJUNCTIONS = {
-		"a","an","and","as","at","both","but","either","for","is","just","neither","nor","of","only","or",
-		"so","this","the","to","whether","yet",
+		"a","an","and","as","at","both","but","either","for","in","is","just","neither","nor","of","only","or",
+		"so","this","the","to","with","whether","yet",
 	};
 	
 	/** List of stop words */
