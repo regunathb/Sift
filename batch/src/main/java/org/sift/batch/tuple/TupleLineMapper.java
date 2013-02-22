@@ -47,8 +47,6 @@ public class TupleLineMapper implements LineMapper<Tuple>, InitializingBean {
 	public Tuple mapLine(String line, int lineNumber) throws Exception {
 		Resource currentResource = this.itemReader == null ? this.resource : this.itemReader.getCurrentResource();
 		URI reviewURI = new URI(currentResource.getFile().getAbsolutePath()+"#"+String.valueOf(lineNumber));
-		
-
 		Tuple tuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES);
 		//Add key
 		tuple.setValue(Fields.KEY, String.valueOf(lineNumber));
