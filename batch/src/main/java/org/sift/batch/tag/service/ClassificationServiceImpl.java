@@ -9,7 +9,6 @@ import java.net.URLConnection;
 
 import org.sift.runtime.model.sentimentdata.Classification;
 import org.sift.runtime.model.sentimentdata.ClassificationCollection;
-import org.sift.runtime.model.sentimentdata.Probability;
 import org.sift.runtime.spi.ClassificationService;
 import org.trpr.platform.integration.spi.marshalling.Marshaller;
 
@@ -28,10 +27,9 @@ public class ClassificationServiceImpl implements ClassificationService {
 
 	/** The Marshaller implementation */
 	private Marshaller marshaller;
-		
+
 	public ClassificationCollection getSentiment(String line) {
-		try
-		{	//System.out.println("line is: "+line);
+		try{	
 			URLConnection conn = url.openConnection();
 			conn.setDoOutput(true);
 			OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
@@ -41,7 +39,6 @@ public class ClassificationServiceImpl implements ClassificationService {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String jsonLine="";
 			while ((retLine = reader.readLine()) != null) {
-				//System.out.println(retLine);
 				jsonLine+=retLine;
 			}
 			Classification sentimentData = 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
     http://www.springframework.org/schema/beans classpath:org/springframework/beans/factory/xml/spring-beans-2.5.xsd	
@@ -10,12 +9,14 @@
     http://www.springframework.org/schema/context classpath:org/springframework/context/config/spring-context-2.5.xsd">
 
 	<!-- Bean for registering the jobs with the JobRegistry. Mandatory bean -->
-	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
-		<property name="jobRegistry" ref="jobRegistry"/>
-	</bean>		
+	<bean
+		class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+		<property name="jobRegistry" ref="jobRegistry" />
+	</bean>
 
 	<bean name="tagJobDetailBean" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="org.trpr.platform.batch.impl.spring.job.BatchJob" />
+		<property name="jobClass"
+			value="org.trpr.platform.batch.impl.spring.job.BatchJob" />
 		<property name="group" value="sample-batch" />
 		<property name="jobDataAsMap">
 			<map>
@@ -25,98 +26,113 @@
 			</map>
 		</property>
 	</bean>
-	
+
 	<bean id="tagJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="tagJobDetailBean" />
 		<property name="cronExpression" value="0 0/60 * * * ?" />
 	</bean>
 
-	<bean
-		class="org.trpr.platform.batch.impl.quartz.SchedulerFactoryBean">
+	<bean class="org.trpr.platform.batch.impl.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
 				<ref bean="tagJobCronTrigger" />
 			</list>
 		</property>
 	</bean>
-	
-	<!--
-		The simple async task executor for the partition execution
-	-->
+
+	<!-- The simple async task executor for the partition execution -->
 	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
-	
-	<!--
-		Tag cloud Job Task Executor Multi-Threaded-Pool Configuration.
-	-->
-	<bean id="tagJobTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+
+	<!-- Tag cloud Job Task Executor Multi-Threaded-Pool Configuration. -->
+	<bean id="tagJobTaskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="10" />
 		<property name="maxPoolSize" value="100" />
 		<property name="queueCapacity" value="500" />
-	</bean>	
-	
-	<!--
-		Multi-Threaded Tagcloud Batch Job configuration
-	-->
+	</bean>
+
+	<!-- Multi-Threaded Tagcloud Batch Job configuration -->
 	<batch:job id="tagCloudJob" incrementer="incrementer">
-		<batch:step id="tagStep" next="tagCloudStep">
-			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the  MultiResourceItemReader. See https://jira.springsource.org/browse/BATCH-1301-->
-				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="10000"/>
+		<batch:step id="tagStep" next="tagFilteringStep">
+			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the MultiResourceItemReader. 
+					See https://jira.springsource.org/browse/BATCH-1301 -->
+				<batch:chunk reader="fileReader" processor="chainProcessor"
+					writer="tupleWriter" commit-interval="10000" />
+			</batch:tasklet>
+		</batch:step>
+		<batch:step id="tagFilteringStep" next="tagCloudStep">
+			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the MultiResourceItemReader. 
+					See https://jira.springsource.org/browse/BATCH-1301 -->
+				<batch:chunk reader="tupleListReader" processor="filteringProcessor"
+					writer="tupleListWriter" commit-interval="1" />
 			</batch:tasklet>
 		</batch:step>
 		<batch:step id="tagCloudStep">
 			<batch:tasklet task-executor="tagJobTaskExecutor">
-				<batch:chunk reader="tagCloudInputReader" processor="tagCloudProcessor" writer="tagCloudWriter" commit-interval="1"/>
+				<batch:chunk reader="tagCloudInputReader" processor="tagCloudProcessor"
+					writer="tagCloudWriter" commit-interval="1" />
 			</batch:tasklet>
 		</batch:step>
 	</batch:job>
-	
+
 	<!-- Start tagStep beans -->
-	<bean id="fileReader" class="org.springframework.batch.item.file.MultiResourceItemReader">
+	<bean id="fileReader"
+		class="org.springframework.batch.item.file.MultiResourceItemReader">
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
- 				<property name="lineMapper">
-	            	<bean class="org.sift.batch.tuple.TupleLineMapper">
-	            		<property name="itemReader" ref="fileReader"/>
-	            	</bean>
-        		</property>	
-        	</bean>
-        </property>	
-        <property name="resources">
-			<list>	
-				<ref bean="inputFileResource1"/>
-		<!-- 	<ref bean="inputFileResource2"/>
-				<ref bean="inputFileResource3"/> -->	
-			</list>        
-        </property>
-	</bean>	
-			
+				<property name="lineMapper">
+					<bean class="org.sift.batch.tuple.TupleLineMapper">
+						<property name="itemReader" ref="fileReader" />
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="resources">
+			<list>
+				<ref bean="inputFileResource1" />
+				<!-- <ref bean="inputFileResource2"/> <ref bean="inputFileResource3"/> -->
+			</list>
+		</property>
+	</bean>
+
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/home/devashishshankar/mobile_rev"/>
-	</bean>	
+		<constructor-arg value="/home/devashishshankar/nikon.txt" />
+	</bean>
 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt"/>
-	</bean>	
+		<constructor-arg
+			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt" />
+	</bean>
 	<bean id="inputFileResource3" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt"/>
-	</bean>	
-	
+		<constructor-arg
+			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt" />
+	</bean>
+
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
 		<property name="processors">
-			<list>
-				<bean class="org.sift.runtime.impl.TagLineSplitterProcessor">
+			<list value-type="org.sift.runtime.Tuple">
+				<bean class="org.sift.batch.test.TagLineSplitterProcessor">
 					<constructor-arg ref="lineSplitterProcessor" />
 				</bean>
-			<bean class="org.sift.runtime.impl.SentimentProcessor" >
+				<bean class="org.sift.runtime.impl.SentimentProcessor">
 					<property name="classificationService" ref="classificationService" />
 					<property name="numberConfidence" value="1" />
-					<property name="probConfidence" value="0.7" />
-					<property name="sentimentFilter" value="neg" />
-				</bean>  	
+					<property name="probConfidence" value="0.6" />
+					<property name="sentimentFilter" value="negative" />
+				</bean>
+				<bean class="org.sift.runtime.impl.AspectExtractionProcessor">
+					<property name="posTagger">
+						<bean class="org.sift.runtime.impl.POSTagger">
+							<constructor-arg
+								value="/home/devashishshankar/reviews/libraries/stanford-postagger-2012-11-11/models/wsj-0-18-left3words.tagger" />
+						</bean>
+					</property>
+				</bean>
+
 				<bean class="org.sift.runtime.impl.WordSplitterProcessor">
-					<property name="nGram" value="4"/>
-			 		<property name="stopWords">
-			            <bean class="org.sift.winnow.StopWords" />
-			        </property>							
+					<property name="nGram" value="4" />
+					<property name="stopWords">
+						<bean class="org.sift.winnow.StopWords" />
+					</property>
 				</bean>
 				<bean class="org.sift.batch.test.TagIdentifierProcessor">
 					<property name="wordWeights">
@@ -126,53 +142,90 @@
 							<entry key="3" value="8" />
 							<entry key="4" value="16" />
 						</map>
-					</property>	
+					</property>
 					<property name="sourceBoosts">
 						<map>
 							<entry key="nikon.txt" value="2" />
 						</map>
-					</property>	
+					</property>
 				</bean>
+
 			</list>
 		</property>
-	</bean>	
-	<bean id = "lineSplitterProcessor" class="org.sift.runtime.impl.LineSplitterProcessor" />
+	</bean>
+
+	<bean id="lineSplitterProcessor" class="org.sift.runtime.impl.LineSplitterProcessor" />
+
 	<bean id="classificationService" class="org.sift.batch.tag.service.ClassificationServiceImpl">
-		 <property name="marshaller">
-            <bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
-        </property>		
+		<property name="marshaller">
+			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
+		</property>
 		<property name="url" value="http://localhost:4000/" />
 		<property name="urlParameter" value="query" />
 	</bean>
+
 	<bean id="tupleWriter" class="org.sift.batch.tuple.TupleWriter">
-		<property name="collector" ref="collector"/>
-	</bean>	
+		<property name="collector" ref="collector" />
+	</bean>
+
 	<bean id="collector" class="org.sift.runtime.impl.ValueAggregatingOutputCollector">
-		<property name="shuffler" ref="shuffler"/>
-		<property name="delegate" ref="collectorDelegate"/>	
-	</bean>	
-	<bean id="shuffler" class="org.sift.runtime.impl.MemSortMergeShuffler"/>
-	<bean id="collectorDelegate" class="org.sift.runtime.impl.MemOutputCollector"/>
+		<property name="shuffler" ref="shuffler" />
+		<property name="delegate" ref="collectorDelegate" />
+	</bean>
+
+	<bean id="shuffler" class="org.sift.runtime.impl.MemSortMergeShuffler" />
+	<bean id="collectorDelegate" class="org.sift.runtime.impl.MemOutputCollector" />
+	<bean id="tupleListCollectorDelegate" class="org.sift.runtime.impl.MemOutputCollector" />
 	<!-- End tagStep beans -->
 
-	<!-- Start tagCloudStep beans -->	
-	<bean id="tagCloudInputReader" class="org.sift.batch.tag.TagCloudInputReader">
-		<property name="collector" ref="collector"/>
-	</bean>	
+	<!-- Start tagFileteringStep beans -->
+	<bean id="tupleListReader" class="org.sift.batch.tuple.TupleListReader">
+		<property name="collector" ref="collectorDelegate" />
+	</bean>
+	<bean id="filteringProcessor" class="org.sift.batch.tuple.FilteringProcessor" />
+	<!-- <bean id="filteringChainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor"> -->
+	<!-- <property name="processors"> -->
+	<!-- <list value-type="org.sift.runtime.Tuple"> -->
+	<!-- <bean class="org.sift.batch.test.FilteringProcessor"> -->
+	<!-- <constructor-arg ref="lineSplitterProcessor" /> -->
+	<!-- </bean> -->
+	<!-- </list> -->
+	<!-- </property> -->
+	<!-- </bean> -->
+
+	<bean id="tupleListWriter" class="org.sift.batch.tuple.TupleListWriter">
+		<property name="collector" ref="tupleListCollectorDelegate" />
+	</bean>
+	<!-- End tagFileteringStep beans -->
+
+	<!-- Start tagCloudStep beans -->
 	<bean id="tagCloudProcessor" class="org.sift.batch.tag.TagCloudProcessor">
-		<property name="maxTags" value="100"/>
-	</bean>	
+		<property name="maxTags" value="25" />
+	</bean>
+
+	<bean id="tagCloudInputReader" class="org.sift.batch.tag.TagCloudInputReader">
+		<property name="collector" ref="tupleListCollectorDelegate" />
+	</bean>
+
 	<bean id="tagCloudWriter" class="org.sift.batch.tag.TagCloudWriter">
-		<property name="persistenceService" ref="marshallerFileWriter"/>
-	</bean>	
-	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
-		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagclouds"/>		
+		<property name="persistenceServices">
+			<list>
+				<ref bean="imageFileWriter" />
+				<ref bean="marshallerFileWriter" />
+			</list>
+		</property>
+	</bean>
+	<bean id="imageFileWriter"
+		class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
+		<property name="tagCloudsDirectory"
+			value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
 	</bean>
 	<bean id="marshallerFileWriter" class="org.sift.batch.tag.service.TagCloudMarshallerService">
-		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagclouds"/>		
- 		<property name="marshaller">
-            <bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
-        </property>		
+		<property name="tagCloudsDirectory"
+			value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
+		<property name="marshaller">
+			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
+		</property>
 	</bean>
 	<!-- End tagCloudStep beans -->
 

@@ -34,7 +34,7 @@ import org.springframework.batch.item.ItemWriter;
 public class TagCloudWriter<T extends Tag, S extends TagCloud<T>> implements ItemWriter<DisplayTagCloud<DisplayTag>>{
 
 	/** The tag cloud persistence service */
-	private PersistenceService<T,S> persistenceService;
+	private List<PersistenceService<T,S>> persistenceServices;
 
 	/**
 	 * Interface method implementation. Persists the 
@@ -43,16 +43,17 @@ public class TagCloudWriter<T extends Tag, S extends TagCloud<T>> implements Ite
 	@SuppressWarnings("unchecked")
 	public void write(List<? extends DisplayTagCloud<DisplayTag>> tagClouds) throws Exception {
 		for (DisplayTagCloud<DisplayTag> dtc : tagClouds) {
-			this.persistenceService.persistTagCloud((S)dtc);
+			for(PersistenceService<T,S> persistenceService: this.persistenceServices)
+				persistenceService.persistTagCloud((S)dtc);
 		}
 	}
 
 	/** Getter/Setter methods */
-	public PersistenceService<T,S> getPersistenceService() {
-		return this.persistenceService;
+	public List<PersistenceService<T,S>> getPersistenceServices() {
+		return this.persistenceServices;
 	}
-	public void setPersistenceService(PersistenceService<T,S> persistenceService) {
-		this.persistenceService = persistenceService;
+	public void setPersistenceServices(List<PersistenceService<T,S>> persistenceServices) {
+		this.persistenceServices = persistenceServices;
 	}
 
 }

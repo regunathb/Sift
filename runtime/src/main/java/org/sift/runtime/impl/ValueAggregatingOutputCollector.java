@@ -16,8 +16,10 @@
 package org.sift.runtime.impl;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Shuffler;
@@ -30,10 +32,10 @@ import org.sift.runtime.spi.Shuffler;
  * @version 1.0, 28 Jan 2013
  */
 public class ValueAggregatingOutputCollector implements OutputCollector {
-	
+
 	/** The OutputCollector delegate */
 	private OutputCollector delegate;
-	
+
 	/** The Shuffler instance */
 	private Shuffler shuffler;
 
@@ -52,7 +54,7 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 	public List<Tuple> getEmittedTuples() {
 		return this.delegate.getEmittedTuples();
 	}
-	
+
 	/**
 	 * Interface method implementation. Uses the configured {@link Shuffler} to sort and merge the {@link Tuple} instances. Also aggregates the tuple values.
 	 * NOTE : this method is synchronized on this instance in order to protect from concurrent calls to this method.
@@ -61,24 +63,59 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 	public void setTuples(Tuple... tuples) {
 		synchronized(this) {
 			Collections.addAll(this.getEmittedTuples(), tuples);
-			List<Tuple> sortMergedTuples = this.shuffler.sort(this.getEmittedTuples());
-			Tuple[] aggregatedTuples = new Tuple[sortMergedTuples.size()];
-			// now aggregate the values treating them as type integer
-			int count = 0;
-			for (Tuple sortMergedTuple : sortMergedTuples) {
-				Tuple aggregatedValuesTuple = new Tuple(sortMergedTuple.getKey(), sortMergedTuple.getSource());
-				Integer aggregateValue = 0;
-				for (Object value : sortMergedTuple.getValues()) {
-					aggregateValue += (Integer)value;
+			//Create tuple list for each sentiment
+			List<Tuple> negativeTuples = new LinkedList<Tuple>();
+			List<Tuple> positiveTuples = new LinkedList<Tuple>();
+			List<Tuple> neutralTuples = new LinkedList<Tuple>();
+			//Add tuples to list according to sentiment
+			for(Tuple tuple:this.getEmittedTuples()) {
+				if(tuple.getList(Fields.SENTIMENT).get(0).equals(SentimentProcessor.posLabel)) {
+					positiveTuples.add(tuple);
 				}
-				aggregatedValuesTuple.addValue(aggregateValue);
-				aggregatedTuples[count] = aggregatedValuesTuple;	
-				count++;
+				else if(tuple.getList(Fields.SENTIMENT).get(0).equals(SentimentProcessor.negLabel)) {
+					negativeTuples.add(tuple);
+				}
+				else if(tuple.getList(Fields.SENTIMENT).get(0).equals(SentimentProcessor.neutralLabel)) {
+					neutralTuples.add(tuple);
+				}
+				else { //Shouldn't happen
+					throw new RuntimeException("Tuple with wrong sentiment");
+				}
 			}
-			this.delegate.setTuples(aggregatedTuples);
+			//Sort each list separately
+			List<Tuple> sortMergedTuples = this.shuffler.sort(positiveTuples);
+			sortMergedTuples.addAll(this.shuffler.sort(negativeTuples));
+			sortMergedTuples.addAll(this.shuffler.sort(neutralTuples));
+			//Add all tuples to delegate
+			this.delegate.setTuples(aggregateValue(sortMergedTuples));
 		}	
 	}
-
+	
+	/**
+	 * Aggregates values of tuples
+	 * @param sortMergedTuples Tuples, where list of values indicate weight
+	 * @return aggregatedTuples as an array of tuples, where all values have been aggregated
+	 */
+	private Tuple[] aggregateValue(List<Tuple> sortMergedTuples) {
+		Tuple[] aggregatedTuples = new Tuple[sortMergedTuples.size()];
+		// now aggregate the values treating them as type integer
+		int count = 0;
+		for (Tuple sortMergedTuple : sortMergedTuples) {
+			Tuple aggregatedValuesTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES,Fields.SENTIMENT);
+			aggregatedValuesTuple.setValue(Fields.KEY, sortMergedTuple.getString(Fields.KEY));
+			aggregatedValuesTuple.setValue(Fields.SOURCES, sortMergedTuple.getList(Fields.SOURCES));
+			Integer aggregateValue = 0;
+			for (Object value : sortMergedTuple.getList(Fields.VALUES)) {
+				aggregateValue += (Integer)value;
+			}
+			aggregatedValuesTuple.addToList(Fields.VALUES, aggregateValue);
+			aggregatedValuesTuple.addToList(Fields.SENTIMENT, sortMergedTuple.getList(Fields.SENTIMENT).get(0));
+			aggregatedTuples[count] = aggregatedValuesTuple;	
+			count++;
+		}
+		return aggregatedTuples;		
+	}
+	
 	/** Getter/Setter methods */
 	public OutputCollector getDelegate() {
 		return this.delegate;
@@ -92,5 +129,4 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 	public void setShuffler(Shuffler shuffler) {
 		this.shuffler = shuffler;
 	}
-
 }

@@ -15,6 +15,7 @@
  */
 package org.sift.runtime.impl;
 
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
@@ -28,7 +29,7 @@ import org.sift.winnow.StopWords;
  * @version 1.0, 28 Jan 2013
  */
 public class StopWordsFilter implements Processor {
-	
+
 	/** the StopWords instance */
 	private StopWords stopWords;
 
@@ -37,15 +38,17 @@ public class StopWordsFilter implements Processor {
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
-		Tuple output = new Tuple(tuple.getKey(), tuple.getSource());
-		for (Object word : tuple.getValues()) {
+		Tuple output = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES);
+		output.setValue(Fields.KEY, tuple.getString(Fields.KEY));
+		output.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
+		for (Object word : tuple.getList(Fields.VALUES)) {
 			if (!this.stopWords.isStopWord((String)word)) {
-				output.addValue(word);
+				output.addToList(Fields.VALUES,word);
 			}
 		}
 		collector.emit(output);
 	}
-	
+
 	/** Getter/Setter methods */
 	public StopWords getStopWords() {
 		return this.stopWords;

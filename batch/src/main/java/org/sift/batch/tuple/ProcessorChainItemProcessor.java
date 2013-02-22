@@ -18,6 +18,7 @@ package org.sift.batch.tuple;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.impl.MemOutputCollector;
 import org.sift.runtime.spi.Processor;
@@ -25,12 +26,12 @@ import org.springframework.batch.item.ItemProcessor;
 
 /**
  * The <code>ProcessorChainItemProcessor</code> is an implementation of the Spring Batch {@link ItemProcessor} implementation that subjects the
- * passed in {@link Tuple} data input to a series of Sift runtime {@link Processor} implementations.
+ * passed in data input to a series of Sift runtime {@link Processor} implementations.
  * 
  * @author Regunath B
  * @version 1.0, 28 Jan 2013
  */
-public class ProcessorChainItemProcessor implements ItemProcessor<Tuple,Tuple> {
+public class ProcessorChainItemProcessor<T,S> implements ItemProcessor<T,S> {
 
 	/** The list of Processor instances to pass the Tuple through */
 	private List<Processor> processors = new LinkedList<Processor>();
@@ -39,7 +40,9 @@ public class ProcessorChainItemProcessor implements ItemProcessor<Tuple,Tuple> {
 	 * Interface method implementation. Subjects the specified Tuple through a set of configured {@link Processor} instances, 
 	 * @see org.springframework.batch.item.ItemProcessor#process(java.lang.Object)
 	 */
-	public Tuple process(Tuple tuple) throws Exception {
+	@SuppressWarnings("unchecked")
+	public S process(T paramTuple) throws Exception {
+		Tuple tuple = (Tuple) paramTuple;
 		Tuple returnTuple = tuple;
 		for (Processor p : this.getProcessors()) {
 			MemOutputCollector collector = new MemOutputCollector();
@@ -52,13 +55,15 @@ public class ProcessorChainItemProcessor implements ItemProcessor<Tuple,Tuple> {
 				returnTuple = collector.getEmittedTuples().get(0);
 			} else {
 				//else force merge all tuple values into one tuple
-				returnTuple = new Tuple(Tuple.UNDEFINED_KEY, tuple.getSource());
+				returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES);
+				returnTuple.setValue(Fields.KEY, Tuple.UNDEFINED_KEY);
+				returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
 				for (Tuple t : collector.getEmittedTuples()) {
-					returnTuple.getValues().add(t);
+					returnTuple.addToList(Fields.VALUES, t);
 				}
 			}
 		}
-		return returnTuple;
+		return (S)returnTuple;
 	}
 	
 	/** Getter/Setter methods*/

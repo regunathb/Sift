@@ -17,6 +17,7 @@ package org.sift.runtime.impl;
 
 import org.sift.runtime.model.sentimentdata.Classification;
 import org.sift.runtime.model.sentimentdata.ClassificationCollection;
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.ClassificationService;
 import org.sift.runtime.spi.OutputCollector;
@@ -27,71 +28,67 @@ import org.sift.runtime.spi.Processor;
  * specified sentiment only. 
  * 
  * @author devashishshankar
+ * @version 1.0, 19th Feb, 2013
  */
 public class SentimentProcessor implements Processor {
-	
+
 	/** The sentiment to be extracted */
 	private String sentimentFilter;
-	
+
 	/** The minimum probability measure to classify */
 	private double probConfidence;
-	
+
 	/** The number of Classifiers that should agree to classify */
 	private int numberConfidence;
-	
+
 	/** Service providing functionality of Classifying texts into sentiments */
 	private ClassificationService classificationService;
-	
+
 	/** Label of  element for positive sentiments */
-	public String posLabel = "pos";
-	
+	static public String posLabel = "positive";
+
 	/** Label of  element for negative sentiments */
-	public String negLabel = "neg";
-	
+	static public String negLabel = "negative";
+
+	/** Label of  element for neutral sentiments */
+	static public String neutralLabel = "neutral";
+
+	/** 
+	 * Interface method Implementation. Filters a category of sentiments.
+	 * @see org.sift.runtime.spi.Processor#process()
+	 */
 	@Override
 	public void process(Tuple tuple, OutputCollector collector) {
-		Tuple returnTuple = new Tuple(tuple.getKey(), tuple.getSource());
-		for (Object value : tuple.getValues()) {
+		Tuple returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES,Fields.SENTIMENT);
+		returnTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
+		returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
+		for (Object value : tuple.getList(Fields.VALUES)) {
 			String line = (String) value;
-			if(isCorrectSentiment(line)) {
-				returnTuple.addValue(line.trim());
-			}
+			returnTuple.addToList(Fields.VALUES, line.trim());
+			returnTuple.addToList(Fields.SENTIMENT, this.getSentiment(line));
 		}
-		if(returnTuple.getValues().toArray().length>0)
+		if(returnTuple.getList(Fields.VALUES).toArray().length>0)
 			collector.emit(returnTuple);
 	}
-	
-	/** Queries the Sentiment API to get the sentiment of the line */
-	public boolean isCorrectSentiment(String line) {
+
+	/** Queries the Sentiment API to get the sentiment of the line
+	 *  Warning: Won't work for multiple classifiers.
+	 */
+	public String getSentiment(String line) {
 		ClassificationCollection coll = this.classificationService.getSentiment(line);
-		int correctClasscount=0;
 		for (Classification classifierData:coll.getClassification()) {
-			if(classifierData.getLabel().equals(this.sentimentFilter)) {
-				if(this.sentimentFilter.equals(this.posLabel)) {
-					if(classifierData.getProbability().getPos()>this.probConfidence) {
-//						correctClasscount++;
-//						System.out.println("Line queried: "+line);
-//						System.out.println("Output:");
-//						System.out.println("label: "+classifierData.getLabel());
-//						System.out.println("pos: "+classifierData.getProbability().getPos());
-//						System.out.println("neg: "+classifierData.getProbability().getNeg());
-					}
+			if(classifierData.getLabel().equals(SentimentProcessor.posLabel)) {
+				if(classifierData.getProbability().getPos()>this.probConfidence) {
+					return SentimentProcessor.posLabel;
 				}
-				if(this.sentimentFilter.equals(this.negLabel)) {
-					if(classifierData.getProbability().getNeg()>this.probConfidence) {
-//						correctClasscount++;
-//						System.out.println("Line queried: "+line);
-//						System.out.println("Output:");
-//						System.out.println("label: "+classifierData.getLabel());
-//						System.out.println("pos: "+classifierData.getProbability().getPos());
-//						System.out.println("neg: "+classifierData.getProbability().getNeg());
-					}
+			}
+			if(classifierData.getLabel().equals(SentimentProcessor.negLabel)) {
+				if(classifierData.getProbability().getNeg()>this.probConfidence) {
+					return SentimentProcessor.negLabel;
 				}
 			}
 		}
-		if(correctClasscount>=this.numberConfidence)
-			return true;
-		return false;
+		return SentimentProcessor.neutralLabel;
 	}
 	
 	/** Getter/Setter Methods */

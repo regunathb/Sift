@@ -47,13 +47,13 @@ public class StopWords {
 		"has","have","he","her","his","if","in","into","is","it","its","my","nine","no","not","of","on",
 		"one","or","seven","six","so","such","ten","that","the","then","there","these","they","this","three","to","too","two",
 		"will","with",
-		"&amp;","&quot;","amp","quot","&gt","&mdash","gt","mdash","samsung","galaxy","phone","htc"
+		"&amp;","&quot;","amp","quot","&gt","&mdash","gt","mdash",
 	};
 	
 	/** List of conjunctions */
 	private static final String[] CONJUNCTIONS = {
-		"and","both","but","either","for","just","neither","nor","only","or",
-		"so","whether","yet",
+		"a","an","and","as","at","both","but","either","for","in","is","just","neither","nor","of","only","or",
+		"so","this","the","to","with","whether","yet",
 	};
 	
 	/** List of stop words */

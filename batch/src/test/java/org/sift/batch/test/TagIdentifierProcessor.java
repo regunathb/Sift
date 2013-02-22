@@ -18,6 +18,7 @@ package org.sift.batch.test;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.impl.WordSplitterProcessor;
 import org.sift.runtime.spi.OutputCollector;
@@ -47,15 +48,18 @@ public class TagIdentifierProcessor  implements Processor {
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
-		Object[] values = tuple.getValues().toArray();
+		Object[] values = tuple.getList(Fields.VALUES).toArray();
+		Object[] sentiments = tuple.getList(Fields.SENTIMENT).toArray();
 		if(values.length<1) {
 			return;
 		}
 		String tag = (String)values[0];
-		System.out.println("tag: "+tag);
 		for (int i = 1; i < values.length; i++) {
 			if (!((String)values[i]).startsWith(tag)) { // ignore Tuple values that start with the Tag
-				Tuple returnTuple = new Tuple(tag + Tuple.KEY_SEP_CHAR + (String)values[i], tuple.getSource());
+				Tuple returnTuple = new Tuple(Fields.KEY,Fields.VALUES,Fields.SOURCES,Fields.SENTIMENT);
+				returnTuple.setValue(Fields.KEY, tag + Tuple.KEY_SEP_CHAR + (String)values[i]);
+				returnTuple.setValue(Fields.SOURCES, tuple.getValue(Fields.SOURCES));
+				
 				int wordsLength = WordSplitterProcessor.getWordsLength((String)values[i]);
 				String weight = this.getWordWeights().get(String.valueOf(wordsLength));
 				if (weight == null) {
@@ -63,11 +67,12 @@ public class TagIdentifierProcessor  implements Processor {
 					weight = DEFAULT_WEIGHT;
 				}
 				//check if there is a source boost to be applied
-				String boost = this.sourceBoosts.get(tuple.getSource());
+				String boost = this.sourceBoosts.get(tuple.getList(Fields.SOURCES));
 				if (boost != null) {
 					weight = String.valueOf((int)(Double.valueOf(boost) * Integer.valueOf(weight)));
 				}
-				returnTuple.addValue(Integer.valueOf(weight));
+				returnTuple.addToList(Fields.VALUES, Integer.valueOf(weight));
+				returnTuple.addToList(Fields.SENTIMENT, (String)sentiments[i]);
 				collector.emit(returnTuple);		
 			}
 		}

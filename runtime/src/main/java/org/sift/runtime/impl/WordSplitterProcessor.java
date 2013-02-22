@@ -15,6 +15,7 @@
  */
 package org.sift.runtime.impl;
 
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
@@ -28,41 +29,45 @@ import org.sift.winnow.StopWords;
  * @version 1.0, 28 Jan 2013
  */
 public class WordSplitterProcessor implements Processor {
-	
+
 	/** The n-grams to extract */
 	private int nGram = StopWords.DEFAULT_N_GRAM;
-			
+
 	/** Additional stop words, if any */
 	private StopWords stopWords;
-	
+
 	/**
 	 * Interface method implementation. Splits the string values in the specified Tuple into independent words
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
-		Tuple returnTuple = new Tuple(tuple.getKey(), tuple.getSource());
-		for (Object value : tuple.getValues()) {
-			String[] lines = this.getLines(((String)value).toLowerCase());
-			for (String line : lines) {
-				String[] tokens = line.split(StopWords.WORD_BOUNDARY);
-				for (int i = 0; i < tokens.length; i++) {
-					StringBuffer tokenBuffer = new StringBuffer();
-					for (int j = 0; j < this.getnGram(); j++) {
-						if (i+j <  tokens.length) {
-							tokenBuffer.append(tokens[i+j]);
-							tokenBuffer.append(StopWords.WORD_BOUNDARY_STRING);
-						}
-						String word = tokenBuffer.toString().trim();
-						if (this.getStopWords() != null && !this.getStopWords().isStopWord(word)) {
-							returnTuple.addValue(tokenBuffer.toString().trim());
-						}
+		Tuple returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES,Fields.SENTIMENT);
+		returnTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
+		returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
+		//To see the value element being accessed, to get the corresponding sentiment
+		int valueCount=-1;
+		for (Object value : tuple.getList(Fields.VALUES)) {
+			valueCount++;
+			String line = (String) value;
+			String[] tokens = line.split(StopWords.WORD_BOUNDARY);
+			for (int i = 0; i < tokens.length; i++) {
+				StringBuffer tokenBuffer = new StringBuffer();
+				for (int j = 0; j < this.getnGram(); j++) {
+					if (i+j <  tokens.length) {
+						tokenBuffer.append(tokens[i+j]);
+						tokenBuffer.append(StopWords.WORD_BOUNDARY_STRING);
 					}
-				}			
+					String word = tokenBuffer.toString().trim();
+					if (this.getStopWords() != null && !this.getStopWords().isStopWord(word)) {
+						returnTuple.addToList(Fields.VALUES, tokenBuffer.toString().trim());
+						returnTuple.addToList(Fields.SENTIMENT, tuple.getList(Fields.SENTIMENT).get(valueCount));
+					}
+				}
 			}
 		}
 		collector.emit(returnTuple);
 	}
-	
+
 	/**
 	 * Convenience method to consistently return word lengths as interpreted by Sift
 	 * @param words the String containing one or more words
@@ -71,16 +76,7 @@ public class WordSplitterProcessor implements Processor {
 	public static int getWordsLength(String words) {
 		return words.split(StopWords.WORD_BOUNDARY).length;
 	}
-	
-	/**
-	 * Helper method to take a raw line of text and return an array of strings, each representing a separate line
-	 * @param rawLine the raw line to process
-	 * @return array of line strings
-	 */
-	private String[] getLines(String rawLine) {
-		return new String[] {rawLine.replaceAll(StopWords.LINE_BOUNDARY, StopWords.WORD_BOUNDARY_STRING)};
-	}
-	
+
 	/** Getter/Setter for values */
 	public int getnGram() {
 		return this.nGram;
@@ -94,5 +90,5 @@ public class WordSplitterProcessor implements Processor {
 	public void setStopWords(StopWords stopWords) {
 		this.stopWords = stopWords;
 	}
-	
+
 }

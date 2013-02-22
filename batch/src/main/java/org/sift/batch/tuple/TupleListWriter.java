@@ -15,43 +15,35 @@
  */
 package org.sift.batch.tuple;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.springframework.batch.item.ItemWriter;
 
 /**
- * The <code>TupleWriter</code> is a Spring Batch {@link ItemWriter} implementation that writes the output to the configured
+ * The <code>TupleListWriter</code> is a Spring Batch {@link ItemWriter} implementation that writes the output to the configured
  * {@link OutputCollector} instance
  * 
- * @author Regunath B
- * @version 1.0, 28 Jan 2013
+ * @author devashishshankar
+ * @version 1.0, 20 Feb 2013
  */
-public class TupleWriter implements ItemWriter<Tuple> {
+public class TupleListWriter implements ItemWriter< List<Tuple> > {
 
 	/** The OutputCollector to write the output to*/
 	private OutputCollector collector;
-	
+
 	/**
-	 * Interface method implementation. Writes the out to the cobfigured {@link OutputCollector}
+	 * Interface method implementation. Writes the out to the configured {@link OutputCollector}
 	 * @see org.springframework.batch.item.ItemWriter#write(java.util.List)
 	 */
-	public void write(List<? extends Tuple> tuples) throws Exception {
-		List<Tuple> containedTuples = new LinkedList<Tuple>();
-		for (Tuple t : tuples) {
-			if (t.getString(Fields.KEY).equals(Tuple.UNDEFINED_KEY)) { // it is an collection of Tuple instances
-				Collections.addAll(containedTuples, t.getList(Fields.VALUES).toArray(new Tuple[0]));				
-			} else {
-				Collections.addAll(containedTuples,t);
-			}
-		}
-		this.collector.setTuples(containedTuples.toArray(new Tuple[0]));
-	}
-	
+	@Override
+	public void write(List<? extends List<Tuple>> tuplesList) throws Exception {
+		List<Tuple> tuples = tuplesList.get(0);
+		this.collector.setTuples(tuples.toArray(new Tuple[0]));
+	}	
+
+
 	/** Getter/Setter methods */
 	public OutputCollector getCollector() {
 		return this.collector;
@@ -59,6 +51,4 @@ public class TupleWriter implements ItemWriter<Tuple> {
 	public void setCollector(OutputCollector collector) {
 		this.collector = collector;
 	}
-	
-
 }

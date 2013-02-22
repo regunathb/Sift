@@ -15,6 +15,7 @@
  */
 package org.sift.runtime.impl;
 
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
@@ -28,27 +29,34 @@ import org.sift.winnow.StopWords;
  * @version 1.0, 28 Jan 2013
  */
 public class LineSplitterProcessor implements Processor {
-	
+
 	/** Minimum length (in no. of characters) of a line for it to contain useful information */
 	public static int minLineLength = 3;
-	
+
 	/** The regex for splitting text into lines. It follows the following rules:
 	 * 1. Splits on '\n'
 	 * 2. Splits on '.' except decimal numbers (like '3.5')
 	 */
-	public static String lineSplitRegex = "\\\\n|\\.(?!\\d)|(?<!\\d)\\.";
+	public static String LINE_SPLIT_REGEX = "\\\\n|\\.(?!\\d)|(?<!\\d)\\.";
+	
+	/** Character representing new line */
+	public static String NEW_LINE_CHAR = "\\n";
 	
 	/**
 	 * Interface method implementation. Splits the string values in the specified Tuple into independent lines
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
-		Tuple returnTuple = new Tuple(tuple.getKey(), tuple.getSource());
-		for (Object value : tuple.getValues()) {
+
+		Tuple returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES);
+		returnTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
+		returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
+
+		for (Object value : tuple.getList(Fields.VALUES)) {
 			for(String line : this.getLines(((String)value).toLowerCase())) {
-					if(line.length()>LineSplitterProcessor.minLineLength) {
-						returnTuple.addValue(line.trim());
-					}
+				if(line.length()>LineSplitterProcessor.minLineLength) {
+					returnTuple.addToList(Fields.VALUES, line.trim());
+				}
 			}	
 		}
 		collector.emit(returnTuple);
@@ -60,12 +68,11 @@ public class LineSplitterProcessor implements Processor {
 	 * @return array of line strings
 	 */
 	public String[] getLines(String rawLine) {
-		String a[] = rawLine.split(LineSplitterProcessor.lineSplitRegex);
-		for(String i : a){
-			i.replaceAll(StopWords.LINE_BOUNDARY, "");
-			i.replaceAll("\\n", "");
+		String lines[] = rawLine.split(LineSplitterProcessor.LINE_SPLIT_REGEX);
+		for(String line : lines){
+			line.replaceAll(StopWords.LINE_BOUNDARY, "");
+			line.replaceAll(LineSplitterProcessor.NEW_LINE_CHAR, "");
 		}
-		
-		return a;
+		return lines;
 	}	
 }

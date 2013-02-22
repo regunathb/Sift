@@ -20,8 +20,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.sift.runtime.model.tagcloud.TagCloudModel;
@@ -80,8 +82,12 @@ public class TagCloudMarshallerService <T extends Tag, S extends TagCloud<T>> im
 	    	if (tag.getTagURL() != null) {
 	    		tModel.setTagURL(tag.getTagURL().toExternalForm());
 	    	}
-	    	if (tag.getTagSourcesURL() != null) {
-	    		tModel.setTagSourcesURL(tag.getTagSourcesURL().toExternalForm());
+	    	if (tag.getTagSourcesURIs() != null) {
+	    		//URIs from tag to tagmodel
+	    		List<String> tagSourceURIs = tModel.getTagSourcesURIs();
+	    		for (URI uri : tag.getTagSourcesURIs()) {
+	    			tagSourceURIs.add(uri.toASCIIString());
+	    		}
 	    	}
 	    	tModel.setTitle(tag.getTitle());
 	    	tagCloudModel.getTags().add(tModel);
@@ -114,7 +120,9 @@ public class TagCloudMarshallerService <T extends Tag, S extends TagCloud<T>> im
 		    	DisplayTag dTag = new DisplayTag(tag.getDisplayText(), tag.getWeight());
 		    	dTag.setDescription(tag.getDescription());
 		    	dTag.setTagURL(new URL(tag.getTagURL()));
-		    	dTag.setTagSourcesURL(new URL(tag.getTagSourcesURL()));
+		    	for (String uri : tag.getTagSourcesURIs()) {
+		    		dTag.getTagSourcesURIs().add(new URI(uri));
+		    	}
 		    	dTag.setTitle(tag.getTitle());
 		    	tagCloud.addTag((T)dTag);
 		    }

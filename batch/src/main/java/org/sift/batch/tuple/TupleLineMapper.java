@@ -15,6 +15,11 @@
  */
 package org.sift.batch.tuple;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.MultiResourceItemReader;
@@ -41,8 +46,20 @@ public class TupleLineMapper implements LineMapper<Tuple>, InitializingBean {
 	 */
 	public Tuple mapLine(String line, int lineNumber) throws Exception {
 		Resource currentResource = this.itemReader == null ? this.resource : this.itemReader.getCurrentResource();
-		Tuple tuple = new Tuple(String.valueOf(lineNumber), currentResource.getFilename());
-		tuple.addValue(line);
+		URI reviewURI = new URI(currentResource.getFile().getAbsolutePath()+"#"+String.valueOf(lineNumber));
+		
+
+		Tuple tuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES);
+		//Add key
+		tuple.setValue(Fields.KEY, String.valueOf(lineNumber));
+		//Add sources
+		List<URI> sourceURI = new ArrayList<URI>();
+		sourceURI.add(reviewURI);
+		tuple.setValue(Fields.SOURCES, sourceURI);
+		//Add values
+		List<String> initialValues = new ArrayList<String>();
+		initialValues.add(line);
+		tuple.setValue(Fields.VALUES, initialValues);
 		return tuple;
 	}
 

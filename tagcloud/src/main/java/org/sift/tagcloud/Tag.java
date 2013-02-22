@@ -15,7 +15,10 @@
  */
 package org.sift.tagcloud;
 
+import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The <code>Tag</code> represents a displayed word in a tag cloud. This class hold data about
@@ -44,7 +47,7 @@ public class Tag {
 	/** The tag URL pointing to a resource (or) action that this tag may lead to*/
 	private URL tagURL;
 	/** URL pointing to source(s) from which this tag was derived from*/
-	private URL tagSourcesURL;
+	private List<URI> tagSourcesURIs;
 	
 	/** Constructors*/
 	public Tag(String displayText) {
@@ -90,11 +93,14 @@ public class Tag {
 	public int getWeight() {
 		return this.weight;
 	}	
-	public URL getTagSourcesURL() {
-		return this.tagSourcesURL;
+	public List<URI> getTagSourcesURIs() {
+		if(this.tagSourcesURIs==null) {
+			this.tagSourcesURIs = new ArrayList<URI>();
+		}
+		return this.tagSourcesURIs;
 	}
-	public void setTagSourcesURL(URL tagSourcesURL) {
-		this.tagSourcesURL = tagSourcesURL;
+	public void setTagSourcesURIs(List<URI> tagSourcesURL) {
+		this.tagSourcesURIs = tagSourcesURL;
 	}
 	/** End Getter/Setter methods*/
 

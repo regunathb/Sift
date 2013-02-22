@@ -15,11 +15,13 @@
  */
 package org.sift.runtime.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.Shuffler;
 
@@ -41,12 +43,23 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 		List<Tuple> sortMergeTuples = new LinkedList<Tuple>();
 		Tuple mergedTuple = null;
 		for (Tuple tuple : tuples) {
-			if (mergedTuple == null || !mergedTuple.getKey().equals(tuple.getKey())) {
-				mergedTuple = new Tuple(tuple.getKey(), tuple.getSource());
+			if (mergedTuple == null || !mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) {
+				mergedTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES,Fields.SENTIMENT);
+				mergedTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
+				//Copying the list before adding to mergedTuple
+				List<Object> oldTupleSourceList = new ArrayList<Object>();
+				oldTupleSourceList.addAll(tuple.getList(Fields.SOURCES));
+				mergedTuple.setValue(Fields.SOURCES, oldTupleSourceList);
 				sortMergeTuples.add(mergedTuple);
 			}
-			if (mergedTuple.getKey().equals(tuple.getKey())) { // double check
-				Collections.addAll(mergedTuple.getValues(), tuple.getValues().toArray(new Object[0]));
+			if (mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) { // double check
+				//Add the source URIs				
+				for (Object uri:tuple.getList(Fields.SOURCES)) {
+					if(mergedTuple.getList(Fields.SOURCES)==null || !mergedTuple.getList(Fields.SOURCES).contains(uri))
+						mergedTuple.addToList(Fields.SOURCES, uri);
+				}
+				Collections.addAll(mergedTuple.getList(Fields.VALUES), tuple.getList(Fields.VALUES).toArray(new Object[0]));
+				Collections.addAll(mergedTuple.getList(Fields.SENTIMENT), tuple.getList(Fields.SENTIMENT).toArray(new Object[0]));
 			} else { // this should never happen
 				throw new RuntimeException("Unable to sort and merge tuple data!");
 			}
@@ -59,7 +72,7 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 	public int compare(Tuple tuple1, Tuple tuple2) {
-		return tuple1.getKey().compareTo(tuple2.getKey());
+		return tuple1.getString(Fields.KEY).compareTo(tuple2.getString(Fields.KEY));
 	}
 
 }

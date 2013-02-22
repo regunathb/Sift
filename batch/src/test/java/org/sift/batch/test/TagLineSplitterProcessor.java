@@ -15,6 +15,7 @@
  */
 package org.sift.batch.test;
 
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.impl.LineSplitterProcessor;
 import org.sift.runtime.spi.OutputCollector;
@@ -29,8 +30,13 @@ import org.sift.runtime.spi.Processor;
  * @version 1.0, 18 Feb 2013
  */
 public class TagLineSplitterProcessor implements Processor {
+
+	/** Instance of the generic {@link LineSplitterProcessor} which has methods for Line splitting*/
 	LineSplitterProcessor lineSplitterProcessor;
-	
+
+	/** Character delimiting the first value (which is tag value) */
+	static public String TAG_VALUE_SEP_CHAR = "\t";
+
 	/**
 	 * Default constructor. Injects {@link LineSplitterProcessor} into this class
 	 * @param lineSplitterProcessor
@@ -38,23 +44,26 @@ public class TagLineSplitterProcessor implements Processor {
 	public TagLineSplitterProcessor(LineSplitterProcessor lineSplitterProcessor) {
 		this.lineSplitterProcessor = lineSplitterProcessor;
 	}
-	
+
 	/**
 	 * Interface method implementation. Splits the string values in the specified Tuple into independent lines
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
 	 */
 	@Override
 	public void process(Tuple tuple, OutputCollector collector) {
-		Tuple returnTuple = new Tuple(tuple.getKey(), tuple.getSource());
-		Object[] values = tuple.getValues().toArray();
+
+		Tuple returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES);
+		returnTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
+		returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
+		Object[] values = tuple.getList(Fields.VALUES).toArray();
 		//Get the tag value
 		String tag = (String)values[0];
-		tag = tag.substring(0, tag.indexOf("\t"));
-		for (Object value : tuple.getValues()) {
+		tag = tag.substring(0, tag.indexOf(TagLineSplitterProcessor.TAG_VALUE_SEP_CHAR));
+		for (Object value : tuple.getList(Fields.VALUES)) {
 			for(String line : this.lineSplitterProcessor.getLines(((String)value).toLowerCase())) {
-					if(line.length()>LineSplitterProcessor.minLineLength) {
-						returnTuple.addValue(tag+"\t"+line.trim());
-					}
+				if(line.length()>LineSplitterProcessor.minLineLength) {
+					returnTuple.addToList(Fields.VALUES, tag+TagLineSplitterProcessor.TAG_VALUE_SEP_CHAR+line.trim());
+				}
 			}	
 		}
 		collector.emit(returnTuple);
