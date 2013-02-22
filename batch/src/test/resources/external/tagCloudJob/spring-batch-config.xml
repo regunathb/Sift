@@ -175,23 +175,18 @@
 
 	<bean id="shuffler" class="org.sift.runtime.impl.MemSortMergeShuffler" />
 	<bean id="collectorDelegate" class="org.sift.runtime.impl.MemOutputCollector" />
-	<bean id="tupleListCollectorDelegate" class="org.sift.runtime.impl.MemOutputCollector" />
 	<!-- End tagStep beans -->
 
 	<!-- Start tagFileteringStep beans -->
+	<!--  Note: In TagFilteringStep, the reader emits a List of tuples (not individual tuples like tagstep)
+	 -->
+	 
+	<!--  Another collector is required for TagFilteringStep -->
+	<bean id="tupleListCollectorDelegate" class="org.sift.runtime.impl.MemOutputCollector" />
 	<bean id="tupleListReader" class="org.sift.batch.tuple.TupleListReader">
 		<property name="collector" ref="collectorDelegate" />
 	</bean>
 	<bean id="filteringProcessor" class="org.sift.batch.tuple.FilteringProcessor" />
-	<!-- <bean id="filteringChainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor"> -->
-	<!-- <property name="processors"> -->
-	<!-- <list value-type="org.sift.runtime.Tuple"> -->
-	<!-- <bean class="org.sift.batch.test.FilteringProcessor"> -->
-	<!-- <constructor-arg ref="lineSplitterProcessor" /> -->
-	<!-- </bean> -->
-	<!-- </list> -->
-	<!-- </property> -->
-	<!-- </bean> -->
 
 	<bean id="tupleListWriter" class="org.sift.batch.tuple.TupleListWriter">
 		<property name="collector" ref="tupleListCollectorDelegate" />
