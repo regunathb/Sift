@@ -49,16 +49,15 @@ public class TagIdentifierProcessor  implements Processor {
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
 		Object[] values = tuple.getList(Fields.VALUES).toArray();
-		Object[] sentiments = tuple.getList(Fields.SENTIMENT).toArray();
 		if(values.length<1) {
 			return;
 		}
-		String tag = (String)values[0];
-		for (int i = 1; i < values.length; i++) {
+		String tag = tuple.getString(Fields.TAG);
+		for (int i = 0; i < values.length; i++) {
 			if (!((String)values[i]).startsWith(tag)) { // ignore Tuple values that start with the Tag
-				Tuple returnTuple = new Tuple(Fields.KEY,Fields.VALUES,Fields.SOURCES,Fields.SENTIMENT);
+				Tuple returnTuple = tuple.clone();
 				returnTuple.setValue(Fields.KEY, tag + Tuple.KEY_SEP_CHAR + (String)values[i]);
-				returnTuple.setValue(Fields.SOURCES, tuple.getValue(Fields.SOURCES));
+				returnTuple.setValue(Fields.VALUES,null);
 				
 				int wordsLength = WordSplitterProcessor.getWordsLength((String)values[i]);
 				String weight = this.getWordWeights().get(String.valueOf(wordsLength));
@@ -72,7 +71,6 @@ public class TagIdentifierProcessor  implements Processor {
 					weight = String.valueOf((int)(Double.valueOf(boost) * Integer.valueOf(weight)));
 				}
 				returnTuple.addToList(Fields.VALUES, Integer.valueOf(weight));
-				returnTuple.addToList(Fields.SENTIMENT, (String)sentiments[i]);
 				collector.emit(returnTuple);		
 			}
 		}

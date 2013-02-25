@@ -21,5 +21,5 @@ package org.sift.runtime;
  * @version 1.0, 21 Feb, 2013
  */
 public enum Fields {
-	KEY,SOURCES,VALUES,SENTIMENT
+	KEY,SOURCES,VALUES,SENTIMENT,TAG
 }

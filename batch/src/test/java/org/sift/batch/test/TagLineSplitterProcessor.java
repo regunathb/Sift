@@ -52,20 +52,22 @@ public class TagLineSplitterProcessor implements Processor {
 	@Override
 	public void process(Tuple tuple, OutputCollector collector) {
 
-		Tuple returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES);
-		returnTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
-		returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
 		Object[] values = tuple.getList(Fields.VALUES).toArray();
-		//Get the tag value
+		//Get the tag value. Tag is the productID
 		String tag = (String)values[0];
 		tag = tag.substring(0, tag.indexOf(TagLineSplitterProcessor.TAG_VALUE_SEP_CHAR));
 		for (Object value : tuple.getList(Fields.VALUES)) {
 			for(String line : this.lineSplitterProcessor.getLines(((String)value).toLowerCase())) {
 				if(line.length()>LineSplitterProcessor.minLineLength) {
-					returnTuple.addToList(Fields.VALUES, tag+TagLineSplitterProcessor.TAG_VALUE_SEP_CHAR+line.trim());
+					Tuple returnTuple = tuple.clone();
+					//Adding a new field, TAG to hold the tag
+					returnTuple.addField(Fields.TAG);
+					returnTuple.setValue(Fields.VALUES, null);
+					returnTuple.addToList(Fields.VALUES, line.trim());
+					returnTuple.setValue(Fields.TAG, tag);
+					collector.emit(returnTuple);
 				}
 			}	
 		}
-		collector.emit(returnTuple);
 	}
 }

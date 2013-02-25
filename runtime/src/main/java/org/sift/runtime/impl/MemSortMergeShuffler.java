@@ -44,12 +44,8 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 		Tuple mergedTuple = null;
 		for (Tuple tuple : tuples) {
 			if (mergedTuple == null || !mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) {
-				mergedTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES,Fields.SENTIMENT);
-				mergedTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
+				mergedTuple = tuple.clone();
 				//Copying the list before adding to mergedTuple
-				List<Object> oldTupleSourceList = new ArrayList<Object>();
-				oldTupleSourceList.addAll(tuple.getList(Fields.SOURCES));
-				mergedTuple.setValue(Fields.SOURCES, oldTupleSourceList);
 				sortMergeTuples.add(mergedTuple);
 			}
 			if (mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) { // double check
@@ -59,7 +55,6 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 						mergedTuple.addToList(Fields.SOURCES, uri);
 				}
 				Collections.addAll(mergedTuple.getList(Fields.VALUES), tuple.getList(Fields.VALUES).toArray(new Object[0]));
-				Collections.addAll(mergedTuple.getList(Fields.SENTIMENT), tuple.getList(Fields.SENTIMENT).toArray(new Object[0]));
 			} else { // this should never happen
 				throw new RuntimeException("Unable to sort and merge tuple data!");
 			}

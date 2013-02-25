@@ -8,7 +8,8 @@
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
     http://www.springframework.org/schema/context classpath:org/springframework/context/config/spring-context-2.5.xsd">
 
-	<!-- Bean for registering the jobs with the JobRegistry. Mandatory bean -->
+	<!-- Bean for registering the jobs with the J
+		thoobRegistry. Mandatory bean -->
 	<bean
 		class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
 		<property name="jobRegistry" ref="jobRegistry" />
@@ -109,31 +110,31 @@
 
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
 		<property name="processors">
-			<list value-type="org.sift.runtime.Tuple">
+		  <list value-type="org.sift.runtime.Tuple">
 				<bean class="org.sift.batch.test.TagLineSplitterProcessor">
 					<constructor-arg ref="lineSplitterProcessor" />
 				</bean>
-				<bean class="org.sift.runtime.impl.SentimentProcessor">
+		<!--   	<bean class="org.sift.Sieve.impl.SentimentProcessor">
 					<property name="classificationService" ref="classificationService" />
 					<property name="numberConfidence" value="1" />
 					<property name="probConfidence" value="0.6" />
-					<property name="sentimentFilter" value="negative" />
-				</bean>
-				<bean class="org.sift.runtime.impl.AspectExtractionProcessor">
+					<property name="sentimentFilter" value="negative" /> 
+				</bean>--> 
+			<!--  <bean class="org.sift.Sieve.impl.AspectExtractionProcessor">
 					<property name="posTagger">
-						<bean class="org.sift.runtime.impl.POSTagger">
+						<bean class="org.sift.Sieve.impl.POSTagger">
 							<constructor-arg
 								value="/home/devashishshankar/reviews/libraries/stanford-postagger-2012-11-11/models/wsj-0-18-left3words.tagger" />
 						</bean>
 					</property>
-				</bean>
+				</bean>-->	
 
-				<bean class="org.sift.runtime.impl.WordSplitterProcessor">
+			<!--  	<bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4" />
 					<property name="stopWords">
 						<bean class="org.sift.winnow.StopWords" />
 					</property>
-				</bean>
+				</bean>-->
 				<bean class="org.sift.batch.test.TagIdentifierProcessor">
 					<property name="wordWeights">
 						<map>
@@ -165,9 +166,13 @@
 	</bean>
 
 	<bean id="tupleWriter" class="org.sift.batch.tuple.TupleWriter">
-		<property name="collector" ref="collector" />
+		<property name="collector" ref="sentimentCollector" />
 	</bean>
 
+	<bean id="sentimentCollector" class="org.sift.Sieve.impl.SentimentBasedValueAggregator">
+		<property name="shuffler" ref="shuffler" />
+		<property name="delegate" ref="collectorDelegate" />
+	</bean>
 	<bean id="collector" class="org.sift.runtime.impl.ValueAggregatingOutputCollector">
 		<property name="shuffler" ref="shuffler" />
 		<property name="delegate" ref="collectorDelegate" />

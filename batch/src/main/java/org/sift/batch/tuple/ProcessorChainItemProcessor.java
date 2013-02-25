@@ -17,8 +17,8 @@ package org.sift.batch.tuple;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
-import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.impl.MemOutputCollector;
 import org.sift.runtime.spi.Processor;
@@ -35,7 +35,7 @@ public class ProcessorChainItemProcessor<T,S> implements ItemProcessor<T,S> {
 
 	/** The list of Processor instances to pass the Tuple through */
 	private List<Processor> processors = new LinkedList<Processor>();
-		
+
 	/**
 	 * Interface method implementation. Subjects the specified Tuple through a set of configured {@link Processor} instances, 
 	 * @see org.springframework.batch.item.ItemProcessor#process(java.lang.Object)
@@ -43,29 +43,22 @@ public class ProcessorChainItemProcessor<T,S> implements ItemProcessor<T,S> {
 	@SuppressWarnings("unchecked")
 	public S process(T paramTuple) throws Exception {
 		Tuple tuple = (Tuple) paramTuple;
-		Tuple returnTuple = tuple;
+		//Stack holding list of tuples to be passed on to the next Processor
+		Stack<Tuple> returnedTuples = new Stack<Tuple>();
+		returnedTuples.push(tuple);
 		for (Processor p : this.getProcessors()) {
 			MemOutputCollector collector = new MemOutputCollector();
-			p.process(returnTuple, collector);
-			// check if there is only one emitted Tuple and return it
-			if(collector.getEmittedTuples().size()==0) { //No tuple returned. The processor filtered it
-				return null;
-			}
-			if (collector.getEmittedTuples().size() == 1) {
-				returnTuple = collector.getEmittedTuples().get(0);
-			} else {
-				//else force merge all tuple values into one tuple
-				returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES);
-				returnTuple.setValue(Fields.KEY, Tuple.UNDEFINED_KEY);
-				returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
-				for (Tuple t : collector.getEmittedTuples()) {
-					returnTuple.addToList(Fields.VALUES, t);
-				}
-			}
+			//Process all the tuples
+			for(Tuple returnTuple :returnedTuples)
+				p.process(returnTuple, collector);
+			//Clear and add the new tuples
+			returnedTuples.clear();
+			returnedTuples.addAll(collector.getEmittedTuples());
 		}
-		return (S)returnTuple;
+		List<Tuple> returnTuples = new LinkedList<Tuple>(returnedTuples);
+		return (S)returnTuples;
 	}
-	
+
 	/** Getter/Setter methods*/
 	public List<Processor> getProcessors() {
 		return this.processors;

@@ -20,7 +20,6 @@ import java.util.Stack;
 
 import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
-import org.sift.runtime.impl.SentimentProcessor;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.tagcloud.ui.DisplayTag;
 import org.sift.tagcloud.ui.DisplayTagCloud;
@@ -39,9 +38,12 @@ public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTa
 
 	/** The OutputCollector to get Tuples and their aggregated values */
 	private OutputCollector collector;
-	
+
 	/** Stack storing more tag clouds, which are popped one by one */
 	static Stack<DisplayTagCloud<DisplayTag>> tagCloudList = new Stack<DisplayTagCloud<DisplayTag>>();
+
+	/** Factory for generating TagCLouds */
+	private TagCloudFactory tagCloudFactory;
 
 	public DisplayTagCloud<DisplayTag> read() throws Exception, UnexpectedInputException,ParseException {
 		synchronized(this.collector) {
@@ -54,39 +56,23 @@ public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTa
 			if(TagCloudInputReader.tagCloudList.empty()) { //Populate the stack
 				String[] tupleValues = this.getSubjectAndTag(this.collector.getEmittedTuples().remove(0).getString(Fields.KEY));
 				String subject = tupleValues[0];
-				//3 Tag clouds for positive, negative and neutral sentiments
-				DisplayTagCloud<DisplayTag> tagCloudPositive = new DisplayTagCloud<DisplayTag>(subject+"_"+SentimentProcessor.posLabel);		
-				DisplayTagCloud<DisplayTag> tagCloudNegative = new DisplayTagCloud<DisplayTag>(subject+"_"+SentimentProcessor.negLabel);		
-				DisplayTagCloud<DisplayTag> tagCloudNeutral = new DisplayTagCloud<DisplayTag>(subject+"_"+SentimentProcessor.neutralLabel);
+				this.tagCloudFactory = new TagCloudFactory(this.collector.getEmittedTuples().remove(0));
 				while(!this.collector.getEmittedTuples().isEmpty()) {
 					Tuple t = this.collector.getEmittedTuples().get(0);
 					tupleValues = this.getSubjectAndTag(t.getString(Fields.KEY));
-					if (tupleValues[0].equals(subject)) {
-						DisplayTag displayTag = new DisplayTag(this.getSubjectAndTag(t.getString(Fields.KEY))[1], (Integer)t.getList(Fields.VALUES).get(0));
+					String displayText = this.getSubjectAndTag(t.getString(Fields.KEY))[1];
+					if (tupleValues[0].equals(subject) && displayText.length()>1) {  //Display tag is not an empty string
+						DisplayTag displayTag = new DisplayTag(displayText, (Integer)t.getList(Fields.VALUES).get(0));
 						for (Object source: t.getList(Fields.SOURCES)) {
 							displayTag.getTagSourcesURIs().add((URI)source);
 						}
-						if(t.getList(Fields.SENTIMENT).get(0).equals(SentimentProcessor.posLabel)) {
-							tagCloudPositive.addTag(displayTag);
-						}
-						else if(t.getList(Fields.SENTIMENT).get(0).equals(SentimentProcessor.negLabel)) {
-							tagCloudNegative.addTag(displayTag);
-						}
-
-						else if(t.getList(Fields.SENTIMENT).get(0).equals(SentimentProcessor.neutralLabel)) {
-							tagCloudNeutral.addTag(displayTag);
-						}
-						else { //Shouldn't happen
-							throw new RuntimeException("Error while getting tag sentiment");
-						}
+						this.tagCloudFactory.add(t, displayTag);
 						this.collector.getEmittedTuples().remove(0);
 					} else {
 						break;
 					}
 				}
-				TagCloudInputReader.tagCloudList.push(tagCloudPositive);
-				TagCloudInputReader.tagCloudList.push(tagCloudNegative);
-				TagCloudInputReader.tagCloudList.push(tagCloudNeutral);
+				TagCloudInputReader.tagCloudList.addAll(this.tagCloudFactory.getAll());
 			} 
 			return TagCloudInputReader.tagCloudList.pop();
 		}
@@ -110,6 +96,14 @@ public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTa
 	}
 	public void setCollector(OutputCollector collector) {
 		this.collector = collector;
+	}
+
+	public TagCloudFactory getTagCloudFactory() {
+		return tagCloudFactory;
+	}
+
+	public void setTagCloudFactory(TagCloudFactory tagCloudFactory) {
+		this.tagCloudFactory = tagCloudFactory;
 	}
 
 }

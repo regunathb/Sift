@@ -95,6 +95,11 @@
 			<artifactId>tagcloud</artifactId>
 			<version>1.0.0</version>
 		</dependency>	
+		<dependency>
+			<groupId>org.sift</groupId>
+			<artifactId>Sieve</artifactId>
+			<version>1.0.0</version>
+		</dependency>	
 		<!-- Third party dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>

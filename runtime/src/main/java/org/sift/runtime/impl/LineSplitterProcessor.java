@@ -47,11 +47,9 @@ public class LineSplitterProcessor implements Processor {
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
-
 		Tuple returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES);
 		returnTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
 		returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
-
 		for (Object value : tuple.getList(Fields.VALUES)) {
 			for(String line : this.getLines(((String)value).toLowerCase())) {
 				if(line.length()>LineSplitterProcessor.minLineLength) {

@@ -15,9 +15,12 @@
  */
 package org.sift.batch.tuple;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
+import org.sift.Sieve.impl.AspectFactory;
 import org.springframework.batch.item.ItemProcessor;
 
 /**
@@ -29,13 +32,54 @@ import org.springframework.batch.item.ItemProcessor;
  */
 public class FilteringProcessor implements ItemProcessor< List<Tuple>, List<Tuple> > {
 
+	/** AspectFactory which holds all the aspects to be displayed by groupID  */
+	private AspectFactory aspectFactory;
+	
 	/**
-	 * Interface method implementation. 
+	 * Interface method implementation. Removes aspects not found in the GroupID. Maps synonyms
+	 * to the correct aspect. (This information is generated from AspectFactory. If aspectFactory is 
+	 * not initialized, this processor does nothing)
 	 * @see org.springframework.batch.item.ItemProcessor#process(java.lang.Object)
 	 */
 	@Override
 	public List<Tuple> process(List<Tuple> tuples) throws Exception {
-		//TODO: This is a stub. Category based filtering and synonym matching to be done here
-		return tuples;
+		List<Tuple> returnTuples = new LinkedList<Tuple>();
+		//If aspectFactory is not set, leave Tuples as it is
+		if(aspectFactory==null)
+			return tuples;
+		for (Tuple t:tuples) {
+			String groupID = "";
+			String aspect = this.aspectFactory.getAspect((String)t.getList(Fields.VALUES).get(0), groupID);
+			if(aspect==null) {
+				continue;
+			}
+			else {
+				Tuple returnTuple = t.clone();
+				String[] tupleValues = this.getSubjectAndTag(t.getString(Fields.KEY));
+				returnTuple.setValue(Fields.KEY, tupleValues[0]+Tuple.KEY_SEP_CHAR+aspect);
+				returnTuples.add(returnTuple);
+			}
+		}
+		return returnTuples;
 	}
+	
+	/**
+	 * Helper method to get subject and tag
+	 */
+	private String[] getSubjectAndTag(String key) {
+		String[] values = new String[2];
+		values[0] = key.substring(0, key.indexOf(Tuple.KEY_SEP_CHAR));
+		values[1] = key.substring(key.indexOf(Tuple.KEY_SEP_CHAR) + 1, key.length());
+		return values;
+	}
+
+	/** Getter/Setter methods */
+	public AspectFactory getAspectFactory() {
+		return aspectFactory;
+	}
+
+	public void setAspectFactory(AspectFactory aspectFactory) {
+		this.aspectFactory = aspectFactory;
+	}
+	/** End Getter/Setter methods */
 }

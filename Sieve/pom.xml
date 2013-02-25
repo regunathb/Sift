@@ -4,10 +4,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.sift</groupId>
-	<artifactId>runtime</artifactId>
-	<name>Sift Runtime</name>
+	<artifactId>Sieve</artifactId>
+	<name>Sieve</name>
 	<version>1.0.0</version>
-	<description>Runtime libraries project</description>
+	<description>Additional level of filtering for opinion mining</description>
 
 	<licenses>
     	<license>
@@ -51,15 +51,30 @@
 		<!-- Sift dependencies -->
 		<dependency>
 			<groupId>org.sift</groupId>
-			<artifactId>winnow</artifactId>
+			<artifactId>runtime</artifactId>
 			<version>1.0.0</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>runtime-model</artifactId>
 			<version>1.0.0</version>
-		</dependency>		
-		
+		</dependency>	
+		<dependency>
+			<groupId>org.sift</groupId>
+			<artifactId>winnow</artifactId>
+			<version>1.0.0</version>
+		</dependency>	
+		<dependency>
+			<groupId>org.sift</groupId>
+			<artifactId>tagcloud</artifactId>
+			<version>1.0.0</version>
+		</dependency>				
+		<!-- Third party dependencies -->	
+		<dependency>
+			<groupId>edu.stanford.nlp</groupId>
+			<artifactId>stanford-corenlp</artifactId>
+			<version>1.3.4</version>
+   	 	</dependency>
 	</dependencies>
 	
 	<build>

@@ -15,6 +15,8 @@
  */
 package org.sift.runtime.impl;
 
+import java.util.List;
+
 import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.spi.OutputCollector;
@@ -41,13 +43,10 @@ public class WordSplitterProcessor implements Processor {
 	 * @see org.sift.runtime.spi.Processor#process(org.sift.runtime.Tuple, org.sift.runtime.spi.OutputCollector)
 	 */
 	public void process(Tuple tuple, OutputCollector collector) {
-		Tuple returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES,Fields.SENTIMENT);
-		returnTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
-		returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
-		//To see the value element being accessed, to get the corresponding sentiment
-		int valueCount=-1;
-		for (Object value : tuple.getList(Fields.VALUES)) {
-			valueCount++;
+		Tuple returnTuple = tuple.clone();
+		returnTuple.setValue(Fields.VALUES, null);
+		List<Object> values = tuple.getList(Fields.VALUES);
+		for(Object value:values) {
 			String line = (String) value;
 			String[] tokens = line.split(StopWords.WORD_BOUNDARY);
 			for (int i = 0; i < tokens.length; i++) {
@@ -60,7 +59,6 @@ public class WordSplitterProcessor implements Processor {
 					String word = tokenBuffer.toString().trim();
 					if (this.getStopWords() != null && !this.getStopWords().isStopWord(word)) {
 						returnTuple.addToList(Fields.VALUES, tokenBuffer.toString().trim());
-						returnTuple.addToList(Fields.SENTIMENT, tuple.getList(Fields.SENTIMENT).get(valueCount));
 					}
 				}
 			}

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sift.runtime.impl;
+package org.sift.Sieve.impl;
 
 import org.sift.runtime.model.sentimentdata.Classification;
 import org.sift.runtime.model.sentimentdata.ClassificationCollection;
@@ -59,16 +59,17 @@ public class SentimentProcessor implements Processor {
 	 */
 	@Override
 	public void process(Tuple tuple, OutputCollector collector) {
-		Tuple returnTuple = new Tuple(Fields.KEY,Fields.SOURCES,Fields.VALUES,Fields.SENTIMENT);
-		returnTuple.setValue(Fields.KEY, tuple.getString(Fields.KEY));
-		returnTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
-		for (Object value : tuple.getList(Fields.VALUES)) {
-			String line = (String) value;
-			returnTuple.addToList(Fields.VALUES, line.trim());
-			returnTuple.addToList(Fields.SENTIMENT, this.getSentiment(line));
+		//CODE not guaran
+		for(Object value : tuple.getList(Fields.VALUES)) {
+			String strValue = (String) value;
+			Tuple returnTuple = tuple.clone();
+			returnTuple.addField(Fields.SENTIMENT);
+			returnTuple.setValue(Fields.SENTIMENT, this.getSentiment((String)tuple.getList(Fields.VALUES).get(0)));
+			returnTuple.setValue(Fields.VALUES, null);
+			returnTuple.addToList(Fields.VALUES, strValue);
+			if(strValue.length()>0)
+				collector.emit(returnTuple);
 		}
-		if(returnTuple.getList(Fields.VALUES).toArray().length>0)
-			collector.emit(returnTuple);
 	}
 
 	/** Queries the Sentiment API to get the sentiment of the line

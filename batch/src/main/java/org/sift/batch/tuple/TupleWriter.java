@@ -31,27 +31,30 @@ import org.springframework.batch.item.ItemWriter;
  * @author Regunath B
  * @version 1.0, 28 Jan 2013
  */
-public class TupleWriter implements ItemWriter<Tuple> {
-
+public class TupleWriter implements ItemWriter<List<Tuple>> {
+	
 	/** The OutputCollector to write the output to*/
 	private OutputCollector collector;
 	
 	/**
-	 * Interface method implementation. Writes the out to the cobfigured {@link OutputCollector}
+	 * Interface method implementation. Writes the out to the configured {@link OutputCollector}
 	 * @see org.springframework.batch.item.ItemWriter#write(java.util.List)
 	 */
-	public void write(List<? extends Tuple> tuples) throws Exception {
+	@Override
+	public void write(List<? extends List<Tuple>> tuples) throws Exception {
 		List<Tuple> containedTuples = new LinkedList<Tuple>();
-		for (Tuple t : tuples) {
-			if (t.getString(Fields.KEY).equals(Tuple.UNDEFINED_KEY)) { // it is an collection of Tuple instances
-				Collections.addAll(containedTuples, t.getList(Fields.VALUES).toArray(new Tuple[0]));				
-			} else {
-				Collections.addAll(containedTuples,t);
+		for (List<Tuple> tList : tuples) {
+			for(Tuple t:tList) {
+				if (t.getString(Fields.KEY).equals(Tuple.UNDEFINED_KEY)) { // it is an collection of Tuple instances
+					Collections.addAll(containedTuples, t.getList(Fields.VALUES).toArray(new Tuple[0]));				
+				} else {
+					Collections.addAll(containedTuples,t);
+				}
 			}
 		}
-		this.collector.setTuples(containedTuples.toArray(new Tuple[0]));
+		this.collector.setTuples(containedTuples.toArray(new Tuple[0]));		
 	}
-	
+
 	/** Getter/Setter methods */
 	public OutputCollector getCollector() {
 		return this.collector;
@@ -59,6 +62,4 @@ public class TupleWriter implements ItemWriter<Tuple> {
 	public void setCollector(OutputCollector collector) {
 		this.collector = collector;
 	}
-	
-
 }

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * The <code>Tuple</code> represents a basic data structure of a named list of values in Sift. Tuple has a list of fields.
  * Each field can have a value or set of values attached to it. The list of fields is supplied at the initialisation and
- * cannot be dynamically changed. 
+ * can be dynamically changed. 
  * 
  * @author Regunath B
  * @version 1.0, 28 Jan 2013
@@ -62,7 +62,7 @@ public class Tuple {
 	public Tuple(Fields... fields) { 
 		this.fields = new ArrayList<Fields>(Arrays.asList(fields));
 		this.values = new ArrayList<Object>(fields.length);
-		for(Fields field : fields) {
+		for(int i=0; i<fields.length; i++) {
 			this.values.add(null);
 		}
 	}	
@@ -82,12 +82,31 @@ public class Tuple {
 		return buffer.toString();
 	}
 	
+	/**
+	 * Dynamically adds a new field in the tuple. Starting value is null
+	 * @param field {@link Fields} field to be added
+	 */
+	public void addField(Fields field) {
+		if(this.fields.contains(field))
+			return;
+		this.fields.add(field);
+		this.values.add(null);
+	}
+	
 	/** Setter Methods */
 	public void setValue(Fields field, Object value) {
 		this.values.set(this.getFieldIndex(field), value);
 	}
 	
+	/**
+	 * Adds a value to list. If field is null, a new list is created. If field is not a list, CastException is thrown
+	 * @param field Field to which value has to be added
+	 * @param value value to be added
+	 * 
+	 */
 	public void addToList(Fields field, Object value) {
+		if(value==null)
+			return;
 		List<Object> fieldList = this.getList(field);
 		if(fieldList==null) {
 			fieldList = new ArrayList<Object>();
@@ -98,21 +117,50 @@ public class Tuple {
 	/** End setter methods */
 	
 	/** Getter methods */
-	public Object getValue(Fields field) throws RuntimeException {
+	
+	/**
+	 * Gets all the @link {Fields} in the current instance
+	 * @return List of fields
+	 */
+	public List<Fields> getFields() {
+		return this.fields;
+	}
+	
+	/**
+	 * Gets the value of the field
+	 * @param field {@link Fields} of which the value is required
+	 * @return Object reference
+	 */
+	public Object getValue(Fields field){
 		if(!this.contains(field)) {
-			throw new RuntimeException("Field not found in Tuple");
+			return null;
 		}
 		return this.values.get(this.getFieldIndex(field));
 	}
-
+	
+	/**
+	 * Gets the value of an integer field
+	 * @param field {@link Fields} of which the value is required
+	 * @return int, A CastException is thrown if field is not an int
+	 */
 	public int getInt(Fields field){
 		return (Integer) this.getValue(field);
 	}
-	
+
+	/**
+	 * Gets the value of a String field
+	 * @param field {@link Fields} of which the value is required
+	 * @return String, A CastException is thrown if field is not a String
+	 */
 	public String getString(Fields field){
 		return (String) this.getValue(field);
 	}
-	
+
+	/**
+	 * Gets the value of a List field.
+	 * @param field {@link Fields} of which the value is required
+	 * @return a reference to the list, A CastException is thrown if field is not a List
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Object> getList(Fields field) {
 		if(this.getValue(field)==null) {
@@ -121,13 +169,34 @@ public class Tuple {
 		}
 		return (List<Object>) this.getValue(field);
 	}
-	public int getFieldIndex(Fields field) {
-		return this.fields.indexOf(field);
-	}
+	/** End Getters */
 	
+	/**
+	 * Checks if a field is present in the tuple
+	 * @param field 
+	 * @return true, if field is found
+	 */
 	public boolean contains(Fields field) {
 		return this.fields.contains(field);
 	}
-	/** End getter methods */
+	
+	/**
+	 * Returns a copy of the Tuple (Warning: The new tuple contains references to the old tuple in case of lists)
+	 */
+	public Tuple clone() {
+		Fields[] a = {Fields.KEY};
+		Tuple returnTuple = new Tuple(this.fields.toArray(a));
+		for (Fields field:this.getFields()) {
+			returnTuple.setValue(field, this.getValue(field));
+		}
+		return returnTuple;
+	}
+	
+	/**
+	 * Gets the index of the field. The index can be used to get the corresponding value
+	 */
+	private int getFieldIndex(Fields field) {
+		return this.fields.indexOf(field);
+	}
 }
 
