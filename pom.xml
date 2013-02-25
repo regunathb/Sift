@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -21,26 +20,4 @@
 	</modules>
 
 </project>
-=======
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
-	
-	<groupId>org.sift</groupId>
-	<artifactId>sift-full</artifactId>
-	<name>Sift Full Build</name>
-	<packaging>pom</packaging>
-	<version>1.1.0</version>
-
-	<modules>
-		<module>winnow</module>
-		<module>tagcloud</module>
-		<module>runtime-model</module>
-		<module>runtime</module>
-		<module>lucene-runtime</module>
-		<module>batch</module>
-	</modules>
-			
-</project>
->>>>>>> 6d21ac62d8d3dc271b463a9c4c11b44b92a68366
