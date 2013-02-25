@@ -1,4 +1,4 @@
-package org.sift.runtime.spi;
+package org.sift.sieve.spi;
 
 import org.sift.runtime.model.sentimentdata.ClassificationCollection;
 

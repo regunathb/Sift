@@ -97,7 +97,7 @@
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
-			<artifactId>Sieve</artifactId>
+			<artifactId>sieve</artifactId>
 			<version>1.0.0</version>
 		</dependency>	
 		<!-- Third party dependencies -->

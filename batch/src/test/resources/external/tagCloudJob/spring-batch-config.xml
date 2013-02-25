@@ -97,7 +97,7 @@
 	</bean>
 
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/home/devashishshankar/nikon.txt" />
+		<constructor-arg value="/home/devashishshankar/mobile_rev" />
 	</bean>
 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource">
 		<constructor-arg
@@ -114,27 +114,27 @@
 				<bean class="org.sift.batch.test.TagLineSplitterProcessor">
 					<constructor-arg ref="lineSplitterProcessor" />
 				</bean>
-		<!--   	<bean class="org.sift.Sieve.impl.SentimentProcessor">
+		  <!-- 	<bean class="org.sift.sieve.impl.SentimentProcessor">
 					<property name="classificationService" ref="classificationService" />
 					<property name="numberConfidence" value="1" />
 					<property name="probConfidence" value="0.6" />
 					<property name="sentimentFilter" value="negative" /> 
-				</bean>--> 
-			<!--  <bean class="org.sift.Sieve.impl.AspectExtractionProcessor">
+				</bean> --> 
+			  <bean class="org.sift.sieve.impl.AspectExtractionProcessor">
 					<property name="posTagger">
-						<bean class="org.sift.Sieve.impl.POSTagger">
+						<bean class="org.sift.sieve.impl.POSTagger">
 							<constructor-arg
 								value="/home/devashishshankar/reviews/libraries/stanford-postagger-2012-11-11/models/wsj-0-18-left3words.tagger" />
 						</bean>
 					</property>
-				</bean>-->	
+				</bean>	
 
-			<!--  	<bean class="org.sift.runtime.impl.WordSplitterProcessor">
+			 	<bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4" />
 					<property name="stopWords">
 						<bean class="org.sift.winnow.StopWords" />
 					</property>
-				</bean>-->
+				</bean>
 				<bean class="org.sift.batch.test.TagIdentifierProcessor">
 					<property name="wordWeights">
 						<map>
@@ -169,7 +169,7 @@
 		<property name="collector" ref="sentimentCollector" />
 	</bean>
 
-	<bean id="sentimentCollector" class="org.sift.Sieve.impl.SentimentBasedValueAggregator">
+	<bean id="sentimentCollector" class="org.sift.sieve.impl.SentimentBasedValueAggregator">
 		<property name="shuffler" ref="shuffler" />
 		<property name="delegate" ref="collectorDelegate" />
 	</bean>

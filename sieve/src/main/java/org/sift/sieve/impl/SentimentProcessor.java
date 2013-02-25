@@ -19,7 +19,7 @@ import org.sift.runtime.model.sentimentdata.Classification;
 import org.sift.runtime.model.sentimentdata.ClassificationCollection;
 import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
-import org.sift.runtime.spi.ClassificationService;
+import org.sift.sieve.spi.ClassificationService;
 import org.sift.runtime.spi.OutputCollector;
 import org.sift.runtime.spi.Processor;
 

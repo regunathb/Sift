@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.sift.Sieve.impl.SentimentProcessor;
 import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
+import org.sift.sieve.impl.SentimentProcessor;
 import org.sift.tagcloud.ui.DisplayTag;
 import org.sift.tagcloud.ui.DisplayTagCloud;
 
