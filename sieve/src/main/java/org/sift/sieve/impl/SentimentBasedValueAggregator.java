@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sift.Sieve.impl;
+package org.sift.sieve.impl;
 
 import java.util.Collections;
 import java.util.LinkedList;

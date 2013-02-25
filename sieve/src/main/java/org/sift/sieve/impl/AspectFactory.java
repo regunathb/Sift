@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sift.Sieve.impl;
+package org.sift.sieve.impl;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * <code> AspectFactory </code> holds a list of {@link Aspect} mapped to a groupID. This map can be loaded

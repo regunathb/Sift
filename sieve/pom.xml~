@@ -4,7 +4,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.sift</groupId>
-	<artifactId>sieve</artifactId>
+	<artifactId>Sieve</artifactId>
 	<name>Sieve</name>
 	<version>1.0.0</version>
 	<description>Additional level of filtering for opinion mining</description>
