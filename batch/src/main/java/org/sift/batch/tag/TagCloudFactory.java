@@ -53,7 +53,6 @@ public class TagCloudFactory {
 			this.tagCloudList.add(tagCloudPositive);
 			this.tagCloudList.add(tagCloudNegative);
 			this.tagCloudList.add(tagCloudNeutral);
-
 		}
 		else {
 			this.tagCloudList.add(new DisplayTagCloud<DisplayTag>(subject));	

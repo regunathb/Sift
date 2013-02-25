@@ -59,7 +59,7 @@ public class SentimentProcessor implements Processor {
 	 */
 	@Override
 	public void process(Tuple tuple, OutputCollector collector) {
-		//CODE not guaran
+		//If there are list of values, creates a new Tuple for each
 		for(Object value : tuple.getList(Fields.VALUES)) {
 			String strValue = (String) value;
 			Tuple returnTuple = tuple.clone();
