@@ -62,7 +62,7 @@ public class Tuple {
 	public Tuple(Fields... fields) { 
 		this.fields = new ArrayList<Fields>(Arrays.asList(fields));
 		this.values = new ArrayList<Object>(fields.length);
-		for(Fields field : fields) {
+		for(int i=0; i< fields.length; i++) {
 			this.values.add(null);
 		}
 	}	
@@ -74,8 +74,7 @@ public class Tuple {
 	public String toString() {
 		StringBuffer buffer = new StringBuffer(KEY);
 		buffer.append(this.getValue(Fields.KEY));
-		buffer.append(VALUES);
-		
+		buffer.append(VALUES);		
 		for (Object o : this.getList(Fields.VALUES)) {
 			buffer.append(o + VALUE_SEP_CHAR);
 		}
