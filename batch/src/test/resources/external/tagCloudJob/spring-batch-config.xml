@@ -55,17 +55,13 @@
 	<!-- Multi-Threaded Tagcloud Batch Job configuration -->
 	<batch:job id="tagCloudJob" incrementer="incrementer">
 		<batch:step id="tagStep" next="tagFilteringStep">
-			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the MultiResourceItemReader. 
-					See https://jira.springsource.org/browse/BATCH-1301 -->
-				<batch:chunk reader="fileReader" processor="chainProcessor"
-					writer="tupleWriter" commit-interval="10000" />
+			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the MultiResourceItemReader. See https://jira.springsource.org/browse/BATCH-1301 -->
+				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="10000" />
 			</batch:tasklet>
 		</batch:step>
 		<batch:step id="tagFilteringStep" next="tagCloudStep">
-			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the MultiResourceItemReader. 
-					See https://jira.springsource.org/browse/BATCH-1301 -->
-				<batch:chunk reader="tupleListReader" processor="filteringProcessor"
-					writer="tupleListWriter" commit-interval="1" />
+			<batch:tasklet task-executor="tagJobTaskExecutor"> 
+				<batch:chunk reader="tupleListReader" processor="filteringProcessor" writer="tupleListWriter" commit-interval="1" />
 			</batch:tasklet>
 		</batch:step>
 		<batch:step id="tagCloudStep">
@@ -91,13 +87,16 @@
 		<property name="resources">
 			<list>
 				<ref bean="inputFileResource1" />
-				<!-- <ref bean="inputFileResource2"/> <ref bean="inputFileResource3"/> -->
+				<!-- 
+				<ref bean="inputFileResource2"/> 
+				<ref bean="inputFileResource3"/> 
+				-->
 			</list>
 		</property>
 	</bean>
 
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/home/devashishshankar/mobile_rev" />
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt" />
 	</bean>
 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource">
 		<constructor-arg
@@ -114,13 +113,15 @@
 				<bean class="org.sift.batch.test.TagLineSplitterProcessor">
 					<constructor-arg ref="lineSplitterProcessor" />
 				</bean>
-		  <!-- 	<bean class="org.sift.sieve.impl.SentimentProcessor">
+		  		<!-- 	
+		  		<bean class="org.sift.sieve.impl.SentimentProcessor">
 					<property name="classificationService" ref="classificationService" />
 					<property name="numberConfidence" value="1" />
 					<property name="probConfidence" value="0.6" />
 					<property name="sentimentFilter" value="negative" /> 
-				</bean> --> 
-			  <bean class="org.sift.sieve.impl.AspectExtractionProcessor">
+				</bean> 
+				--> 
+			    <bean class="org.sift.sieve.impl.AspectExtractionProcessor">
 					<property name="posTagger">
 						<bean class="org.sift.sieve.impl.POSTagger">
 							<constructor-arg
@@ -128,7 +129,6 @@
 						</bean>
 					</property>
 				</bean>	
-
 			 	<bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4" />
 					<property name="stopWords">
@@ -150,7 +150,6 @@
 						</map>
 					</property>
 				</bean>
-
 			</list>
 		</property>
 	</bean>
