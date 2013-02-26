@@ -18,7 +18,7 @@ package org.sift.batch.tuple;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.sift.sieve.impl.AspectFactory;
+import org.sift.sieve.spi.AspectFactory;
 import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.springframework.batch.item.ItemProcessor;

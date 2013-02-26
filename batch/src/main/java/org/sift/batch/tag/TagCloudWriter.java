@@ -43,8 +43,9 @@ public class TagCloudWriter<T extends Tag, S extends TagCloud<T>> implements Ite
 	@SuppressWarnings("unchecked")
 	public void write(List<? extends DisplayTagCloud<DisplayTag>> tagClouds) throws Exception {
 		for (DisplayTagCloud<DisplayTag> dtc : tagClouds) {
-			for(PersistenceService<T,S> persistenceService: this.persistenceServices)
+			for(PersistenceService<T,S> persistenceService: this.persistenceServices) {
 				persistenceService.persistTagCloud((S)dtc);
+			}
 		}
 	}
 

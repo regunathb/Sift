@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sift.sieve.impl;
+package org.sift.sieve.spi;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.sift.sieve.impl.Aspect;
 
 
 /**

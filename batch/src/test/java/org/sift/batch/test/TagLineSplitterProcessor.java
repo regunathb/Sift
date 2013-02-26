@@ -15,6 +15,10 @@
  */
 package org.sift.batch.test;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
 import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.sift.runtime.impl.LineSplitterProcessor;
@@ -36,6 +40,9 @@ public class TagLineSplitterProcessor implements Processor {
 
 	/** Character delimiting the first value (which is tag value) */
 	static public String TAG_VALUE_SEP_CHAR = "\t";
+	
+	/** Character separating the fragments in a URI created by this methods (in case of multiple fragments) */
+	static public String FRAGMENT_SEP_CHAR = "_";
 
 	/**
 	 * Default constructor. Injects {@link LineSplitterProcessor} into this class
@@ -51,20 +58,34 @@ public class TagLineSplitterProcessor implements Processor {
 	 */
 	@Override
 	public void process(Tuple tuple, OutputCollector collector) {
-
 		Object[] values = tuple.getList(Fields.VALUES).toArray();
 		//Get the tag value. Tag is the productID
 		String tag = (String)values[0];
 		tag = tag.substring(0, tag.indexOf(TagLineSplitterProcessor.TAG_VALUE_SEP_CHAR));
+		//The line number after using split line
+		int fragmentCount = 0;
+		List<Object> sourceList  = tuple.getList(Fields.SOURCES);
+		URI uri = (URI) sourceList.remove(0);
 		for (Object value : tuple.getList(Fields.VALUES)) {
 			for(String line : this.lineSplitterProcessor.getLines(((String)value).toLowerCase())) {
+				//The line number
+				fragmentCount++;
 				if(line.length()>LineSplitterProcessor.minLineLength) {
-					Tuple returnTuple = tuple.clone();
+					//Creating a returnTuple with fields of tuple. Not using clone because it uses references, thus all clones have references to the original tuple.
+					Tuple returnTuple = new Tuple(tuple.getFields().toArray(new Fields[0]));
+					tuple.setValue(Fields.KEY, tuple.getValue(Fields.KEY));
 					//Adding a new field, TAG to hold the tag
 					returnTuple.addField(Fields.TAG);
 					returnTuple.setValue(Fields.VALUES, null);
 					returnTuple.addToList(Fields.VALUES, line.trim());
 					returnTuple.setValue(Fields.TAG, tag);
+					//Create a new URI with fragment(line index with the review index)
+					try {
+						returnTuple.addToList(Fields.SOURCES,new URI(uri.toASCIIString()+TagLineSplitterProcessor.FRAGMENT_SEP_CHAR+fragmentCount));
+					} catch (URISyntaxException e) {
+						//Shouldn't happen
+						throw new RuntimeException(e);
+					}
 					collector.emit(returnTuple);
 				}
 			}	

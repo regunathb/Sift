@@ -184,8 +184,7 @@ public class Tuple {
 	 * Returns a copy of the Tuple (Warning: The new tuple contains references to the old tuple in case of lists)
 	 */
 	public Tuple clone() {
-		Fields[] a = {Fields.KEY};
-		Tuple returnTuple = new Tuple(this.fields.toArray(a));
+		Tuple returnTuple = new Tuple(this.fields.toArray(new Fields[0]));
 		for (Fields field:this.getFields()) {
 			returnTuple.setValue(field, this.getValue(field));
 		}
