@@ -15,8 +15,11 @@
  */
 package org.sift.sieve.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+
+import org.trpr.platform.runtime.impl.config.FileLocator;
 
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
@@ -29,7 +32,7 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 public class POSTagger {
 	
 	/** Location of the tagger model used for POS tagging. A tagger consists of a trained data set used for tagging */
-	private String taggerLocation;
+	private String taggerFileName;
 	
 	/** @link {MaxentTagger} which actually tags the sentence */
 	static MaxentTagger tagger;
@@ -40,15 +43,18 @@ public class POSTagger {
 	/** Label for Subordinating conjuction */
 	private String[] conj = {"IN"};
 	
+	final public static String TAG_SEP_CHAR = "_";
+	
 	/**
 	 * Default constructor
 	 * @param taggerLocation Location of the tagger dataset
 	 */
-	public POSTagger(String taggerLocation) {
-		this.taggerLocation = taggerLocation;
+	public POSTagger(String taggerFileName) {
+		this.taggerFileName = taggerFileName;
+		File taggerFile = FileLocator.findUniqueFile(taggerFileName);
 		try {
 			//Initialize the tagger
-			tagger = new MaxentTagger(this.taggerLocation);
+			tagger = new MaxentTagger(taggerFile.getAbsolutePath());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} catch (ClassNotFoundException e) {
@@ -96,10 +102,10 @@ public class POSTagger {
 	 * @return untagged word
 	 */
 	public String untag(String taggedWord) {
-		if(!taggedWord.contains("_")) { //No tag
+		if(!taggedWord.contains(POSTagger.TAG_SEP_CHAR)) { //No tag
 			return taggedWord;
 		}
-		return taggedWord.substring(0,taggedWord.lastIndexOf('_'));
+		return taggedWord.substring(0,taggedWord.lastIndexOf(POSTagger.TAG_SEP_CHAR));
 	}
 	
 	/**
@@ -108,7 +114,7 @@ public class POSTagger {
 	 * @return the tag 
 	 */
 	public String getTag(String taggedWord) {
-		if(!taggedWord.contains("_")) { //No tag
+		if(!taggedWord.contains(POSTagger.TAG_SEP_CHAR)) { //No tag
 			return null;
 		}
 		return taggedWord.substring(taggedWord.lastIndexOf('_')+1);

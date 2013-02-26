@@ -96,16 +96,16 @@
 	</bean>
 
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt" />
+		<constructor-arg value="/home/devashishshankar/nikon.txt" />
 	</bean>
-	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg
-			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt" />
-	</bean>
-	<bean id="inputFileResource3" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg
-			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt" />
-	</bean>
+<!-- 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource"> -->
+<!-- 		<constructor-arg -->
+<!-- 			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt" /> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="inputFileResource3" class="org.springframework.core.io.FileSystemResource"> -->
+<!-- 		<constructor-arg -->
+<!-- 			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt" /> -->
+<!-- 	</bean> -->
 
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
 		<property name="processors">
@@ -121,16 +121,15 @@
 					<property name="sentimentFilter" value="negative" /> 
 				</bean> 
 				--> 
-		  		<!-- 	
+		  			
 			    <bean class="org.sift.sieve.impl.AspectExtractionProcessor">
 					<property name="posTagger">
 						<bean class="org.sift.sieve.impl.POSTagger">
-							<constructor-arg
-								value="/home/devashishshankar/reviews/libraries/stanford-postagger-2012-11-11/models/wsj-0-18-left3words.tagger" />
+							<constructor-arg value="wsj-0-18-left3words.tagger" />
 						</bean>
 					</property>
 				</bean>	
-				--> 
+
 			 	<bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4" />
 					<property name="stopWords">
@@ -218,11 +217,11 @@
 	</bean>
 	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
 		<property name="tagCloudsDirectory"
-			value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
+			value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
 	</bean>
 	<bean id="marshallerFileWriter" class="org.sift.batch.tag.service.TagCloudMarshallerService">
 		<property name="tagCloudsDirectory"
-			value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
+			value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
 		<property name="marshaller">
 			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
 		</property>

@@ -68,7 +68,13 @@
 			<groupId>org.sift</groupId>
 			<artifactId>tagcloud</artifactId>
 			<version>1.0.0</version>
-		</dependency>				
+		</dependency>
+		<!--  Trooper Dependencies -->	
+		<dependency>
+			<groupId>org.trpr</groupId>
+			<artifactId>runtime-core</artifactId>
+			<version>1.1.0</version>
+   	 	</dependency>
 		<!-- Third party dependencies -->	
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
