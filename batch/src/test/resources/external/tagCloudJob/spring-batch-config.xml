@@ -121,6 +121,7 @@
 					<property name="sentimentFilter" value="negative" /> 
 				</bean> 
 				--> 
+		  		<!-- 	
 			    <bean class="org.sift.sieve.impl.AspectExtractionProcessor">
 					<property name="posTagger">
 						<bean class="org.sift.sieve.impl.POSTagger">
@@ -129,6 +130,7 @@
 						</bean>
 					</property>
 				</bean>	
+				--> 
 			 	<bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4" />
 					<property name="stopWords">
@@ -209,19 +211,18 @@
 	<bean id="tagCloudWriter" class="org.sift.batch.tag.TagCloudWriter">
 		<property name="persistenceServices">
 			<list>
-				<ref bean="imageFileWriter" />
 				<ref bean="marshallerFileWriter" />
+				<ref bean="imageFileWriter" />
 			</list>
 		</property>
 	</bean>
-	<bean id="imageFileWriter"
-		class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
+	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
 		<property name="tagCloudsDirectory"
-			value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
+			value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
 	</bean>
 	<bean id="marshallerFileWriter" class="org.sift.batch.tag.service.TagCloudMarshallerService">
 		<property name="tagCloudsDirectory"
-			value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
+			value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
 		<property name="marshaller">
 			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
 		</property>
