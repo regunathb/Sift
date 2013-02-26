@@ -183,12 +183,12 @@
 	<bean id="collectorDelegate" class="org.sift.runtime.impl.MemOutputCollector" />
 	<!-- End tagStep beans -->
 
-	<!-- Start tagFileteringStep beans -->
-	<!--  Note: In TagFilteringStep, the reader emits a List of tuples (not individual tuples like tagstep)
-	 -->
+	<!-- Start tagFilteringStep beans -->
+	<!--  Note: In TagFilteringStep, the reader emits a List of tuples (not individual tuples like tagstep) -->
 	 
-	<!--  Another collector is required for TagFilteringStep -->
+	<!--  Use a different collector TagFilteringStep as the step is different -->
 	<bean id="tupleListCollectorDelegate" class="org.sift.runtime.impl.MemOutputCollector" />
+	
 	<bean id="tupleListReader" class="org.sift.batch.tuple.TupleListReader">
 		<property name="collector" ref="collectorDelegate" />
 	</bean>
@@ -197,7 +197,7 @@
 	<bean id="tupleListWriter" class="org.sift.batch.tuple.TupleListWriter">
 		<property name="collector" ref="tupleListCollectorDelegate" />
 	</bean>
-	<!-- End tagFileteringStep beans -->
+	<!-- End tagFilteringStep beans -->
 
 	<!-- Start tagCloudStep beans -->
 	<bean id="tagCloudProcessor" class="org.sift.batch.tag.TagCloudProcessor">
