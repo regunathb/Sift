@@ -83,9 +83,6 @@ public class DisplayTagCloud<S extends DisplayTag> extends TagCloud<S> {
 			return;
 		}
 
-		// randomize the tag positions in the tag-list
-		Collections.shuffle(this.getTagsList(), this.random);
-
 		DisplayTag first = this.getTagsList().get(0);
 		double high = -Double.MAX_VALUE;
 		double low = Double.MAX_VALUE;
