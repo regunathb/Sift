@@ -48,13 +48,15 @@ public class WordSplitterProcessor implements Processor {
 		List<Object> values = tuple.getList(Fields.VALUES);
 		for(Object value:values) {
 			String line = (String) value;
-			String[] tokens = line.split(StopWords.WORD_BOUNDARY);
+			String[] tokens = this.stopWords.split(line);
 			for (int i = 0; i < tokens.length; i++) {
 				StringBuffer tokenBuffer = new StringBuffer();
 				for (int j = 0; j < this.getnGram(); j++) {
 					if (i+j <  tokens.length) {
 						tokenBuffer.append(tokens[i+j]);
 						tokenBuffer.append(StopWords.WORD_BOUNDARY_STRING);
+					} else {
+						break;
 					}
 					String word = tokenBuffer.toString().trim();
 					if (this.getStopWords() != null && !this.getStopWords().isStopWord(word)) {
