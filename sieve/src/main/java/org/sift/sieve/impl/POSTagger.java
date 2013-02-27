@@ -114,6 +114,6 @@ public class POSTagger {
 		if(!taggedWord.contains(POSTagger.TAG_SEP_CHAR)) { //No tag
 			return null;
 		}
-		return taggedWord.substring(taggedWord.lastIndexOf('_')+1);
+		return taggedWord.substring(taggedWord.lastIndexOf(POSTagger.TAG_SEP_CHAR)+1);
 	}
 }
