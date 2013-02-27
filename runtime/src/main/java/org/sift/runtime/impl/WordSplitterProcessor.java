@@ -55,10 +55,12 @@ public class WordSplitterProcessor implements Processor {
 					if (i+j <  tokens.length) {
 						tokenBuffer.append(tokens[i+j]);
 						tokenBuffer.append(StopWords.WORD_BOUNDARY_STRING);
+					} else {
+						break;
 					}
 					String word = tokenBuffer.toString().trim();
 					if (this.getStopWords() != null && !this.getStopWords().isStopWord(word)) {
-						returnTuple.addToList(Fields.VALUES, tokenBuffer.toString().trim());
+						returnTuple.addToList(Fields.VALUES, word);
 					}
 				}
 			}
