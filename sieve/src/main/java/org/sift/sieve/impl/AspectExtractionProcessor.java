@@ -47,7 +47,6 @@ public class AspectExtractionProcessor implements Processor {
 	@Override
 	public void process(Tuple tuple, OutputCollector collector) {
 		tuple.getString(Fields.KEY);
-		String groupID = ""; //TODO: get category
 		Tuple returnTuple = tuple.clone();
 		returnTuple.setValue(Fields.VALUES, null);
 		//Take the first value (At this point there should be only 1 Value in the Tuple)
@@ -56,33 +55,38 @@ public class AspectExtractionProcessor implements Processor {
 		String taggedLine = this.posTagger.tagLine(line);
 		List<String> aspects = new ArrayList<String>();
 		String currentAspect = "";
+		//This loop selects consecutive nouns, and nouns with subordinating conjunction in between
 		for (String word:taggedLine.split(" ")) {
 			if(this.posTagger.isNoun(word)) {
 				currentAspect+=(" "+this.posTagger.untag(word));
-			}
-			else if(this.posTagger.isSupConj(word)) {
+			} else if(this.posTagger.isSupConj(word)) {
+				//If already there is a noun in current aspects, add the subortinating conjunction
 				if(currentAspect.length()>0) {
 					currentAspect+=(" "+this.posTagger.untag(word));
 				}
-			}
-			else {
+			} else {
+				//If there is something in currentAspect, add it to list of aspects
 				if(currentAspect.length()>0) {
 					aspects.add(currentAspect);
 					currentAspect = "";
 				}
 			}
 		}
+		//If there is something in currentAspect, add it to list of aspects
+		if(currentAspect.length()>0) {
+			aspects.add(currentAspect);
+			currentAspect = "";
+		}
+		//Adding aspects to returnTuple
 		for (String i : aspects) {
 			returnTuple.addToList(Fields.VALUES, i);
 		}
-	
-	collector.emit(returnTuple);
-}
+		collector.emit(returnTuple);
+	}
 
-/** Getter/Setter methods */
-public void setPosTagger(POSTagger posTagger) {
-	this.posTagger = posTagger;
-}
-/** End Getter/Setter methods */
-
+	/** Getter/Setter methods */
+	public void setPosTagger(POSTagger posTagger) {
+		this.posTagger = posTagger;
+	}
+	/** End Getter/Setter methods */
 }

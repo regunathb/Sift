@@ -30,19 +30,17 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
  * @version 1.0, 19 Feb 2013
  */
 public class POSTagger {
-	
-	/** Location of the tagger model used for POS tagging. A tagger consists of a trained data set used for tagging */
-	private String taggerFileName;
-	
+
 	/** @link {MaxentTagger} which actually tags the sentence */
-	static MaxentTagger tagger;
+	private MaxentTagger tagger;
 	
 	/**'Noun' label by the tagger */
-	private String[] nouns = {"NN","NNS"};
+	public static String[] NOUNS = {"NN","NNS"};
 	
 	/** Label for Subordinating conjuction */
-	private String[] conj = {"IN"};
+	public static String[] SUBORTINATING_CONJUNCTIONS = {"IN"};
 	
+	/** Character for separating tag from word */
 	final public static String TAG_SEP_CHAR = "_";
 	
 	/**
@@ -50,7 +48,6 @@ public class POSTagger {
 	 * @param taggerLocation Location of the tagger dataset
 	 */
 	public POSTagger(String taggerFileName) {
-		this.taggerFileName = taggerFileName;
 		File taggerFile = FileLocator.findUniqueFile(taggerFileName);
 		try {
 			//Initialize the tagger
@@ -78,7 +75,7 @@ public class POSTagger {
 	 * @return true, if the word has been tagged a noun, false otherwise
 	 */
 	public boolean isNoun(String taggedWord) {
-		if(Arrays.asList(nouns).contains(this.getTag(taggedWord))) { //Noun
+		if(Arrays.asList(POSTagger.NOUNS).contains(this.getTag(taggedWord))) { //Noun
 			return true;
 		}
 		return false;
@@ -90,7 +87,7 @@ public class POSTagger {
 	 * @return true, if the word has been tagged a subordinate conjunction, false otherwise 
 	 */
 	public boolean isSupConj(String taggedWord) {
-		if(Arrays.asList(conj).contains(this.getTag(taggedWord))) { //Subordinate conjuction
+		if(Arrays.asList(POSTagger.SUBORTINATING_CONJUNCTIONS).contains(this.getTag(taggedWord))) { //Subordinate conjuction
 			return true;
 		}
 		return false;
