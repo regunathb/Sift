@@ -54,20 +54,22 @@ public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTa
 				return null;
 			}
 			if(TagCloudInputReader.tagCloudList.empty()) { //Populate the stack
-				String[] tupleValues = this.getSubjectAndTag(this.collector.getEmittedTuples().remove(0).getString(Fields.KEY));
+				String[] tupleValues = this.getSubjectAndTag(this.collector.getEmittedTuples().get(0).getString(Fields.KEY));
 				String subject = tupleValues[0];
-				this.tagCloudFactory = new TagCloudFactory(this.collector.getEmittedTuples().remove(0));
+				this.tagCloudFactory = new TagCloudFactory(this.collector.getEmittedTuples().get(0));
 				while(!this.collector.getEmittedTuples().isEmpty()) {
 					Tuple t = this.collector.getEmittedTuples().get(0);
 					tupleValues = this.getSubjectAndTag(t.getString(Fields.KEY));
 					String displayText = this.getSubjectAndTag(t.getString(Fields.KEY))[1];
-					if (tupleValues[0].equals(subject) && displayText.length()>1) {  //Display tag is not an empty string
-						DisplayTag displayTag = new DisplayTag(displayText, (Integer)t.getList(Fields.VALUES).get(0));
-						for (Object source: t.getList(Fields.SOURCES)) {
-							displayTag.getTagSourcesURIs().add((URI)source);
+					if (tupleValues[0].equals(subject)) {  //Display tag is not an empty string
+						if(displayText.length()>1) {
+							DisplayTag displayTag = new DisplayTag(displayText, (Integer)t.getList(Fields.VALUES).get(0));
+							for (Object source: t.getList(Fields.SOURCES)) {
+								displayTag.getTagSourcesURIs().add((URI)source);
+							}
+							this.tagCloudFactory.add(t, displayTag);
+							this.collector.getEmittedTuples().remove(0);
 						}
-						this.tagCloudFactory.add(t, displayTag);
-						this.collector.getEmittedTuples().remove(0);
 					} else {
 						break;
 					}

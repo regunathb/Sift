@@ -90,6 +90,22 @@ public class StopWords {
 		}
 		return false;
 	}
+	
+	/**
+	 * Splits a String based on the WORD_BOUNDARY definition of this class
+	 * @param input String to be split
+	 * @return Array of Split string
+	 */
+	public String[] split(String input) {
+		String[] splittedText = input.split(WORD_BOUNDARY);
+		List<String> returnList = new LinkedList<String>();
+		for(String i: splittedText) {
+			if(i.trim().length()>0) {
+				returnList.add(i.trim());			
+			}
+		}
+		return returnList.toArray(new String[0]);		
+	}
 
 	/** Getter/Setter methods */	
 	public List<String> getStopWords() {

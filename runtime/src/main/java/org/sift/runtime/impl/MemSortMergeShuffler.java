@@ -43,18 +43,32 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 		List<Tuple> sortMergeTuples = new LinkedList<Tuple>();
 		Tuple mergedTuple = null;
 		for (Tuple tuple : tuples) {
-			if (mergedTuple == null || !mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) {
+			//In the incoming tuple, there should be only one source or value
+			assert (tuple.getList(Fields.VALUES).size()>1);
+			assert (tuple.getList(Fields.SOURCES).size()>1);
+			if(mergedTuple == null ) {
 				mergedTuple = tuple.clone();
+				//Resetting values and sources so that they don't have references to original Tuple
+				mergedTuple.setValue(Fields.SOURCES, null);
+				mergedTuple.addToList(Fields.SOURCES, tuple.getList(Fields.SOURCES).get(0));
+				mergedTuple.setValue(Fields.VALUES, null);
+				mergedTuple.addToList(Fields.VALUES, tuple.getList(Fields.VALUES).get(0));
+				continue;				
+			}
+			if (!mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) {
 				//Copying the list before adding to mergedTuple
 				sortMergeTuples.add(mergedTuple);
+				mergedTuple = null;
 			}
-			if (mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) { // double check
+			else if (mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) { // double check
 				//Add the source URIs				
 				for (Object uri:tuple.getList(Fields.SOURCES)) {
 					if(mergedTuple.getList(Fields.SOURCES)==null || !mergedTuple.getList(Fields.SOURCES).contains(uri))
 						mergedTuple.addToList(Fields.SOURCES, uri);
 				}
-				Collections.addAll(mergedTuple.getList(Fields.VALUES), tuple.getList(Fields.VALUES).toArray(new Object[0]));
+				List<Object> oldTupleValues = new ArrayList<Object>();
+				oldTupleValues.addAll( tuple.getList(Fields.VALUES));
+				Collections.addAll(mergedTuple.getList(Fields.VALUES), oldTupleValues.toArray(new Object[0]));
 			} else { // this should never happen
 				throw new RuntimeException("Unable to sort and merge tuple data!");
 			}

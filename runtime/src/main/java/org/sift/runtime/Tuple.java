@@ -72,13 +72,15 @@ public class Tuple {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(KEY);
-		buffer.append(this.getValue(Fields.KEY));
-		buffer.append(VALUES);
-		
-		for (Object o : this.getList(Fields.VALUES)) {
-			buffer.append(o + VALUE_SEP_CHAR);
+		StringBuffer buffer = new StringBuffer("TUPLE");
+		buffer.append(" ");
+		for (Fields field : this.getFields()) {
+			buffer.append(field);
+			buffer.append(":");
+			buffer.append(this.getValue(field));
+			buffer.append("; ");
 		}
+
 		return buffer.toString();
 	}
 	
