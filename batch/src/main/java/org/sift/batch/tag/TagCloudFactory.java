@@ -24,7 +24,6 @@ import org.sift.runtime.Tuple;
 import org.sift.tagcloud.ui.DisplayTag;
 import org.sift.tagcloud.ui.DisplayTagCloud;
 
-import com.flipkart.sift.sieve.impl.SentimentProcessor;
 
 /**
  * <code>TagCloudFactory </code> generates TagClouds based on the tuples, i.e. if positive and negative sentiments
@@ -34,10 +33,21 @@ import com.flipkart.sift.sieve.impl.SentimentProcessor;
  * @version 1.0, 25th Feb, 2013 
  */
 public class TagCloudFactory { 
+	
+	/** Index of tagclouds in the tag cloud list */
 	final private int POS_INDEX = 0;
 	final private int NEG_INDEX = 1;
 	final private int NEUTRAL_INDEX = 2;
 
+
+	/** Label of  element for positive sentiments */
+	static public String posLabel = "positive";
+
+	/** Label of  element for negative sentiments */
+	static public String negLabel = "negative";
+
+	/** Label of  element for neutral sentiments */
+	static public String neutralLabel = "neutral";
 	/** The list of tagClouds */
 	private List<DisplayTagCloud<DisplayTag>> tagCloudList;
 
@@ -48,9 +58,9 @@ public class TagCloudFactory {
 		String key = tuple.getString(Fields.KEY);
 		String subject = key.substring(0, key.indexOf(Tuple.KEY_SEP_CHAR));
 		if(tuple.contains(Fields.SENTIMENT)) {
-			DisplayTagCloud<DisplayTag> tagCloudPositive = new DisplayTagCloud<DisplayTag>(subject+"_"+SentimentProcessor.posLabel);		
-			DisplayTagCloud<DisplayTag> tagCloudNegative = new DisplayTagCloud<DisplayTag>(subject+"_"+SentimentProcessor.negLabel);		
-			DisplayTagCloud<DisplayTag> tagCloudNeutral = new DisplayTagCloud<DisplayTag>(subject+"_"+SentimentProcessor.neutralLabel);
+			DisplayTagCloud<DisplayTag> tagCloudPositive = new DisplayTagCloud<DisplayTag>(subject+"_"+posLabel);		
+			DisplayTagCloud<DisplayTag> tagCloudNegative = new DisplayTagCloud<DisplayTag>(subject+"_"+negLabel);		
+			DisplayTagCloud<DisplayTag> tagCloudNeutral = new DisplayTagCloud<DisplayTag>(subject+"_"+neutralLabel);
 			this.tagCloudList.add(tagCloudPositive);
 			this.tagCloudList.add(tagCloudNegative);
 			this.tagCloudList.add(tagCloudNeutral);
@@ -71,14 +81,14 @@ public class TagCloudFactory {
 				this.tagCloudList.get(0).addTag(displayTag);
 			}
 			else if(this.tagCloudList.size()==3) {
-				if(tuple.getString(Fields.SENTIMENT).equals(SentimentProcessor.posLabel)) {
+				if(tuple.getString(Fields.SENTIMENT).equals(posLabel)) {
 					this.tagCloudList.get(POS_INDEX).addTag(displayTag);
 				}
-				else if(tuple.getString(Fields.SENTIMENT).equals(SentimentProcessor.negLabel)) {
+				else if(tuple.getString(Fields.SENTIMENT).equals(negLabel)) {
 					this.tagCloudList.get(NEG_INDEX).addTag(displayTag);
 				}
 
-				else if(tuple.getString(Fields.SENTIMENT).equals(SentimentProcessor.neutralLabel)) {
+				else if(tuple.getString(Fields.SENTIMENT).equals(neutralLabel)) {
 					this.tagCloudList.get(NEUTRAL_INDEX).addTag(displayTag);
 				}
 				else { //Shouldn't happen
