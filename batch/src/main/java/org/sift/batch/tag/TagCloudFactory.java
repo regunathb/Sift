@@ -21,9 +21,10 @@ import java.util.List;
 
 import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
-import org.sift.sieve.impl.SentimentProcessor;
 import org.sift.tagcloud.ui.DisplayTag;
 import org.sift.tagcloud.ui.DisplayTagCloud;
+
+import com.flipkart.sift.sieve.impl.SentimentProcessor;
 
 /**
  * <code>TagCloudFactory </code> generates TagClouds based on the tuples, i.e. if positive and negative sentiments

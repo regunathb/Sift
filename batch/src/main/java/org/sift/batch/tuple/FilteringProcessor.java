@@ -18,10 +18,11 @@ package org.sift.batch.tuple;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.sift.sieve.spi.AspectFactory;
 import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.springframework.batch.item.ItemProcessor;
+
+import com.flipkart.sift.sieve.spi.AspectFactory;
 
 /**
  * <code>FilteringProcessor </code> filters certain tuples according to category based filters. It also merges 
