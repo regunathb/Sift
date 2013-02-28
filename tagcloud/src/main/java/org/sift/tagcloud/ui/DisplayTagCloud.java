@@ -29,11 +29,8 @@ import java.util.Random;
 import org.sift.tagcloud.TagCloud;
 
 /**
- * The <code>DisplayTagCloud</code> is a sub-type of {@link TagCloud} suited for
- * generating a visual display. Portions of this code is based on Pierre
- * Lindenbaum's sample at :
- * http://plindenbaum.blogspot.in/2010/10/playing-with-worldle
- * -algorithm-tag.html
+ * The <code>DisplayTagCloud</code> is a sub-type of {@link TagCloud} suited for generating a visual display. Portions of this code is based on 
+ * Pierre Lindenbaum's sample at : http://plindenbaum.blogspot.in/2010/10/playing-with-worldle-algorithm-tag.html
  * 
  * @author Regunath B
  * @version 1.0, 25 Jan 2013
@@ -62,9 +59,7 @@ public class DisplayTagCloud<S extends DisplayTag> extends TagCloud<S> {
 
 	/**
 	 * Constructor for this class.
-	 * 
-	 * @param subject
-	 *            the String identifier for the subject of this tag cloud
+	 * @param subject the String identifier for the subject of this tag cloud
 	 */
 	public DisplayTagCloud(String subject) {
 		super(subject);
