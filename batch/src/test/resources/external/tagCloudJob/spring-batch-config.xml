@@ -114,7 +114,7 @@
 					<constructor-arg ref="lineSplitterProcessor" />
 				</bean>
 		  		<!-- 	
-		  		<bean class="org.sift.sieve.impl.SentimentProcessor">
+		  		<bean class="org.sift.com.flipkart.sift.sieve.impl.SentimentProcessor">
 					<property name="classificationService" ref="classificationService" />
 					<property name="numberConfidence" value="1" />
 					<property name="probConfidence" value="0.6" />
@@ -122,15 +122,15 @@
 				</bean> 
 				--> 
 		  			
-			    <bean class="org.sift.sieve.impl.AspectExtractionProcessor">
+			    <bean class="com.flipkart.sift.sieve.impl.AspectExtractionProcessor">
 					<property name="posTagger">
-						<bean class="org.sift.sieve.impl.POSTagger">
-							<constructor-arg value="wsj-0-18-left3words.tagger" />
+						<bean class="com.flipkart.sift.sieve.impl.POSTagger">
+							<constructor-arg ref="taggerFileBean" />
 						</bean>
 					</property>
 				</bean>	
 
-			 	<bean class="org.sift.runtime.impl.WordSplitterProcessor">
+			  <bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4" />
 					<property name="stopWords">
 						<bean class="org.sift.winnow.StopWords" />
@@ -147,7 +147,7 @@
 					</property>
 					<property name="sourceBoosts">
 						<map>
-							<entry key="nikon.txt" value="2" />
+							<entry key="nikon.txt" value="1" />
 						</map>
 					</property>
 				</bean>
@@ -157,7 +157,7 @@
 
 	<bean id="lineSplitterProcessor" class="org.sift.runtime.impl.LineSplitterProcessor" />
 
-	<bean id="classificationService" class="org.sift.batch.tag.service.ClassificationServiceImpl">
+	<bean id="classificationService" class="com.flipkart.sift.sieve.impl.ClassificationServiceImpl">
 		<property name="marshaller">
 			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
 		</property>
@@ -169,7 +169,7 @@
 		<property name="collector" ref="sentimentCollector" />
 	</bean>
 
-	<bean id="sentimentCollector" class="org.sift.sieve.impl.SentimentBasedValueAggregator">
+	<bean id="sentimentCollector" class="com.flipkart.sift.sieve.impl.SentimentBasedValueAggregator">
 		<property name="shuffler" ref="shuffler" />
 		<property name="delegate" ref="collectorDelegate" />
 	</bean>
@@ -227,6 +227,11 @@
 		</property>
 	</bean>
 	<!-- End tagCloudStep beans -->
+	
+	<!-- Files(Resources) Beans -->
+	<bean id="taggerFileBean" class="org.sift.batch.tag.service.ResourceFactoryBean">
+		<property name="resourceFileName" value="wsj-0-18-left3words.tagger" />
+	</bean>
 
 </beans>
 				
