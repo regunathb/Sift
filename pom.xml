@@ -15,7 +15,6 @@
 		<module>runtime-model</module>
 		<module>runtime</module>
 		<module>lucene-runtime</module>
-		<module>sieve</module>
 		<module>batch</module>
 	</modules>
 

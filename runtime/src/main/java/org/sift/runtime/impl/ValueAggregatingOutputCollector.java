@@ -68,7 +68,6 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 		}	
 	}
 
-	
 	/**
 	 * Aggregates values of tuples.
 	 * @param sortMergedTuples Tuples, where list of values indicate weight

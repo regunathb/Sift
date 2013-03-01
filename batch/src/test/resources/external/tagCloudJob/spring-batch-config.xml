@@ -54,14 +54,9 @@
 
 	<!-- Multi-Threaded Tagcloud Batch Job configuration -->
 	<batch:job id="tagCloudJob" incrementer="incrementer">
-		<batch:step id="tagStep" next="tagFilteringStep">
+		<batch:step id="tagStep" next="tagCloudStep">
 			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the MultiResourceItemReader. See https://jira.springsource.org/browse/BATCH-1301 -->
 				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="10000" />
-			</batch:tasklet>
-		</batch:step>
-		<batch:step id="tagFilteringStep" next="tagCloudStep">
-			<batch:tasklet task-executor="tagJobTaskExecutor"> 
-				<batch:chunk reader="tupleListReader" processor="filteringProcessor" writer="tupleListWriter" commit-interval="1" />
 			</batch:tasklet>
 		</batch:step>
 		<batch:step id="tagCloudStep">
@@ -113,23 +108,6 @@
 				<bean class="org.sift.batch.test.TagLineSplitterProcessor">
 					<constructor-arg ref="lineSplitterProcessor" />
 				</bean>
-		  		<!-- 	
-		  		<bean class="org.sift.com.flipkart.sift.sieve.impl.SentimentProcessor">
-					<property name="classificationService" ref="classificationService" />
-					<property name="numberConfidence" value="1" />
-					<property name="probConfidence" value="0.6" />
-					<property name="sentimentFilter" value="negative" /> 
-				</bean> 
-				--> 
-		  			
-			    <bean class="com.flipkart.sift.sieve.impl.AspectExtractionProcessor">
-					<property name="posTagger">
-						<bean class="com.flipkart.sift.sieve.impl.POSTagger">
-							<constructor-arg ref="taggerFileBean" />
-						</bean>
-					</property>
-				</bean>	
-
 			  <bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4" />
 					<property name="stopWords">
@@ -157,22 +135,11 @@
 
 	<bean id="lineSplitterProcessor" class="org.sift.runtime.impl.LineSplitterProcessor" />
 
-	<bean id="classificationService" class="com.flipkart.sift.sieve.impl.ClassificationServiceImpl">
-		<property name="marshaller">
-			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
-		</property>
-		<property name="url" value="http://localhost:4000/" />
-		<property name="urlParameter" value="query" />
-	</bean>
 
 	<bean id="tupleWriter" class="org.sift.batch.tuple.TupleWriter">
-		<property name="collector" ref="sentimentCollector" />
+		<property name="collector" ref="collector" />
 	</bean>
 
-	<bean id="sentimentCollector" class="com.flipkart.sift.sieve.impl.SentimentBasedValueAggregator">
-		<property name="shuffler" ref="shuffler" />
-		<property name="delegate" ref="collectorDelegate" />
-	</bean>
 	<bean id="collector" class="org.sift.runtime.impl.ValueAggregatingOutputCollector">
 		<property name="shuffler" ref="shuffler" />
 		<property name="delegate" ref="collectorDelegate" />
@@ -191,7 +158,6 @@
 	<bean id="tupleListReader" class="org.sift.batch.tuple.TupleListReader">
 		<property name="collector" ref="collectorDelegate" />
 	</bean>
-	<bean id="filteringProcessor" class="org.sift.batch.tuple.FilteringProcessor" />
 
 	<bean id="tupleListWriter" class="org.sift.batch.tuple.TupleListWriter">
 		<property name="collector" ref="tupleListCollectorDelegate" />
