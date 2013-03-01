@@ -47,7 +47,6 @@ public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTa
 
 	public DisplayTagCloud<DisplayTag> read() throws Exception, UnexpectedInputException,ParseException {
 		synchronized(this.collector) {
-			System.out.println("in reader");
 			if(!TagCloudInputReader.tagCloudList.empty()) { //Pop the existing Tag cloud
 				return TagCloudInputReader.tagCloudList.pop();
 			}
@@ -77,7 +76,6 @@ public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTa
 				}
 				TagCloudInputReader.tagCloudList.addAll(this.tagCloudFactory.getAll());
 			} 
-			System.out.println(TagCloudInputReader.tagCloudList.peek().getTagsList().size());
 			return TagCloudInputReader.tagCloudList.pop();
 		}
 	}
