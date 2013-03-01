@@ -8,8 +8,7 @@
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
     http://www.springframework.org/schema/context classpath:org/springframework/context/config/spring-context-2.5.xsd">
 
-	<!-- Bean for registering the jobs with the J
-		thoobRegistry. Mandatory bean -->
+	<!-- Bean for registering the jobs with the JobRegistry. Mandatory bean -->
 	<bean
 		class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
 		<property name="jobRegistry" ref="jobRegistry" />
@@ -91,7 +90,7 @@
 	</bean>
 
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/home/devashishshankar/nikon.txt" />
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt" />
 	</bean>
 <!-- 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource"> -->
 <!-- 		<constructor-arg -->
@@ -182,22 +181,15 @@
 		</property>
 	</bean>
 	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
-		<property name="tagCloudsDirectory"
-			value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
+		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
 	</bean>
 	<bean id="marshallerFileWriter" class="org.sift.batch.tag.service.TagCloudMarshallerService">
-		<property name="tagCloudsDirectory"
-			value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
+		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
 		<property name="marshaller">
 			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
 		</property>
 	</bean>
 	<!-- End tagCloudStep beans -->
 	
-	<!-- Files(Resources) Beans -->
-	<bean id="taggerFileBean" class="org.sift.batch.tag.service.ResourceFactoryBean">
-		<property name="resourceFileName" value="wsj-0-18-left3words.tagger" />
-	</bean>
-
 </beans>
 				
