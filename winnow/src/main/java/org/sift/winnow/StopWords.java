@@ -100,6 +100,8 @@ public class StopWords {
 		} 
 		// check if it is a stop word, but is at the start (or at the end) of the phrase
 		String[] words = word.split(WORD_BOUNDARY);
+		if(words.length<1)
+			return true;
 		if (this.conjunctionWords.contains(words[0]) || this.conjunctionWords.contains(words[words.length - 1])) {
 			return true;
 		}
