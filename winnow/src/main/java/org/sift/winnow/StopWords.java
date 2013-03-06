@@ -116,7 +116,7 @@ public class StopWords {
 	 */
 	public boolean isStopWord(String word, String groupID) {
 		if(this.groupIDBasedStopWords.containsKey(groupID)) {
-			return this.groupIDBasedStopWords.get(groupID).contains("word");
+			return this.groupIDBasedStopWords.get(groupID).contains(word);
 		}
 		return false;
 	}

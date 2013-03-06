@@ -29,7 +29,7 @@
 
 	<bean id="tagJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="tagJobDetailBean" />
-		<property name="cronExpression" value="0 0/60 * * * ?" />
+		<property name="cronExpression" value="0 0/50 * * * ?" />
 	</bean>
 
 	<bean class="org.trpr.platform.batch.impl.quartz.SchedulerFactoryBean">

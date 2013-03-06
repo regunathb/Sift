@@ -70,6 +70,9 @@ public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTa
 							this.tagCloudFactory.add(t, displayTag);
 							this.collector.getEmittedTuples().remove(0);
 						}
+						else {
+							this.collector.getEmittedTuples().remove(0);
+						}
 					} else {
 						break;
 					}
