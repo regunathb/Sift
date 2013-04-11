@@ -90,7 +90,7 @@
 	</bean>
 
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/home/devashishshankar/nikon.txt" />
+		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt" />
 	</bean>
 <!-- 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource"> -->
 <!-- 		<constructor-arg -->
@@ -117,9 +117,9 @@
 					<property name="wordWeights">
 						<map>
 							<entry key="1" value="1" />
-							<entry key="2" value="4" />
-							<entry key="3" value="8" />
-							<entry key="4" value="16" />
+							<entry key="2" value="2" />
+							<entry key="3" value="6" />
+							<entry key="4" value="8" />
 						</map>
 					</property>
 					<property name="sourceBoosts">
@@ -166,10 +166,10 @@
 		</property>
 	</bean>
 	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
-		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
+		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
 	</bean>
 	<bean id="marshallerFileWriter" class="org.sift.batch.tag.service.TagCloudMarshallerService">
-		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagclouds" />
+		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
 		<property name="marshaller">
 			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
 		</property>

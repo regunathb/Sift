@@ -44,8 +44,7 @@
   	</developers>
 
 	<properties>
-		<org.springframework.version>3.0.5.RELEASE</org.springframework.version>
-		<org.springframework.batch.version>2.1.1.RELEASE</org.springframework.batch.version>
+		<org.trpr.version>1.2.2</org.trpr.version>
 	</properties>
 	
 	<dependencyManagement>
@@ -95,73 +94,31 @@
 			<artifactId>tagcloud</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		<!-- Third party dependencies -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.batch</groupId>
-			<artifactId>spring-batch-core</artifactId>
-			<version>${org.springframework.batch.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-		  	<artifactId>slf4j-api</artifactId>
-		  	<version>1.6.4</version>
-		</dependency>	
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>1.8.0</version>
-		    <exclusions>
-	        	<exclusion> <!-- Remove Log4j as it conflicts with slf4j 1.6.4 -->
-		      	  <groupId>org.slf4j</groupId> 
-		          <artifactId>slf4j-log4j12</artifactId>
-		        </exclusion>
-		    </exclusions>		 			
-		</dependency>						
 		<!-- Trooper dependencies -->
 		<dependency>
 			<groupId>org.trpr</groupId>
 			<artifactId>platform-core</artifactId>
-			<version>1.2.0</version>
+			<version>${org.trpr.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.trpr</groupId>
 			<artifactId>platform-model</artifactId>
-			<version>1.2.0</version>
+			<version>${org.trpr.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.trpr</groupId>
 			<artifactId>platform-integration</artifactId>
-			<version>1.2.0</version>
+			<version>${org.trpr.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.trpr</groupId>
 			<artifactId>batch-core</artifactId>
-			<version>1.2.0</version>
+			<version>${org.trpr.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.trpr</groupId>
 			<artifactId>batch-model</artifactId>
-			<version>1.2.0</version>
+			<version>${org.trpr.version}</version>
 		</dependency>
 	</dependencies>
 	
