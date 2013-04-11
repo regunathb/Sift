@@ -107,7 +107,7 @@
 				<bean class="org.sift.batch.test.TagLineSplitterProcessor">
 					<constructor-arg ref="lineSplitterProcessor" />
 				</bean>
-			  <bean class="org.sift.runtime.impl.WordSplitterProcessor">
+			  	<bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4" />
 					<property name="stopWords">
 						<bean class="org.sift.winnow.StopWords" />

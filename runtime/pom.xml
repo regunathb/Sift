@@ -3,10 +3,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.sift</groupId>
+		<artifactId>sift</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	
 	<groupId>org.sift</groupId>
 	<artifactId>runtime</artifactId>
 	<name>Sift Runtime</name>
-	<version>1.0.0</version>
+	<version>${org.sift.version}</version>
 	<description>Runtime libraries project</description>
 
 	<licenses>
@@ -43,23 +49,18 @@
     	</developer>
   	</developers>
 
-	<properties>
-		<org.springframework.version>3.0.5.RELEASE</org.springframework.version>
-	</properties>
-  
 	<dependencies>	
 		<!-- Sift dependencies -->
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>winnow</artifactId>
-			<version>1.0.0</version>
+			<version>${org.sift.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>runtime-model</artifactId>
-			<version>1.0.0</version>
-		</dependency>		
-		
+			<version>${org.sift.version}</version>
+		</dependency>				
 	</dependencies>
 	
 	<build>
@@ -77,7 +78,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.2</version>
+				<version>${maven-jar-plugin.version}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -92,10 +93,10 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
+				<version>${maven-compiler-plugin.version}</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
 				</configuration>
 			</plugin>			
 		</plugins>		
