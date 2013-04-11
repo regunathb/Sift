@@ -79,6 +79,9 @@ public class TagLineSplitterProcessor implements Processor {
 					returnTuple.setValue(Fields.VALUES, null);
 					returnTuple.addToList(Fields.VALUES, line.trim());
 					returnTuple.setValue(Fields.TAG, tag);
+					if(tuple.contains(Fields.GROUP)) {
+						returnTuple.setValue(Fields.GROUP, tuple.getValue(Fields.GROUP));
+					}
 					//Create a new URI with fragment(line index with the review index)
 					try {
 						returnTuple.addToList(Fields.SOURCES,new URI(uri.toASCIIString()+TagLineSplitterProcessor.FRAGMENT_SEP_CHAR+fragmentCount));
