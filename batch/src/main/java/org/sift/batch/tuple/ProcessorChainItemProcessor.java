@@ -49,8 +49,9 @@ public class ProcessorChainItemProcessor<T,S> implements ItemProcessor<T,S> {
 		for (Processor p : this.getProcessors()) {
 			MemOutputCollector collector = new MemOutputCollector();
 			//Process all the tuples
-			for(Tuple returnTuple :returnedTuples)
+			for(Tuple returnTuple :returnedTuples) {
 				p.process(returnTuple, collector);
+			}
 			//Clear and add the new tuples
 			returnedTuples.clear();
 			returnedTuples.addAll(collector.getEmittedTuples());
