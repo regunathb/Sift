@@ -3,10 +3,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.sift</groupId>
+		<artifactId>sift</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	
 	<groupId>org.sift</groupId>
 	<artifactId>batch</artifactId>
 	<name>Sift Batch</name>
-	<version>1.0.0</version>
+	<version>${org.sift.version}</version>
 	<description>Batch runtime project</description>
 
 	<licenses>
@@ -43,10 +50,6 @@
     	</developer>
   	</developers>
 
-	<properties>
-		<org.trpr.version>1.2.2</org.trpr.version>
-	</properties>
-	
 	<dependencyManagement>
 	    <dependencies>
 			<dependency>
@@ -72,27 +75,27 @@
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>runtime-model</artifactId>
-			<version>1.0.0</version>
+			<version>${org.sift.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>runtime</artifactId>
-			<version>1.0.0</version>
+			<version>${org.sift.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>lucene-runtime</artifactId>
-			<version>1.0.0</version>
+			<version>${org.sift.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>winnow</artifactId>
-			<version>1.0.0</version>
+			<version>${org.sift.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>tagcloud</artifactId>
-			<version>1.0.0</version>
+			<version>${org.sift.version}</version>
 		</dependency>
 		<!-- Trooper dependencies -->
 		<dependency>
@@ -137,7 +140,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.2</version>
+				<version>${maven-jar-plugin.version}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -152,12 +155,26 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
+				<version>${maven-compiler-plugin.version}</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
 				</configuration>
-			</plugin>			
+			</plugin>		
+			<plugin>
+            	<artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                	<execution>
+                    	<phase>install</phase>
+                        <goals>
+                        	<goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                        	<outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+           </plugin>				
 		</plugins>		
 	</build>	
 </project>

@@ -55,7 +55,7 @@
 	<batch:job id="tagCloudJob" incrementer="incrementer">
 		<batch:step id="tagStep" next="tagCloudStep">
 			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the MultiResourceItemReader. See https://jira.springsource.org/browse/BATCH-1301 -->
-				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="10000" />
+				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="500" />
 			</batch:tasklet>
 		</batch:step>
 		<batch:step id="tagCloudStep">
@@ -107,7 +107,7 @@
 				<bean class="org.sift.batch.test.TagLineSplitterProcessor">
 					<constructor-arg ref="lineSplitterProcessor" />
 				</bean>
-			  <bean class="org.sift.runtime.impl.WordSplitterProcessor">
+			  	<bean class="org.sift.runtime.impl.WordSplitterProcessor">
 					<property name="nGram" value="4" />
 					<property name="stopWords">
 						<bean class="org.sift.winnow.StopWords" />
