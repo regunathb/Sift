@@ -90,7 +90,7 @@
 	</bean>
 
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt" />
+		<constructor-arg value="/home/devashishshankar/nikon.txt" />
 	</bean>
 <!-- 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource"> -->
 <!-- 		<constructor-arg -->
@@ -166,10 +166,10 @@
 		</property>
 	</bean>
 	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
-		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
+		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagcloudbasictest/img/" />
 	</bean>
 	<bean id="marshallerFileWriter" class="org.sift.batch.tag.service.TagCloudMarshallerService">
-		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds" />
+		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagcloudbasictest/json/" />
 		<property name="marshaller">
 			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
 		</property>
