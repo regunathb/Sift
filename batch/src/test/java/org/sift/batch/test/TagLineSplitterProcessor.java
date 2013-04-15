@@ -70,6 +70,18 @@ public class TagLineSplitterProcessor implements Processor {
 			for(String line : this.lineSplitterProcessor.getLines(((String)value).toLowerCase())) {
 				//The line number
 				fragmentCount++;
+				//Remove productID
+				if(line.contains(TAG_VALUE_SEP_CHAR)) {
+					int tabIndex = line.indexOf(TAG_VALUE_SEP_CHAR);
+					if(tabIndex!=-1) { //Tab found
+						if(line.length()>tabIndex+1) {//Ignore everything coming before tab
+						 line = line.substring(line.indexOf(TAG_VALUE_SEP_CHAR)+1);
+						}
+						else { //Ignore if tab is the last character
+							continue;
+						}
+					}
+				}
 				if(line.length()>LineSplitterProcessor.minLineLength) {
 					//Creating a returnTuple with fields of tuple. Not using clone because it uses references, thus all clones have references to the original tuple.
 					Tuple returnTuple = new Tuple(tuple.getFields().toArray(new Fields[0]));

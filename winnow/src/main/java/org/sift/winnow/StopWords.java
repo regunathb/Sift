@@ -175,7 +175,8 @@ public class StopWords {
 	public Map<String,String> getgroupIDBasedStopWordsFiles() {
 		return groupIDBasedStopWordsFiles;
 	}
-
+	
+	/** Sets the GroupID based stop word files. Key - GroupID, Value- Filename */
 	public void setgroupIDBasedStopWordsFiles(
 			Map<String,String> groupIDBasedStopWordsFiles) {
 		this.groupIDBasedStopWordsFiles = groupIDBasedStopWordsFiles;
@@ -197,4 +198,6 @@ public class StopWords {
 			}
 		}
 	}
+
+	/** End Getter/Setter methods */
 }
