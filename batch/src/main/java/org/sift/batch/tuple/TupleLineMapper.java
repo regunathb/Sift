@@ -37,8 +37,8 @@ public class TupleLineMapper implements LineMapper<Tuple>, InitializingBean {
 	/** The Resource instance that this LineMapper is mapping lines from */
 	private Resource resource;
 
-	/** The MultiResourceItemReader instance that uses this LineMapper via the delegate reader*/
-	private MultiResourceItemReader<Tuple> itemReader;
+	/** The MultiThreadedMultiResourceItemReader instance that uses this LineMapper via the delegate reader*/
+	private MultiThreadedMultiResourceItemReader<Tuple> itemReader;
 
 	/**
 	 * Interface method implementation. Maps the input line into a {@link Tuple} with line number as key and the line contents as a single String value
@@ -78,10 +78,10 @@ public class TupleLineMapper implements LineMapper<Tuple>, InitializingBean {
 	public void setResource(Resource resource) {
 		this.resource = resource;
 	}
-	public MultiResourceItemReader<Tuple> getItemReader() {
+	public MultiThreadedMultiResourceItemReader<Tuple> getItemReader() {
 		return this.itemReader;
 	}
-	public void setItemReader(MultiResourceItemReader<Tuple> itemReader) {
+	public void setItemReader(MultiThreadedMultiResourceItemReader<Tuple> itemReader) {
 		this.itemReader = itemReader;
 	}
 

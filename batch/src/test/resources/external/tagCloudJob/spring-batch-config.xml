@@ -52,9 +52,9 @@
 	</bean>
 
 	<!-- Multi-Threaded Tagcloud Batch Job configuration -->
-	<batch:job id="tagCloudJob" incrementer="incrementer">
+	<batch:job id="tagCloudJob" incrementer="incrementer" restartable="false">
 		<batch:step id="tagStep" next="tagCloudStep">
-			<batch:tasklet> <!-- DONOT use a multi-threaded task executor for file reading with the MultiResourceItemReader. See https://jira.springsource.org/browse/BATCH-1301 -->
+			<batch:tasklet task-executor="tagJobTaskExecutor"> 
 				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="500" />
 			</batch:tasklet>
 		</batch:step>
@@ -67,8 +67,7 @@
 	</batch:job>
 
 	<!-- Start tagStep beans -->
-	<bean id="fileReader"
-		class="org.springframework.batch.item.file.MultiResourceItemReader">
+	<bean id="fileReader" class="org.sift.batch.tuple.MultiThreadedMultiResourceItemReader">
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
 				<property name="lineMapper">
@@ -81,10 +80,9 @@
 		<property name="resources">
 			<list>
 				<ref bean="inputFileResource1" />
-				<!-- 
-				<ref bean="inputFileResource2"/> 
-				<ref bean="inputFileResource3"/> 
-				-->
+<!-- 				<ref bean="inputFileResource2"/>  -->
+<!-- 				<ref bean="inputFileResource3"/>  -->
+<!-- 				<ref bean="inputFileResource4"/>  -->
 			</list>
 		</property>
 	</bean>
@@ -92,14 +90,18 @@
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
 		<constructor-arg value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt" />
 	</bean>
-<!-- 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource"> -->
-<!-- 		<constructor-arg -->
-<!-- 			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt" /> -->
-<!-- 	</bean> -->
-<!-- 	<bean id="inputFileResource3" class="org.springframework.core.io.FileSystemResource"> -->
-<!-- 		<constructor-arg -->
-<!-- 			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt" /> -->
-<!-- 	</bean> -->
+	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource">
+		<constructor-arg
+			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/top_reviewed_text.txt" />
+	</bean>
+	<bean id="inputFileResource3" class="org.springframework.core.io.FileSystemResource">
+		<constructor-arg
+			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/Camera_Reviews.txt" />
+	</bean>
+	<bean id="inputFileResource4" class="org.springframework.core.io.FileSystemResource">
+		<constructor-arg
+			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/mobileReviews.txt" />
+	</bean>
 
 	<bean id="chainProcessor" class="org.sift.batch.tuple.ProcessorChainItemProcessor">
 		<property name="processors">
