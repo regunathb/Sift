@@ -39,14 +39,12 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 	 * @see org.sift.runtime.spi.Shuffler#sort(java.util.List)
 	 */
 	public List<Tuple> sort(List<Tuple> tuples) {
-		Collections.sort(tuples, this);
+		Collections.sort(tuples, this);		
 		List<Tuple> sortMergeTuples = new LinkedList<Tuple>();
 		Tuple mergedTuple = null;
 		for (Tuple tuple : tuples) {
-			//In the incoming tuple, there should be only one source or value
-			assert (tuple.getList(Fields.VALUES).size()>1);
-			assert (tuple.getList(Fields.SOURCES).size()>1);
 			if(mergedTuple == null ) {
+				mergedTuple = tuple;
 				mergedTuple = tuple.clone();
 				//Resetting values and sources so that they don't have references to original Tuple
 				mergedTuple.setValue(Fields.SOURCES, null);
@@ -58,9 +56,15 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 			if (!mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) {
 				//Copying the list before adding to mergedTuple
 				sortMergeTuples.add(mergedTuple);
-				mergedTuple = null;
-			}
-			else if (mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) { // double check
+				mergedTuple = tuple;
+				// now recreate the new mergedTuple with the current one
+				mergedTuple = tuple.clone();
+				//Resetting values and sources so that they don't have references to original Tuple
+				mergedTuple.setValue(Fields.SOURCES, null);
+				mergedTuple.addToList(Fields.SOURCES, tuple.getList(Fields.SOURCES).get(0));
+				mergedTuple.setValue(Fields.VALUES, null);
+				mergedTuple.addToList(Fields.VALUES, tuple.getList(Fields.VALUES).get(0));	
+			} else if (mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) { // double check
 				//Add the source URIs				
 				for (Object uri:tuple.getList(Fields.SOURCES)) {
 					if(mergedTuple.getList(Fields.SOURCES)==null || !mergedTuple.getList(Fields.SOURCES).contains(uri))
