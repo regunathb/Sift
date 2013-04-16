@@ -179,7 +179,7 @@ public class Tuple {
 	 * @return true, if field is found
 	 */
 	public boolean contains(Fields field) {
-		return this.fields.contains(field);
+		return this.getFieldIndex(field) != -1;
 	}
 	
 	/**
@@ -197,7 +197,12 @@ public class Tuple {
 	 * Gets the index of the field. The index can be used to get the corresponding value
 	 */
 	private int getFieldIndex(Fields field) {
-		return this.fields.indexOf(field);
+		for (int i=0; i < this.fields.size(); i++) {
+			if (this.fields.get(i) == field) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }
 
