@@ -55,6 +55,8 @@ public class ProcessorChainItemProcessor<T,S> implements ItemProcessor<T,S> {
 			//Clear and add the new tuples
 			returnedTuples.clear();
 			returnedTuples.addAll(collector.getEmittedTuples());
+			// clear the collector as we are done processing the Tuple instances that it is holding
+			collector.getEmittedTuples().clear();
 		}
 		List<Tuple> returnTuples = new LinkedList<Tuple>(returnedTuples);
 		return (S)returnTuples;
