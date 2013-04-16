@@ -28,7 +28,7 @@ import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 
 /**
- * The <code>TagCloudInputReader</code> is an implementation of the Spring Batch {@link ItemReader} that reads Tag cloud inout data as {@link Tuple}
+ * The <code>TagCloudInputReader</code> is an implementation of the Spring Batch {@link ItemReader} that reads Tag cloud input data as {@link Tuple}
  * instances from an {@link OutputCollector}
  * 
  * @author Regunath B
@@ -36,24 +36,31 @@ import org.springframework.batch.item.UnexpectedInputException;
  */
 public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTag>> {
 
+	/** The Monitor object for serializing thread access*/
+	private static final Object MONITOR = new Object();
+
 	/** The OutputCollector to get Tuples and their aggregated values */
 	private OutputCollector collector;
 
 	/** Stack storing more tag clouds, which are popped one by one */
-	static Stack<DisplayTagCloud<DisplayTag>> tagCloudList = new Stack<DisplayTagCloud<DisplayTag>>();
+	private Stack<DisplayTagCloud<DisplayTag>> tagCloudList = new Stack<DisplayTagCloud<DisplayTag>>();
 
 	/** Factory for generating TagCLouds */
 	private TagCloudFactory tagCloudFactory;
 
+	/**
+	 * Interface method implementation. Serializes read on the OutputCollector while reading Tuple data for creating TagCloud instances
+	 * @see org.springframework.batch.item.ItemReader#read()
+	 */
 	public DisplayTagCloud<DisplayTag> read() throws Exception, UnexpectedInputException,ParseException {
-		synchronized(this.collector) {
-			if(!TagCloudInputReader.tagCloudList.empty()) { //Pop the existing Tag cloud
-				return TagCloudInputReader.tagCloudList.pop();
+		synchronized(MONITOR) {
+			if(!this.tagCloudList.empty()) { //Pop the existing Tag cloud
+				return this.tagCloudList.pop();
 			}
 			if (this.collector.getEmittedTuples().size() == 0) { //Stack is empty and collector has no more elements. Reading finished
 				return null;
 			}
-			if(TagCloudInputReader.tagCloudList.empty()) { //Populate the stack
+			if(this.tagCloudList.empty()) { //Populate the stack
 				String[] tupleValues = this.getSubjectAndTag(this.collector.getEmittedTuples().get(0).getString(Fields.KEY));
 				String subject = tupleValues[0];
 				this.tagCloudFactory = new TagCloudFactory(this.collector.getEmittedTuples().get(0));
@@ -69,17 +76,16 @@ public class TagCloudInputReader implements ItemReader<DisplayTagCloud<DisplayTa
 							}
 							this.tagCloudFactory.add(t, displayTag);
 							this.collector.getEmittedTuples().remove(0);
-						}
-						else {
+						} else {
 							this.collector.getEmittedTuples().remove(0);
 						}
 					} else {
 						break;
 					}
 				}
-				TagCloudInputReader.tagCloudList.addAll(this.tagCloudFactory.getAll());
+				this.tagCloudList.addAll(this.tagCloudFactory.getAll());
 			} 
-			return TagCloudInputReader.tagCloudList.pop();
+			return this.tagCloudList.pop();
 		}
 	}
 

@@ -32,6 +32,9 @@ import org.sift.runtime.spi.Shuffler;
  */
 public class ValueAggregatingOutputCollector implements OutputCollector {
 	
+	/** The Monitor object for serializing thread access*/
+	private static final Object MONITOR = new Object();
+	
 	/** The OutputCollector delegate */
 	protected OutputCollector delegate;
 	
@@ -60,7 +63,7 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 	 * @see org.sift.runtime.spi.OutputCollector#setTuples(org.sift.runtime.Tuple[])
 	 */
 	public void setTuples(Tuple... tuples) {
-		synchronized(this) {
+		synchronized(MONITOR) {
 			Collections.addAll(this.getEmittedTuples(), tuples);
 			List<Tuple> sortMergedTuples = this.shuffler.sort(this.getEmittedTuples());
 			Tuple[] aggregatedTuples = this.aggregateValue(sortMergedTuples);
@@ -73,7 +76,7 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 	 * @param sortMergedTuples Tuples, where list of values indicate weight
 	 * @return aggregatedTuples as an array of tuples, where all values have been aggregated
 	 */
-	public Tuple[] aggregateValue(List<Tuple> sortMergedTuples) {
+	private Tuple[] aggregateValue(List<Tuple> sortMergedTuples) {
 		Tuple[] aggregatedTuples = new Tuple[sortMergedTuples.size()];
 		// now aggregate the values treating them as type integer
 		int count = 0;

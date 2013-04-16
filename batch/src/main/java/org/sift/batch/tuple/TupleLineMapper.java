@@ -22,7 +22,6 @@ import java.util.List;
 import org.sift.runtime.Fields;
 import org.sift.runtime.Tuple;
 import org.springframework.batch.item.file.LineMapper;
-import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 

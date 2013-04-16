@@ -29,7 +29,7 @@
 
 	<bean id="tagJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="tagJobDetailBean" />
-		<property name="cronExpression" value="0 0/50 * * * ?" />
+		<property name="cronExpression" value="0 0/34 2 3 * ?" />
 	</bean>
 
 	<bean class="org.trpr.platform.batch.impl.quartz.SchedulerFactoryBean">
@@ -55,13 +55,12 @@
 	<batch:job id="tagCloudJob" incrementer="incrementer" restartable="false">
 		<batch:step id="tagStep" next="tagCloudStep">
 			<batch:tasklet task-executor="tagJobTaskExecutor"> 
-				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="500" />
+				<batch:chunk reader="fileReader" processor="chainProcessor" writer="tupleWriter" commit-interval="100" />
 			</batch:tasklet>
 		</batch:step>
 		<batch:step id="tagCloudStep">
 			<batch:tasklet task-executor="tagJobTaskExecutor">
-				<batch:chunk reader="tagCloudInputReader" processor="tagCloudProcessor"
-					writer="tagCloudWriter" commit-interval="1" />
+				<batch:chunk reader="tagCloudInputReader" processor="tagCloudProcessor" writer="tagCloudWriter" commit-interval="1" />
 			</batch:tasklet>
 		</batch:step>
 	</batch:job>
@@ -79,8 +78,8 @@
 		</property>
 		<property name="resources">
 			<list>
-				<ref bean="inputFileResource1" />
-<!-- 				<ref bean="inputFileResource2"/>  -->
+<!-- 				<ref bean="inputFileResource1" /> -->
+				<ref bean="inputFileResource2"/> 
 <!-- 				<ref bean="inputFileResource3"/>  -->
 <!-- 				<ref bean="inputFileResource4"/>  -->
 			</list>
@@ -88,7 +87,8 @@
 	</bean>
 
 	<bean id="inputFileResource1" class="org.springframework.core.io.FileSystemResource">
-		<constructor-arg value="/home/devashishshankar/nikon.txt" />
+		<constructor-arg
+			value="/Users/regunath.balasubramanian/Documents/workspace/experiments/Samples/scripts/nikon.txt" />
 	</bean>
 	<bean id="inputFileResource2" class="org.springframework.core.io.FileSystemResource">
 		<constructor-arg
@@ -136,7 +136,6 @@
 
 	<bean id="lineSplitterProcessor" class="org.sift.runtime.impl.LineSplitterProcessor" />
 
-
 	<bean id="tupleWriter" class="org.sift.batch.tuple.TupleWriter">
 		<property name="collector" ref="collector" />
 	</bean>
@@ -168,10 +167,10 @@
 		</property>
 	</bean>
 	<bean id="imageFileWriter" class="org.sift.tagcloud.impl.service.ImageFilePersistenceService">
-		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagcloudbasictest/img/" />
+		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds/img" />
 	</bean>
 	<bean id="marshallerFileWriter" class="org.sift.batch.tag.service.TagCloudMarshallerService">
-		<property name="tagCloudsDirectory" value="/home/devashishshankar/Documents/Sift/junk/tagcloudbasictest/json/" />
+		<property name="tagCloudsDirectory" value="/Users/regunath.balasubramanian/Documents/junk/tagclouds/json" />
 		<property name="marshaller">
 			<bean class="org.trpr.platform.integration.impl.json.JSONTranscoderImpl" />
 		</property>

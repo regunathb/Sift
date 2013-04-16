@@ -39,6 +39,9 @@ import org.trpr.platform.core.spi.logging.Logger;
  * @version 1.0, 15 Apr 2013
  */
 public class MultiThreadedMultiResourceItemReader <T> implements ItemReader<T>, ItemStream, InitializingBean {
+	
+	/** The Monitor object for serializing thread access*/
+	private static final Object MONITOR = new Object();
 
 	/** Logger instance for this class*/
 	private static final Logger LOGGER = LogFactory.getLogger(MultiThreadedMultiResourceItemReader.class);
@@ -54,7 +57,7 @@ public class MultiThreadedMultiResourceItemReader <T> implements ItemReader<T>, 
 	
 	/** The index position of the current Resource*/
 	private int currentResourceIndex = INVALID_INDEX;
-
+	
 	/**
 	 * Interface method implementation. Checks if the 'delegate' and 'resources' properties have been set
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
@@ -69,19 +72,21 @@ public class MultiThreadedMultiResourceItemReader <T> implements ItemReader<T>, 
 	 * delegate or null when all resources have been read. This method serializes access across calling calling threads.
 	 * @see org.springframework.batch.item.ItemReader#read()
 	 */
-	public synchronized T read() throws Exception, UnexpectedInputException, ParseException,NonTransientResourceException {
-		if (this.currentResourceIndex == INVALID_INDEX) {
-			this.openNextAvailableResource();
-		}
-		T item = this.delegate.read();
-		while (item == null) {
-			this.openNextAvailableResource();
-			if (this.currentResourceIndex >= this.getResources().length) {
-				return null;
+	public T read() throws Exception, UnexpectedInputException, ParseException,NonTransientResourceException {
+		synchronized(MONITOR) {
+			if (this.currentResourceIndex == INVALID_INDEX) {
+				this.openNextAvailableResource();
 			}
-			item = this.delegate.read();
+			T item = this.delegate.read();
+			while (item == null) {
+				this.openNextAvailableResource();
+				if (this.currentResourceIndex >= this.getResources().length) {
+					return null;
+				}
+				item = this.delegate.read();
+			}
+			return item;
 		}
-		return item;
 	}
 
 	/**

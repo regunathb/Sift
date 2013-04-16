@@ -33,6 +33,9 @@ import org.springframework.batch.item.UnexpectedInputException;
  */
 public class TupleListReader implements ItemReader< List<Tuple> > {
 
+	/** The Monitor object for serializing thread access*/
+	private static final Object MONITOR = new Object();
+
 	/** The OutputCollector to get Tuples and their aggregated values */
 	private OutputCollector collector;
 	
@@ -40,7 +43,7 @@ public class TupleListReader implements ItemReader< List<Tuple> > {
 	 * Interface method implementation. @see {ItemReader#read()}
 	 */
 	public List<Tuple> read() throws Exception, UnexpectedInputException,ParseException {
-		synchronized(this.collector) {
+		synchronized(MONITOR) {
 			if (this.collector.getEmittedTuples().size() == 0) {
 				return null;
 			}
