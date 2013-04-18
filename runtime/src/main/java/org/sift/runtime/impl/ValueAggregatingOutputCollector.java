@@ -76,7 +76,7 @@ public class ValueAggregatingOutputCollector implements OutputCollector {
 	 * @param sortMergedTuples Tuples, where list of values indicate weight
 	 * @return aggregatedTuples as an array of tuples, where all values have been aggregated
 	 */
-	private Tuple[] aggregateValue(List<Tuple> sortMergedTuples) {
+	protected Tuple[] aggregateValue(List<Tuple> sortMergedTuples) {
 		Tuple[] aggregatedTuples = new Tuple[sortMergedTuples.size()];
 		// now aggregate the values treating them as type integer
 		int count = 0;
