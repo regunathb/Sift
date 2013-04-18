@@ -48,7 +48,7 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 				mergedTuple = tuple.clone();
 				//Resetting values and sources so that they don't have references to original Tuple
 				mergedTuple.setValue(Fields.SOURCES, null);
-				mergedTuple.addToList(Fields.SOURCES, tuple.getList(Fields.SOURCES).get(0));
+				mergedTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
 				mergedTuple.setValue(Fields.VALUES, null);
 				mergedTuple.addToList(Fields.VALUES, tuple.getList(Fields.VALUES).get(0));
 				continue;				
@@ -61,9 +61,9 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 				mergedTuple = tuple.clone();
 				//Resetting values and sources so that they don't have references to original Tuple
 				mergedTuple.setValue(Fields.SOURCES, null);
-				mergedTuple.addToList(Fields.SOURCES, tuple.getList(Fields.SOURCES).get(0));
+				mergedTuple.setValue(Fields.SOURCES, tuple.getList(Fields.SOURCES));
 				mergedTuple.setValue(Fields.VALUES, null);
-				mergedTuple.addToList(Fields.VALUES, tuple.getList(Fields.VALUES).get(0));	
+				mergedTuple.addToList(Fields.VALUES, tuple.getList(Fields.VALUES).get(0));
 			} else if (mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) { // double check
 				//Add the source URIs				
 				for (Object uri:tuple.getList(Fields.SOURCES)) {
