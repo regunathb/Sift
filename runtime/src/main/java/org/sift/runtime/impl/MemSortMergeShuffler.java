@@ -44,7 +44,6 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 		Tuple mergedTuple = null;
 		for (Tuple tuple : tuples) {
 			if(mergedTuple == null ) {
-				mergedTuple = tuple;
 				mergedTuple = tuple.clone();
 				//Resetting values and sources so that they don't have references to original Tuple
 				mergedTuple.setValue(Fields.SOURCES, null);
@@ -56,7 +55,6 @@ public class MemSortMergeShuffler implements Shuffler, Comparator<Tuple> {
 			if (!mergedTuple.getString(Fields.KEY).equals(tuple.getString(Fields.KEY))) {
 				//Copying the list before adding to mergedTuple
 				sortMergeTuples.add(mergedTuple);
-				mergedTuple = tuple;
 				// now recreate the new mergedTuple with the current one
 				mergedTuple = tuple.clone();
 				//Resetting values and sources so that they don't have references to original Tuple
