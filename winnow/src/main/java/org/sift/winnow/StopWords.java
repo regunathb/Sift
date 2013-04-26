@@ -57,9 +57,14 @@ public class StopWords {
 	};
 
 	/** List of conjunctions */
-	private static final String[] CONJUNCTIONS = {
-		"a","an","and","as","at","both","but","either","for","in","is","just","neither","nor","of","only","or",
-		"so","this","the","to","with","whether","yet",
+	public static final String[] CONJUNCTIONS = {
+		"and","both","but","either","for","neither","nor","or",
+		"so","whether","yet",
+	};
+
+	/** List of articles */
+	public static final String[] ARTICLES = {
+		"a","an","the","some",
 	};
 
 	/** List of stop words */
@@ -68,9 +73,12 @@ public class StopWords {
 	/** List of group ID based stop words */
 	private Map<String,List<String>> groupIDBasedStopWords = new HashMap<String, List<String>>();
 	
-	/** List of stop words */
+	/** List of conjunction words */
 	private List<String> conjunctionWords = new LinkedList<String>();
 
+	/** List of article words */
+	private List<String> articleWords = new LinkedList<String>();
+	
 	/** List of files from which stopwords will be dynamically loaded */
 	private List<String> stopWordsFiles = new LinkedList<String>();
 	
@@ -87,6 +95,9 @@ public class StopWords {
 		for (String word : CONJUNCTIONS) {
 			this.conjunctionWords.add(word);
 		}
+		for (String word : ARTICLES) {
+			this.articleWords.add(word);
+		}
 	}
 
 	/**
@@ -98,11 +109,13 @@ public class StopWords {
 		if (this.stopWords.contains(word)) {
 			return true;
 		} 
-		// check if it is a stop word, but is at the start (or at the end) of the phrase
+		// check if it is a conjunction or article word, but is at the start (or at the end) of the phrase
 		String[] words = word.split(WORD_BOUNDARY);
-		if(words.length<1)
+		if(words.length<1) {
 			return true;
-		if (this.conjunctionWords.contains(words[0]) || this.conjunctionWords.contains(words[words.length - 1])) {
+		}
+		if (this.conjunctionWords.contains(words[0]) || this.conjunctionWords.contains(words[words.length - 1]) ||
+				this.articleWords.contains(words[0]) || this.articleWords.contains(words[words.length - 1])) {
 			return true;
 		}
 		return false;
@@ -152,6 +165,12 @@ public class StopWords {
 	}
 	public List<String> getStopWordsFiles() {
 		return this.stopWordsFiles;
+	}	
+	public List<String> getArticleWords() {
+		return this.articleWords;
+	}
+	public void setArticleWords(List<String> articleWords) {
+		this.articleWords = articleWords;
 	}
 	public void setStopWordsFiles(List<String> stopWordsFiles) {
 		this.stopWordsFiles = stopWordsFiles;
