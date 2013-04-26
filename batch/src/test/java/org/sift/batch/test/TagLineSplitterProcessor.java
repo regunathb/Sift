@@ -27,7 +27,7 @@ import org.sift.runtime.spi.Processor;
 
 /**
  * The <code>TagLineSplitterProcessor</code> is an implementation of the {@link Processor} that splits {@link Tuple}
- *  values as lines using the functionalities of <code>TagLineSplitterProcessor</code>, but keeps intact the
+ *  values as lines using the functionalities of <code>LineSplitterProcessor</code>, but keeps intact the
  *  tag value interpretation of Trooper (i.e, makes the first element of value as tagValue)
  * 
  * @author devashishshankar
@@ -75,7 +75,7 @@ public class TagLineSplitterProcessor implements Processor {
 					int tabIndex = line.indexOf(TAG_VALUE_SEP_CHAR);
 					if(tabIndex!=-1) { //Tab found
 						if(line.length()>tabIndex+1) {//Ignore everything coming before tab
-						 line = line.substring(line.indexOf(TAG_VALUE_SEP_CHAR)+1);
+							line = line.substring(line.indexOf(TAG_VALUE_SEP_CHAR)+1);
 						}
 						else { //Ignore if tab is the last character
 							continue;
