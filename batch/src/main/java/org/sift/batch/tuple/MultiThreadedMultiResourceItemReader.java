@@ -95,6 +95,7 @@ public class MultiThreadedMultiResourceItemReader <T> implements ItemReader<T>, 
 	 */
 	public void close() throws ItemStreamException {
 		this.delegate.close();
+		this.currentResourceIndex = INVALID_INDEX;
 	}
 	
 	/**
