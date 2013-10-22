@@ -7,13 +7,13 @@
 	<parent>
 		<groupId>org.sift</groupId>
 		<artifactId>sift</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0</version>
 	</parent>
 	
 	<groupId>org.sift</groupId>
 	<artifactId>batch</artifactId>
 	<name>Sift Batch</name>
-	<version>${org.sift.version}</version>
+	<version>1.1.0</version>
 	<description>Batch runtime project</description>
 
 	<licenses>
@@ -75,27 +75,27 @@
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>runtime-model</artifactId>
-			<version>${org.sift.version}</version>
+			<version>1.1.0</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>runtime</artifactId>
-			<version>${org.sift.version}</version>
+			<version>1.1.0</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>lucene-runtime</artifactId>
-			<version>${org.sift.version}</version>
+			<version>1.1.0</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>winnow</artifactId>
-			<version>${org.sift.version}</version>
+			<version>1.1.0</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.sift</groupId>
 			<artifactId>tagcloud</artifactId>
-			<version>${org.sift.version}</version>
+			<version>1.1.0</version>
 		</dependency>
 		<!-- Trooper dependencies -->
 		<dependency>

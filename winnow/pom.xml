@@ -7,13 +7,13 @@
 	<parent>
 		<groupId>org.sift</groupId>
 		<artifactId>sift</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0</version>
 	</parent>
 	
 	<groupId>org.sift</groupId>
 	<artifactId>winnow</artifactId>
 	<name>Sift Winnow</name>
-	<version>${org.sift.version}</version>
+	<version>1.1.0</version>
 	<description>Winnow libraries project</description>
 
 	<licenses>
